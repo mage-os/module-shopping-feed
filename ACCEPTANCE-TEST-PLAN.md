@@ -415,3 +415,16 @@ No open High or Medium defect may be accepted for the first production release w
 | Release owner | | Approve / Reject | | |
 
 Approval applies only to the recorded commit and tested configuration. Any code change after sign-off requires affected checks to be rerun and a new release decision.
+
+## SHO-1 XML output acceptance (unreleased)
+
+Automated coverage includes XML parsing and escaping, repeated elements, CDATA terminators, namespaces, optional empty values, zero preservation, invalid characters, DTD rejection, generator row dispatch, batch boundaries, and UTF-8 filtering.
+
+Live admin and database acceptance remains pending. On a disposable Magento installation:
+
+1. Create a custom feed, select XML, set an `.xml` filename, and save a header, item element, footer, optional columns, and CDATA columns. Reload and verify every value.
+2. Map a product containing ampersands, Unicode, and `]]>`; map a zero value, an empty optional value, and repeated image values. Generate and parse the downloaded file. Check values and tag counts.
+3. Generate with one product per batch, then with no matching products. Verify exactly one header/footer and publication only after the final batch.
+4. Publish a valid feed, then try malformed wrappers or an undeclared namespace. Generation must fail and preserve the published file.
+5. Run Test SKU; verify mapped values still render. Switch to delimited output, save/reload, and compare the generated CSV/TSV with the prior output.
+6. Configure the same XML options in an extension preset and create a feed from it. Verify defaults survive save/reload and generation.

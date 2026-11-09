@@ -60,6 +60,19 @@ class FeedFormDataTest extends TestCase
         self::assertSame($input, (new FeedFormData())->decode(json_encode($input)));
     }
 
+    public function testXmlSettingsSurviveProviderAndSaveTransport(): void
+    {
+        $data = ['config' => [
+            'output_params_format' => 'xml',
+            'output_params_xml_header' => '<?xml version="1.0"?><rss xmlns:g="urn:google"><channel>',
+            'output_params_xml_item' => 'item', 'output_params_xml_footer' => '</channel></rss>',
+            'output_params_xml_optional_columns' => 'description,brand',
+            'output_params_xml_cdata_columns' => '*',
+        ]];
+        $form = new FeedFormData();
+        self::assertSame($data, $form->decode($form->encodeForProvider($data)));
+    }
+
     public function testProviderEnvelopeSurvivesMagentoTemplateSanitizationWithoutChangingNestedArrays(): void
     {
         $data = ['config' => ['columns_product_columns' => [

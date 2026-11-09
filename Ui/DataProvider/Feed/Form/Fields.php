@@ -294,6 +294,23 @@ class Fields
             ],
         ];
         $sections['general']['file_feed'] = ['label' => __('File Name'), 'required' => true];
+        $sections['general']['output_params_format'] = [
+            'label' => __('Output Format'), 'formElement' => 'select', 'default' => 'delimited',
+            'options' => [
+                ['value' => 'delimited', 'label' => __('Delimited')],
+                ['value' => 'xml', 'label' => __('XML')]
+            ],
+            'notice' => __('For XML output, use a .xml file name. XML output always uses UTF-8.')
+        ];
+        foreach (['header' => __('XML Header'), 'item' => __('XML Item Element'),
+            'footer' => __('XML Footer'), 'optional_columns' => __('XML Optional Columns'),
+            'cdata_columns' => __('XML CDATA Columns')] as $key => $label) {
+            $sections['general']['output_params_xml_' . $key] = [
+                'label' => $label,
+                'formElement' => in_array($key, ['header', 'footer'], true) ? 'textarea' : 'input',
+                'notice' => __('XML column lists are comma-separated names; * selects all columns.')
+            ];
+        }
         $sections['general']['output_params_delimiter_other'] = ['label' => __('Other Delimiter')];
         if ($model->getType() === 'generic') {
             foreach (['enclose_cell' => __('Cell Enclosure'), 'enclose_escape' => __('Enclosure Escape'),

@@ -194,6 +194,17 @@
                                     <xs:element name="enclose_escape" />
                                     <xs:element name="delimiter_other" />
                                     <xs:element name="encoding" />
+                                    <xs:element name="format" minOccurs="0">
+                                        <xs:simpleType><xs:restriction base="xs:string">
+                                            <xs:enumeration value="delimited"/>
+                                            <xs:enumeration value="xml"/>
+                                        </xs:restriction></xs:simpleType>
+                                    </xs:element>
+                                    <xs:element name="xml_header" type="xs:string" minOccurs="0"/>
+                                    <xs:element name="xml_item" type="xs:string" minOccurs="0"/>
+                                    <xs:element name="xml_footer" type="xs:string" minOccurs="0"/>
+                                    <xs:element name="xml_optional_columns" type="xs:string" minOccurs="0"/>
+                                    <xs:element name="xml_cdata_columns" type="xs:string" minOccurs="0"/>
                                 </xs:sequence>
                             </xs:complexType>
                         </xs:element>

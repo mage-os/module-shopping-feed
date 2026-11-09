@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add XML feed output with configurable header, item element, footer, optional columns, and CDATA columns. Preserve delimited output as the default.
+
 All notable changes to this project will be documented here.
 
 ## 1.2.5 - 2026-10-22

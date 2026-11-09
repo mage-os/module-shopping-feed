@@ -94,6 +94,9 @@ class Generator extends DataObject
      */
     protected $feed;
 
+    /** @var Output\Xml|null */
+    private ?Output\Xml $xmlWriter = null;
+
     /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\MetaCatalog */
     private $metaCatalogValidator;
 
@@ -361,6 +364,11 @@ class Generator extends DataObject
             $addedItems = $addedItems - (int)$this->batch->getOffset();
         }
 
+        if (!$this->isTestMode() && $this->isXmlOutput() && $this->batch !== null
+            && (!$this->batch->isEnabled() || $this->getTotalItems() <= $this->currentIteration)
+        ) {
+            $this->fileDriver->fileWrite($this->getTemporaryHandle(), $this->getXmlWriter()->footer());
+        }
         $this->closeTemporaryHandle()
             ->copyDataFromTemporaryFeedFile();
 
@@ -635,6 +643,30 @@ class Generator extends DataObject
             }
         }
 
+        if ($this->isXmlOutput()) {
+            $writer = $this->getXmlWriter();
+            $output = [];
+            foreach ($this->getOutputColumns(false) as $map) {
+                $output[$map['column']] = $fields[$map['column']] ?? '';
+            }
+            $xml = $addNewLine ? $writer->row($output) : $writer->header();
+            if ($this->isTestMode()) {
+                $preview = [];
+                foreach ($output as $name => $values) {
+                    foreach (is_array($values) ? $values : [$values] as $value) {
+                        $preview[] = ['label' => $name, 'value' => $value];
+                    }
+                }
+                $this->testOutput[] = $preview;
+            } else {
+                $this->fileDriver->fileWrite($this->getTemporaryHandle(), $xml);
+            }
+            if ($addNewLine) {
+                $this->countProductsExported++;
+            }
+            return $this;
+        }
+
         $params = $this->getWriteFeedParams();
         $defaultValue = $params['defaultValue'];
         $delimiter = $params['delimiter'];
@@ -790,7 +822,9 @@ class Generator extends DataObject
             $handle = $this->fileDriver->fileOpen($this->getFeedFile() . '.tmp', $mode);
 
             // Microsoft TSV uses plain UTF-8 so the first header has no BOM prefix.
-            if ($mode === "w" && $this->feed->getData('type') !== 'microsoft_merchant_center') {
+            if ($mode === "w" && !$this->isXmlOutput()
+                && $this->feed->getData('type') !== 'microsoft_merchant_center'
+            ) {
                 $this->fileDriver->fileWrite($handle, self::UTF8_BOM);
             }
 
@@ -922,6 +956,42 @@ class Generator extends DataObject
                 : ''
         ];
         return $params;
+    }
+
+    /**
+     * Check the explicitly selected output format.
+     *
+     * @return bool
+     */
+    private function isXmlOutput(): bool
+    {
+        return $this->feed->getConfig('output_params_format', 'delimited') === 'xml';
+    }
+
+    /**
+     * Build and validate the XML configuration once per generation process.
+     *
+     * @return Output\Xml
+     */
+    private function getXmlWriter(): Output\Xml
+    {
+        if ($this->xmlWriter === null) {
+            $columns = fn (string $key): array => array_values(array_filter(array_map(
+                'trim',
+                explode(',', (string)$this->feed->getConfig('output_params_' . $key, ''))
+            ), static fn (string $value): bool => $value !== ''));
+            $this->xmlWriter = new Output\Xml(
+                (string)$this->feed->getConfig(
+                    'output_params_xml_header',
+                    '<?xml version="1.0" encoding="UTF-8"?><products>'
+                ),
+                (string)$this->feed->getConfig('output_params_xml_item', 'product'),
+                (string)$this->feed->getConfig('output_params_xml_footer', '</products>'),
+                $columns('xml_optional_columns'),
+                $columns('xml_cdata_columns')
+            );
+        }
+        return $this->xmlWriter;
     }
 
     /**

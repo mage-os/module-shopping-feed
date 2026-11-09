@@ -14,12 +14,22 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class GoogleAndCustomOutputTest extends TestCase
 {
-    private function writer(string $type, array $columns, string $delimiter, array &$writes): Generator
-    {
+    /**
+     * Prepare a generator with captured file writes.
+     *
+     * @phpstan-param array<string, string> $settings
+     */
+    private function writer(
+        string $type,
+        array $columns,
+        string $delimiter,
+        array &$writes,
+        array $settings = []
+    ): Generator {
         $feed = $this->createMock(Feed::class);
         $feed->method('getData')->willReturn($type);
         $feed->method('getConfig')->willReturnCallback(fn($key, $default = '') =>
-            $key === 'output_params_delimiter' ? $delimiter : $default);
+            $settings[$key] ?? ($key === 'output_params_delimiter' ? $delimiter : $default));
         $feed->method('getColumnsMap')->willReturn(array_map(fn($name) => ['column' => $name], $columns));
         $driver = $this->createMock(File::class);
         $driver->method('fileWrite')->willReturnCallback(function ($handle, $line) use (&$writes) {
@@ -51,6 +61,20 @@ class GoogleAndCustomOutputTest extends TestCase
             $this->assertSame([$value, 'sku-1', ''], str_getcsv(ltrim(end($writes), "\n"), ',', '"', ''));
         }
         $this->assertSame($columns, str_getcsv($writes[0], ',', '"', ''));
+    }
+
+    public function testXmlRowsUseMappedNamesAndDoNotWriteColumnHeaders(): void
+    {
+        $writes = [];
+        $generator = $this->writer('generic', ['id', 'image', 'empty'], ',', $writes, [
+            'output_params_format' => 'xml', 'output_params_xml_header' => '<products>',
+            'output_params_xml_optional_columns' => 'empty',
+        ]);
+        $this->write($generator, ['id' => 'id', 'image' => 'image', 'empty' => 'empty'], false);
+        $this->write($generator, ['id' => 0, 'image' => ['a&b', 'c<d'], 'empty' => '']);
+        self::assertSame("<products>\n", $writes[0]);
+        self::assertSame("<product><id>0</id><image>a&amp;b</image><image>c&lt;d</image></product>\n", $writes[1]);
+        self::assertSame(1, $generator->getCountProductsExported());
     }
 
     /** @dataProvider dateCases */

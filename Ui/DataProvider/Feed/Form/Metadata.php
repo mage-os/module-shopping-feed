@@ -135,6 +135,13 @@ class Metadata
         );
 
         $columns = $this->select(__('Column'), 'Columns');
+        foreach (['header', 'item', 'footer', 'optional_columns', 'cdata_columns'] as $key) {
+            $this->dependency(
+                $meta['general']['children']['output_params_xml_' . $key],
+                'general.output_params_format',
+                'xml'
+            );
+        }
         $parameter = [
             'label' => __('Parameters'), 'component' => 'MageOS_ShoppingFeed/js/form/parameter',
             'elementTmpl' => 'MageOS_ShoppingFeed/form/parameter', 'definitions' => $this->parameters->get($feed),
@@ -365,7 +372,9 @@ class Metadata
     private function dependency(array &$field, string $source, string $value): void
     {
         $config = &$field['arguments']['data']['config'];
-        $config['component'] = 'MageOS_ShoppingFeed/js/form/dependent-' . ($config['formElement'] ?? 'input');
+        $element = $config['formElement'] ?? 'input';
+        $config['component'] = 'MageOS_ShoppingFeed/js/form/dependent-'
+            . ($element === 'textarea' ? 'input' : $element);
         $config['imports']['dependency'] = '${ $.ns }.${ $.ns }.' . $source . ':value';
         $config['imports']['__disableTmpl']['dependency'] = false;
         $config['showWhen'] = $value;

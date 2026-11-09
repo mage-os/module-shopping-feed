@@ -1,5 +1,7 @@
 # Mage-OS Shopping Feed
 
+Unreleased: XML output supports configurable document wrappers, optional tags, and CDATA. See [XML output](docs/wiki/XML-Output.md).
+
 [![Check Extension on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml?query=branch%3Amain)
 
 `MageOS_ShoppingFeed` turns a Mage-OS or Magento Open Source catalog into product data feeds for Google Shopping, Google Local Inventory, Google Promotions, Meta, Pinterest, TikTok, Microsoft Merchant Center, OpenAI Google-compatible and generic delimited recipients. Merchants define each feed's columns, filters, category taxonomy, schedule and optional FTP or SFTP delivery in the Admin. Cron writes the files under `pub/media/mageos-shopping-feed`. On the storefront, the module can add schema.org microdata for Google Automatic Item Updates, preselect product options from feed deep links, and send Google Ads `view_item` events.

@@ -381,6 +381,12 @@
         <enclose_escape><![CDATA[]]></enclose_escape>
         <delimiter_other><![CDATA[]]></delimiter_other>
         <encoding><![CDATA[UTF-8]]></encoding>
+        <format>delimited</format>
+        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><products>]]></xml_header>
+        <xml_item>product</xml_item>
+        <xml_footer><![CDATA[</products>]]></xml_footer>
+        <xml_optional_columns/>
+        <xml_cdata_columns/>
       </output_params>
       <file>
         <feed><![CDATA[mageos_shopping_feed_%s.txt]]></feed>
@@ -897,6 +903,12 @@
         <enclose_escape><![CDATA[]]></enclose_escape>
         <delimiter_other><![CDATA[]]></delimiter_other>
         <encoding><![CDATA[UTF-8]]></encoding>
+        <format>delimited</format>
+        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><products>]]></xml_header>
+        <xml_item>product</xml_item>
+        <xml_footer><![CDATA[</products>]]></xml_footer>
+        <xml_optional_columns/>
+        <xml_cdata_columns/>
       </output_params>
       <file>
         <feed><![CDATA[mageos_shopping_feed_%s.txt]]></feed>
@@ -1328,6 +1340,12 @@
         <enclose_escape><![CDATA["]]></enclose_escape>
         <delimiter_other><![CDATA[]]></delimiter_other>
         <encoding><![CDATA[UTF-8]]></encoding>
+        <format>delimited</format>
+        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><products>]]></xml_header>
+        <xml_item>product</xml_item>
+        <xml_footer><![CDATA[</products>]]></xml_footer>
+        <xml_optional_columns/>
+        <xml_cdata_columns/>
       </output_params>
       <file>
         <feed><![CDATA[mageos_meta_catalog_%s.tsv]]></feed>
@@ -1762,6 +1780,12 @@
         <enclose_escape><![CDATA["]]></enclose_escape>
         <delimiter_other><![CDATA[]]></delimiter_other>
         <encoding><![CDATA[UTF-8]]></encoding>
+        <format>delimited</format>
+        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><products>]]></xml_header>
+        <xml_item>product</xml_item>
+        <xml_footer><![CDATA[</products>]]></xml_footer>
+        <xml_optional_columns/>
+        <xml_cdata_columns/>
       </output_params>
       <file>
         <feed><![CDATA[mageos_pinterest_catalog_%s.tsv]]></feed>
@@ -2204,6 +2228,12 @@
         <enclose_escape><![CDATA["]]></enclose_escape>
         <delimiter_other><![CDATA[]]></delimiter_other>
         <encoding><![CDATA[UTF-8]]></encoding>
+        <format>delimited</format>
+        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><products>]]></xml_header>
+        <xml_item>product</xml_item>
+        <xml_footer><![CDATA[</products>]]></xml_footer>
+        <xml_optional_columns/>
+        <xml_cdata_columns/>
       </output_params>
       <file>
         <feed><![CDATA[mageos_tiktok_catalog_%s.csv]]></feed>
@@ -2646,6 +2676,12 @@
         <enclose_escape><![CDATA[]]></enclose_escape>
         <delimiter_other><![CDATA[]]></delimiter_other>
         <encoding><![CDATA[UTF-8]]></encoding>
+        <format>delimited</format>
+        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><products>]]></xml_header>
+        <xml_item>product</xml_item>
+        <xml_footer><![CDATA[</products>]]></xml_footer>
+        <xml_optional_columns/>
+        <xml_cdata_columns/>
       </output_params>
       <file>
         <feed><![CDATA[mageos_microsoft_%s.txt]]></feed>
@@ -3106,6 +3142,12 @@
         <enclose_escape><![CDATA["]]></enclose_escape>
         <delimiter_other><![CDATA[]]></delimiter_other>
         <encoding><![CDATA[UTF-8]]></encoding>
+        <format>delimited</format>
+        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><products>]]></xml_header>
+        <xml_item>product</xml_item>
+        <xml_footer><![CDATA[</products>]]></xml_footer>
+        <xml_optional_columns/>
+        <xml_cdata_columns/>
       </output_params>
       <file>
         <feed><![CDATA[mageos_openai_google_compatible_%s.tsv]]></feed>
@@ -3349,6 +3391,12 @@
         <enclose_escape><![CDATA[]]></enclose_escape>
         <delimiter_other><![CDATA[]]></delimiter_other>
         <encoding><![CDATA[UTF-8]]></encoding>
+        <format>delimited</format>
+        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><products>]]></xml_header>
+        <xml_item>product</xml_item>
+        <xml_footer><![CDATA[</products>]]></xml_footer>
+        <xml_optional_columns/>
+        <xml_cdata_columns/>
       </output_params>
       <file>
         <feed><![CDATA[mageos_shopping_feed_%s.txt]]></feed>

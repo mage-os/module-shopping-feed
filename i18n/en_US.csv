@@ -535,3 +535,25 @@
 "parent only","parent only"
 "pound","pound"
 "some Directives accept parameters that can be specified here.","some Directives accept parameters that can be specified here."
+XML values must be scalar: %1.,XML values must be scalar: %1.
+Invalid UTF-8 or XML character in column %1.,Invalid UTF-8 or XML character in column %1.
+Invalid XML element name: %1.,Invalid XML element name: %1.
+XML output does not allow DTD or entity declarations.,XML output does not allow DTD or entity declarations.
+XML output must be well-formed XML 1.0 with UTF-8 encoding.,XML output must be well-formed XML 1.0 with UTF-8 encoding.
+This lists only allowed currencies on the store view. WARNING: Changing to a currency which is not displayed on frontend can lead to feed being rejected with provider! Don\,This lists only allowed currencies on the store view. WARNING: Changing to a currency which is not displayed on frontend can lead to feed being rejected with provider! Don\
+It\,It\
+To fill \,To fill \
+Changing the language of your feed affects how Apparels are matched using Google taxonomies. Your products should also be in the same language. Refer to \,Changing the language of your feed affects how Apparels are matched using Google taxonomies. Your products should also be in the same language. Refer to \
+Allowed shipping methods. Realtime carriers aren\,Allowed shipping methods. Realtime carriers aren\
+For US feeds column \,For US feeds column \
+Output Format,Output Format
+Delimited,Delimited
+XML,XML
+"For XML output, use a .xml file name. XML output always uses UTF-8.","For XML output, use a .xml file name. XML output always uses UTF-8."
+XML Header,XML Header
+XML Item Element,XML Item Element
+XML Footer,XML Footer
+XML Optional Columns,XML Optional Columns
+XML CDATA Columns,XML CDATA Columns
+XML column lists are comma-separated names; * selects all columns.,XML column lists are comma-separated names; * selects all columns.
+"XML wrappers must contain item elements as markup.","XML wrappers must contain item elements as markup."

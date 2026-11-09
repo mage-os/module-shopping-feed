@@ -23,6 +23,7 @@
 **Feed guides**
 
 * [Generic feeds](Generic-Feeds)
+* [XML output](XML-Output)
 * [Google Shopping](Google-Shopping)
 * [Google Local Inventory and MSI](Google-Local-Inventory-and-MSI)
 * [Google Promotions](Google-Promotions)

@@ -18,6 +18,7 @@ The current stable release is [1.2.4](https://github.com/mage-os-lab/module-shop
 | Evaluate Magento 2.4.7-p10 | [Dependency guidance and optional backport](compatibility/magento-2.4.7-p10.md) |
 | Maintain or publish the wiki | [Maintenance workflow](WIKI-MAINTENANCE.md) and [content map](WIKI-CONTENT-MAP.md) |
 | Review this documentation refresh | [October 20 review](reviews/2026-10-20-documentation-review.md) |
+| Compare with paid feed extensions | [Competitive gap analysis](plans/2026-11-09-competitive-gap-analysis.md) |
 
 ## Upgrade requirements and limits
 

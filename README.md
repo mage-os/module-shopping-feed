@@ -147,7 +147,7 @@ See [Filters and transformations](https://github.com/mage-os-lab/module-shopping
 | Associated Product Attribute Value Separator (configurable) | `, ` | Separator for combined attribute values. |
 | Price Type (grouped) | Sum of associated products prices | Minimal price or the sum of the default quantities' prices. |
 | Combined weight (bundle) | No | Uses the sum of the selections' weights. |
-| Value inheritance by column (configurable, grouped) | None | Per column, whether the value comes from the child, the parent, or one falling back to the other. |
+| Value inheritance by column (configurable, grouped) | None | Per column, whether the value comes from the child, the parent, or one falling back to the other. Choose **associated if exists, otherwise from parent** to fill empty child values from the parent. |
 
 See [Complex products](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Complex-Products.md).
 

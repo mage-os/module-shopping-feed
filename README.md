@@ -39,6 +39,10 @@ bin/magento cache:clean
 
 In production mode, also run `bin/magento setup:di:compile` and `bin/magento setup:static-content:deploy`. For a source checkout, use `v1.2.5` at `app/code/MageOS/ShoppingFeed`, ensure its runtime Composer requirements (including `phpseclib/phpseclib:^3.0`) are installed in the application, and run the Magento commands without installing a second copy of this package. See [source installation](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Installation-and-Upgrade.md#source-installation).
 
+## Unreleased development
+
+SHO-2 adds a **Conditional Value** directive with product conditions and fixed-text, attribute, or percentage-adjusted outputs. See the [configuration guide](docs/wiki/Columns-and-Directives.md#conditional-value-unreleased-sho-2) and [local verification record](docs/reviews/2026-11-09-sho-2-conditional-values.md). This feature is not part of 1.2.5.
+
 ## Configuration
 
 Store-wide settings live in **Stores > Configuration > Mage-OS > Mage-OS Shopping Feed**. Everything else is set per feed in the feed editor.

@@ -89,3 +89,74 @@ test('framework value links preserve null parameters before form initialization'
         assert.equal(field.getInitialValue(), stored);
     }
 });
+
+const ko = require(path.join(framework, 'lib/web/knockoutjs/knockout.js'));
+const preserveConditional = amd(path.join(root, 'view/adminhtml/web/js/form/preserve-options.js'), []);
+const conditionalEditor = amd(path.join(root, 'view/adminhtml/web/js/form/conditional-value.js'),
+    [ko, preserveConditional, text => text]);
+const conditionalDefinitions = {
+    conditions: {
+        price: {label: 'Price', input: 'string', operators: [{value: '>', label: 'greater than'}]},
+        attribute_set_id: {label: 'Attribute Set', input: 'select', operators: [{value: '==', label: 'is'}],
+            options: [{value: '4', label: 'Clothing'}]}
+    },
+    attributes: [{value: 'price', label: 'Price'}, {value: 'manufacturer', label: 'Brand'}]
+};
+
+test('conditional editor persists all/any, conditions, both outputs and literal text through reload', () => {
+    let saved;
+    const editor = conditionalEditor(conditionalDefinitions, '', value => { saved = value; });
+    editor.addCondition();
+    const row = editor.conditions()[0];
+    row.attribute('attribute_set_id');
+    row.value('4');
+    assert.equal(row.useSelect(), true);
+    editor.ifTrue.type('attribute');
+    editor.ifTrue.attribute('manufacturer');
+    editor.ifFalse.value('0 ${literal} <script>');
+    editor.aggregator('any');
+    const before = JSON.stringify(saved);
+    const reloaded = conditionalEditor(conditionalDefinitions, JSON.parse(before), value => { saved = value; });
+    assert.equal(reloaded.ifFalse.value(), '0 ${literal} <script>');
+    assert.equal(reloaded.conditions()[0].value(), '4');
+    assert.equal(JSON.stringify(saved), before);
+    reloaded.ifTrue.type('percent');
+    reloaded.ifTrue.attribute('price');
+    reloaded.ifTrue.percent('-10');
+    assert.equal(saved.if_true.percent, '-10');
+    reloaded.removeCondition(reloaded.conditions()[0]);
+    assert.equal(saved.conditions.length, 0);
+});
+
+test('conditional editor does not mutate shared defaults or other column parameters', () => {
+    let saved;
+    const first = conditionalEditor(conditionalDefinitions, '', value => { saved = value; });
+    const second = conditionalEditor(conditionalDefinitions, '', () => {});
+    first.addCondition();
+    first.conditions()[0].attribute('price');
+    first.conditions()[0].value('0');
+    assert.equal(saved.conditions[0].operator, '>');
+    assert.equal(saved.conditions[0].value, '0');
+    assert.equal(second.conditions().length, 0);
+    assert.equal(conditionalDefinitions.conditions.price.operators[0].value, '>');
+});
+
+test('late provider imports refresh conditional controls without resetting a row during typing', () => {
+    const component = amd(path.join(root, 'view/adminhtml/web/js/form/parameter.js'),
+        [base, preserveConditional, text => text, conditionalEditor]);
+    const field = Object.assign({}, component, {
+        definitions: {conditional: {...conditionalDefinitions, kind: 'conditional'}},
+        value: ko.observable(null), kind: ko.observable('none'), parameterLabel: ko.observable(''),
+        parameterNotice: ko.observable(''), parameterOptions: ko.observableArray([]),
+        conditionalEditor: ko.observable(null)
+    });
+    field.value.subscribe(() => field.refreshConditionalEditor());
+    field.changeAttribute('conditional');
+    field.value({aggregator: 'any', conditions: [{attribute: 'price', operator: '>', value: '25'}],
+        if_true: {type: 'static', value: 'high'}, if_false: {type: 'static', value: 'low'}});
+    const editor = field.conditionalEditor();
+    assert.equal(editor.conditions()[0].value(), '25');
+    editor.conditions()[0].value('30');
+    assert.equal(field.conditionalEditor(), editor);
+    assert.equal(field.value().conditions[0].value, '30');
+});

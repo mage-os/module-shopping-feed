@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented here.
 
+## Unreleased
+
+### Added
+
+- Add **Conditional Value** to every feed type, with All/Any product conditions using Magento rule comparisons, separate matching and fallback outputs, store-view attribute labels, and raw numeric percentage adjustments (SHO-2). Provide structured controls in the active Admin editor and validate configuration during save and generation.
+
 ## 1.2.5 - 2026-10-22
 
 [Release 1.2.5 notes and upgrade requirements](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/releases/1.2.5.md).

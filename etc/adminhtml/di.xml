@@ -149,6 +149,11 @@
                 <item name="label" xsi:type="string" translate="true">Unit of measure</item>
                 <item name="source" xsi:type="string">Weight</item>
             </item>
+            <item name="MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\ConditionalValue" xsi:type="array">
+                <item name="kind" xsi:type="string">conditional</item>
+                <item name="label" xsi:type="string" translate="true">Conditional Value</item>
+                <item name="notice" xsi:type="string" translate="true">Conditions use raw product values. Attribute outputs use store-view labels. Percentage outputs use raw numbers, rounded to two decimals, without tax or currency conversion.</item>
+            </item>
             <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue" xsi:type="array">
                 <item name="kind" xsi:type="string">input</item>
                 <item name="label" xsi:type="string" translate="true">Value</item>

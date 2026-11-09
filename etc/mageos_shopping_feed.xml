@@ -10,6 +10,13 @@
     <label>Generic</label>
     <description>Generic feed type.</description>
     <directives>
+      <directive name="directive_conditional_value" translate="label">
+        <label>Conditional Value</label>
+        <renderer type="MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\ConditionalValue"/>
+        <mappers>
+          <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ConditionalValue"/>
+        </mappers>
+      </directive>
       <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
@@ -392,6 +399,13 @@
     <label>Google Shopping</label>
     <description>Google Shopping feed type.</description>
     <directives>
+      <directive name="directive_conditional_value" translate="label">
+        <label>Conditional Value</label>
+        <renderer type="MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\ConditionalValue"/>
+        <mappers>
+          <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ConditionalValue"/>
+        </mappers>
+      </directive>
       <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
@@ -909,6 +923,13 @@
     <label>Meta Catalog (Facebook and Instagram)</label>
     <description>UTF-8 TSV product catalog for Meta Commerce Manager scheduled data feeds. Review brand, identifiers, condition, and variant mappings before upload.</description>
     <directives>
+      <directive name="directive_conditional_value" translate="label">
+        <label>Conditional Value</label>
+        <renderer type="MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\ConditionalValue"/>
+        <mappers>
+          <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ConditionalValue"/>
+        </mappers>
+      </directive>
       <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
@@ -1339,6 +1360,13 @@
     <label>Pinterest Catalog</label>
     <description>Quoted TSV for Pinterest retail catalogs and product Pins.</description>
     <directives>
+      <directive name="directive_conditional_value" translate="label">
+        <label>Conditional Value</label>
+        <renderer type="MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\ConditionalValue"/>
+        <mappers>
+          <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ConditionalValue"/>
+        </mappers>
+      </directive>
       <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
@@ -1773,6 +1801,13 @@
     <label>TikTok Catalog</label>
     <description>Quoted CSV for TikTok Ads Manager product catalogs.</description>
     <directives>
+      <directive name="directive_conditional_value" translate="label">
+        <label>Conditional Value</label>
+        <renderer type="MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\ConditionalValue"/>
+        <mappers>
+          <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ConditionalValue"/>
+        </mappers>
+      </directive>
       <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
@@ -2215,6 +2250,13 @@
     <label>Microsoft Merchant Center (TSV)</label>
     <description>Tab-delimited product catalog for Microsoft Merchant Center.</description>
     <directives>
+      <directive name="directive_conditional_value" translate="label">
+        <label>Conditional Value</label>
+        <renderer type="MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\ConditionalValue"/>
+        <mappers>
+          <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ConditionalValue"/>
+        </mappers>
+      </directive>
       <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
@@ -2657,6 +2699,13 @@
     <label>OpenAI / ChatGPT (Google-compatible, beta)</label>
     <description>Beta TSV preset for the OpenAI Google-compatible discovery profile. Requires feed onboarding and confirmation of format, merchant identity, and markets. Does not enable checkout.</description>
     <directives>
+      <directive name="directive_conditional_value" translate="label">
+        <label>Conditional Value</label>
+        <renderer type="MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\ConditionalValue"/>
+        <mappers>
+          <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ConditionalValue"/>
+        </mappers>
+      </directive>
       <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
@@ -3117,6 +3166,13 @@
     <label>Google Local Inventory</label>
     <description>Google Local Inventory feed type.</description>
     <directives>
+      <directive name="directive_conditional_value" translate="label">
+        <label>Conditional Value</label>
+        <renderer type="MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\ConditionalValue"/>
+        <mappers>
+          <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ConditionalValue"/>
+        </mappers>
+      </directive>
       <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>

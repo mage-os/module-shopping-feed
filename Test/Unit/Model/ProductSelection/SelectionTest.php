@@ -33,12 +33,17 @@ class SelectionTest extends CompatibilityTestCase
     protected function setUp(): void
     {
         $attributes = [];
-        foreach (['sku', 'price', 'image', 'status', 'visibility', 'brand', 'color', 'release_date', 'release_time', 'tier_price'] as $code) {
+        $codes = [
+            'sku', 'price', 'image', 'status', 'visibility', 'brand', 'color',
+            'release_date', 'release_time', 'tier_price'
+        ];
+        foreach ($codes as $code) {
             $attribute = $this->getMockBuilder(Attribute::class)->disableOriginalConstructor()
                 ->onlyMethods([])->getMock();
             $attribute->setData(['id' => 1, 'attribute_id' => 1, 'attribute_code' => $code, 'frontend_label' => $code,
                 'frontend_input' => [
-                    'brand' => 'select', 'color' => 'multiselect', 'release_date' => 'date', 'release_time' => 'datetime'
+                    'brand' => 'select', 'color' => 'multiselect',
+                    'release_date' => 'date', 'release_time' => 'datetime'
                 ][$code] ?? 'text',
                 'backend_type' => $code === 'release_date' ? 'datetime' : 'varchar']);
             $attributes[$code] = $attribute;
@@ -303,8 +308,9 @@ class SelectionTest extends CompatibilityTestCase
         $values = [false, 'bad', ['aggregator' => 'xor', 'conditions' => []]];
         $changes = [['scope' => 'unknown'], ['attribute' => 'no_such_attribute'], ['operator' => 'eval'],
             ['value' => []], ['value' => str_repeat('x', 4097)], ['attribute' => 'has_image', 'value' => 'yes'],
-            ['attribute' => 'price', 'operator' => 'glob'], ['attribute' => 'tier_price'], ['attribute' => 'brand', 'value' => 'Xray'],
-            ['attribute' => 'release_time', 'value' => 'not a date'], ['attribute' => 'release_date', 'value' => '2026-02-30']];
+            ['attribute' => 'price', 'operator' => 'glob'], ['attribute' => 'tier_price'],
+            ['attribute' => 'brand', 'value' => 'Xray'], ['attribute' => 'release_time', 'value' => 'not a date'],
+            ['attribute' => 'release_date', 'value' => '2026-02-30']];
         foreach ($changes as $change) {
             $values[] = ['aggregator' => 'all', 'conditions' => [array_replace($rule, $change)]];
         }

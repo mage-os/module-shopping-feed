@@ -4831,12 +4831,6 @@ parameters:
 			path: Test/Unit/Model/FeedTest.php
 
 		-
-			message: '#^Call to an undefined method MageOS\\ShoppingFeed\\Model\\Feed\\Config\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: Test/Unit/Model/FeedTest.php
-
-		-
 			message: '#^Call to an undefined method MageOS\\ShoppingFeed\\Model\\Feed\\Schedule\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
 			identifier: method.notFound
 			count: 7

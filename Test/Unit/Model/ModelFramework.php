@@ -92,7 +92,7 @@ class ModelFramework extends CompatibilityTestCase
     protected $categoryCollectionMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Feed\Config|\PHPUnit\Framework\MockObject\MockObject
+     * @var \MageOS\ShoppingFeed\Model\Feed\Config&\PHPUnit\Framework\MockObject\MockObject
      */
     protected $configMock;
 

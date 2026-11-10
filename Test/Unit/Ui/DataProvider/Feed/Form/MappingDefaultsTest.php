@@ -21,10 +21,18 @@ class MappingDefaultsTest extends TestCase
         return $document;
     }
 
+    /** @return array<string,array{string,string,string}> */
     public static function mappingSections(): array
     {
         $cases = [];
-        foreach ((new \DOMXPath(self::definition()))->query('/config/feed') as $feed) {
+        $feeds = (new \DOMXPath(self::definition()))->query('/config/feed');
+        if ($feeds === false) {
+            throw new \RuntimeException('Unable to query feed definitions.');
+        }
+        foreach ($feeds as $feed) {
+            if (!$feed instanceof \DOMElement) {
+                throw new \RuntimeException('Expected a feed element.');
+            }
             $sections = ['columns' => 'columns_product_columns', 'filters' => 'filters_map_replace_empty_columns'];
             foreach ($sections as $section => $key) {
                 $type = $feed->getAttribute('name');

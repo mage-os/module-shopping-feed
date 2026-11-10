@@ -4,7 +4,7 @@
 
 When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The guide separates historical 1.2.0 browser checks from 1.2.4 Mage-OS 3.6 verification and records the remaining limits. Template generation checks do not establish provider ingestion acceptance.
 
-The **Microsoft Merchant Center (TSV)** preset produces a UTF-8 tab-delimited `.txt` file. It shares the module's generation, Test Feed, scheduling, and upload tools. Microsoft import acceptance has not been verified.
+The **Microsoft Merchant Center** preset defaults to a UTF-8 tab-delimited `.txt` file. With the unreleased XML output feature, it also provides an automatic RSS XML preset: select **Output Format: XML** and use a `.xml` file name. The module supplies the XML structure. It shares the module's generation, Test Feed, scheduling, and upload tools. Microsoft import acceptance has not been verified.
 
 ## Create and map the feed
 
@@ -14,7 +14,7 @@ The default map contains 24 fields. Product IDs stay stable; configurable childr
 
 Map manufacturer-assigned GTINs and MPNs to real attributes. They start unmapped. The **Identifier Exists** directive offers explicit confirmation for products with no assigned identifiers; missing catalog data does not set it to FALSE automatically. Brand defaults to Manufacturer. Do not invent identifiers or use your store name as a brand unless you manufacture the item.
 
-The preset emits UTF-8 without a byte-order mark (BOM) and places the required `id` column last so empty optional values do not produce trailing tabs. It does not enclose cells in quotes. Existing field cleaning removes markup and embedded tab/newline separators; Unicode and embedded quotation marks remain readable.
+Delimited output emits UTF-8 without a byte-order mark (BOM) and places the required `id` column last so empty optional values do not produce trailing tabs. It does not enclose cells in quotes. Existing field cleaning removes markup and embedded tab/newline separators; Unicode and embedded quotation marks remain readable. XML output uses the preset's namespace, omits empty tags, and repeats additional-image elements. See [XML Output](XML-Output) for its mapping rules.
 
 ## Destination behavior
 
@@ -35,7 +35,7 @@ This initial preset requires positive prices and does not implement zero-down in
 
 Match price tax treatment to the country of sale and the landing page. The destination's shipping rules, apparel attributes, and other conditional fields depend on the target market and category. The preset cannot infer them from a store view.
 
-For Austria or Germany, configure the required shipping data before import. For a fixed rate, add a Static Value column named `shipping(country:service:price)` with a reviewed value such as `DE:Standard:6.49`. Use a real attribute or custom mapper when costs vary. Do not assume a Google shipping mapping has Microsoft's native field shape.
+For Austria or Germany, configure the required shipping data before import. For a fixed rate in delimited output, add a Static Value column named `shipping(country:service:price)` with a reviewed value such as `DE:Standard:6.49`. For XML output, use a column named `shipping` with the preset's `country:region:service:price` value, for example `DE::Standard:6.49 EUR`; the writer creates nested shipping elements. Use a real attribute or custom mapper when costs vary. Review shipping mappings when changing output format.
 
 For applicable apparel categories and target countries, map color, size, gender, and age group. Keep differentiating attributes consistent across all variants. Review adult-product restrictions, images, and assigned identifiers with Microsoft before enabling a production feed.
 
@@ -43,7 +43,7 @@ For applicable apparel categories and target countries, map color, size, gender,
 
 1. Generate the file with uploads disabled and use **Test Feed** for representative products.
 2. Create an online product feed under **Microsoft Merchant Center > Feeds**. Match the verified store domain, country, and currency.
-3. Choose **Automatically download file from URL** and supply the publicly reachable file URL. Retain the `.txt` extension for this tab-delimited format.
+3. Choose **Automatically download file from URL** and supply the publicly reachable file URL. Use `.txt` for tab-delimited output or `.xml` for XML output.
 4. Schedule generation before the destination fetch, keep the file current, and review import diagnostics.
 5. If you use the existing upload tools, confirm the destination's protocol and filename settings first.
 

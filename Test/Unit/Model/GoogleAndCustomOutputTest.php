@@ -26,7 +26,8 @@ class GoogleAndCustomOutputTest extends TestCase
         array &$writes,
         array $settings = []
     ): Generator {
-        $feed = $this->createMock(Feed::class);
+        $feed = $this->getMockBuilder(Feed::class)->disableOriginalConstructor()
+            ->onlyMethods(['getData', 'getConfig', 'getColumnsMap', 'getXmlPreset'])->getMock();
         $feed->method('getData')->willReturn($type);
         $feed->method('getConfig')->willReturnCallback(fn($key, $default = '') =>
             $settings[$key] ?? ($key === 'output_params_delimiter' ? $delimiter : $default));
@@ -75,6 +76,53 @@ class GoogleAndCustomOutputTest extends TestCase
         self::assertSame("<products>\n", $writes[0]);
         self::assertSame("<product><id>0</id><image>a&amp;b</image><image>c&lt;d</image></product>\n", $writes[1]);
         self::assertSame(1, $generator->getCountProductsExported());
+    }
+
+    public function testBadXmlRowsAreSkippedWithSkuAndColumnAndLaterRowsSurvive(): void
+    {
+        $writes = [];
+        $generator = $this->writer(
+            'generic',
+            ['id', 'description'],
+            ',',
+            $writes,
+            ['output_params_format' => 'xml']
+        );
+        $product = $this->createMock(\Magento\Catalog\Model\Product::class);
+        $product->method('getSku')->willReturn('source-sku');
+        $adapter = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class);
+        $adapter->method('getProduct')->willReturn($product);
+        $adapter->method('map')->willReturn([
+            ['id' => 'bad-child', 'description' => "bad\x0Btext"],
+            ['id' => 'good-child', 'description' => 'good & text'],
+        ]);
+        $logger = $generator->getLogger();
+        self::assertInstanceOf(\PHPUnit\Framework\MockObject\MockObject::class, $logger);
+        $logger->expects(self::once())->method('warning')->with(self::callback(
+            static fn ($message) => str_contains($message, 'source-sku')
+                && str_contains($message, 'bad-child') && str_contains($message, 'description')
+        ));
+        (new \ReflectionMethod($generator, 'addProductToFeed'))->invoke($generator, $adapter);
+        self::assertCount(1, $writes);
+        self::assertStringContainsString('<id>good-child</id>', $writes[0]);
+        self::assertSame(1, $generator->getCountProductsExported());
+        self::assertSame(1, $generator->getCountProductsSkipped());
+    }
+
+    public function testInvalidXmlConfigurationStillStopsGeneration(): void
+    {
+        $writes = [];
+        $generator = $this->writer(
+            'generic',
+            ['undeclared:id'],
+            ',',
+            $writes,
+            ['output_params_format' => 'xml']
+        );
+        $adapter = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class);
+        $adapter->method('map')->willReturn([['undeclared:id' => 'value']]);
+        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
+        (new \ReflectionMethod($generator, 'addProductToFeed'))->invoke($generator, $adapter);
     }
 
     /** @dataProvider dateCases */

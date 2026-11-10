@@ -305,6 +305,40 @@ class GeneratorTest extends ModelFramework
         );
     }
 
+    /** @dataProvider collectionScopeMethods */
+    #[\PHPUnit\Framework\Attributes\DataProvider('collectionScopeMethods')]
+    public function testFullGenerationClearsSharedPreviewScope(string $method): void
+    {
+        $provider = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Product\CollectionProvider::class)
+            ->disableOriginalConstructor()->onlyMethods(['getCollection'])->getMock();
+        $activeSku = new \ReflectionProperty($provider, 'testSku');
+        $collection = $this->createMock(\Magento\Catalog\Model\ResourceModel\Product\Collection::class);
+        $provider->method('getCollection')->willReturn($collection);
+        $this->objectData['collectionProvider'] = $provider;
+        $collection->method('getSelect')->willReturn($this->createMock(\Magento\Framework\DB\Select::class));
+        $collection->method('getSize')->willReturnCallback(
+            static function () use ($activeSku, $provider): int {
+                return $activeSku->getValue($provider) === null ? 2 : 1;
+            }
+        );
+
+        $this->objectData['testSku'] = 'preview-sku';
+        $this->createModel();
+        $preview = $this->model->$method();
+        self::assertSame(1, $method === 'getCollection' ? $preview->getSize() : $preview);
+
+        $this->objectData['testSku'] = null;
+        $this->createModel();
+        $full = $this->model->$method();
+        self::assertSame(2, $method === 'getCollection' ? $full->getSize() : $full);
+    }
+
+    /** @return list<array{string}> */
+    public static function collectionScopeMethods(): array
+    {
+        return [['getCollection'], ['getTotalItems']];
+    }
+
     public function testProcessProductCallbackSkippedPhpLimit()
     {
         $args = [

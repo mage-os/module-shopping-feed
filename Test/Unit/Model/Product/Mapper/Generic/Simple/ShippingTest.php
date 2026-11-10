@@ -39,6 +39,9 @@ class ShippingTest extends ModelFramework
      */
     protected $shippingCountryConfig = ['USA'];
 
+    /** @var string */
+    private string $outputFormat = 'delimited';
+
     /**
      * @inheritdoc
      */
@@ -55,6 +58,8 @@ class ShippingTest extends ModelFramework
             'getConfig',
             $this->returnCallback(function ($arg) {
                 switch ($arg) {
+                    case 'output_params_format':
+                        return $this->outputFormat;
                     case 'shipping_country':
                         return $this->shippingCountryConfig;
                     default:
@@ -99,6 +104,34 @@ class ShippingTest extends ModelFramework
         $this->expectReturn($this->shippingProviderMock, 'getCache', false);
 
         $this->assertEquals('shipping value', $this->model->map());
+    }
+
+    public function testXmlCachePreservesPunctuationAndDelimitedSwitchRecomputes(): void
+    {
+        $this->outputFormat = 'xml';
+        self::assertInstanceOf(\PHPUnit\Framework\MockObject\MockObject::class, $this->cacheMock);
+        self::assertInstanceOf(\PHPUnit\Framework\MockObject\MockObject::class, $this->shippingProviderMock);
+        $this->expectReturn($this->cacheMock, 'getCache', false);
+        $values = [['country' => 'US', 'region' => '', 'service' => 'Ground: 3-5 days, tracked', 'price' => '0 USD']];
+        $text = 'US::Ground: 3-5 days, tracked:0 USD';
+        $stored = 'xml-shipping-v1:' . json_encode(['values' => $values, 'text' => $text]);
+        $this->expectReturn($this->shippingProviderMock, 'getCache', $stored);
+        $mapped = $this->model->map();
+        self::assertInstanceOf(\MageOS\ShoppingFeed\Model\Output\MappedValue::class, $mapped);
+        self::assertSame($values, $mapped->values);
+        self::assertSame($text, (string)$mapped);
+        $this->outputFormat = 'delimited';
+        self::assertSame('shipping value', $this->model->map());
+    }
+
+    public function testXmlRecomputesLegacyFlattenedCache(): void
+    {
+        $this->outputFormat = 'xml';
+        self::assertInstanceOf(\PHPUnit\Framework\MockObject\MockObject::class, $this->cacheMock);
+        self::assertInstanceOf(\PHPUnit\Framework\MockObject\MockObject::class, $this->shippingProviderMock);
+        $this->expectReturn($this->cacheMock, 'getCache', false);
+        $this->expectReturn($this->shippingProviderMock, 'getCache', 'US::ambiguous, value:5 USD');
+        self::assertSame('shipping value', $this->model->map());
     }
 
     public function testMapInterfaceCache()

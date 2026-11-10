@@ -34,6 +34,33 @@ class XmlOutputTest extends TestCase
         self::assertSame('1', $document->getElementsByTagNameNS('urn:google', 'id')->item(0)?->textContent);
     }
 
+    public function testUnicodeElementNames(): void
+    {
+        $writer = new Xml('<éléments>', 'élément', '</éléments>');
+        self::assertStringContainsString('<größe>0</größe>', $writer->row(['größe' => 0]));
+    }
+
+    public function testInvalidTextIsDistinguishedFromInvalidConfiguration(): void
+    {
+        $writer = new Xml('<products>', 'product', '</products>');
+        $this->expectException(\MageOS\ShoppingFeed\Model\Output\InvalidValueException::class);
+        $writer->row(['description' => "bad\x0Btext"]);
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidColumns')]
+    public function testValidateColumnsRejectsInvalidOrUndeclaredNames(string $name): void
+    {
+        $writer = new Xml('<products>', 'product', '</products>', ['*']);
+        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
+        $writer->validateColumns([$name]);
+    }
+
+    /** @return list<array{string}> */
+    public static function invalidColumns(): array
+    {
+        return [['Product Name'], ['price (USD)'], ['g:custom'], ['a:b:c'], ['<injection>']];
+    }
+
     public function testRejectsDtdBeforeParsing(): void
     {
         $this->expectException(\Magento\Framework\Exception\LocalizedException::class);

@@ -302,14 +302,26 @@ class Fields
             ],
             'notice' => __('For XML output, use a .xml file name. XML output always uses UTF-8.')
         ];
-        foreach (['header' => __('XML Header'), 'item' => __('XML Item Element'),
-            'footer' => __('XML Footer'), 'optional_columns' => __('XML Optional Columns'),
-            'cdata_columns' => __('XML CDATA Columns')] as $key => $label) {
-            $sections['general']['output_params_xml_' . $key] = [
-                'label' => $label,
-                'formElement' => in_array($key, ['header', 'footer'], true) ? 'textarea' : 'input',
-                'notice' => __('XML column lists are comma-separated names; * selects all columns.')
+        if ($model->getType() === 'generic') {
+            foreach (['header' => __('XML Header'), 'item' => __('XML Item Element'),
+                'footer' => __('XML Footer'), 'optional_columns' => __('XML Optional Columns'),
+                'cdata_columns' => __('XML CDATA Columns')] as $key => $label) {
+                $sections['general']['output_params_xml_' . $key] = [
+                    'label' => $label,
+                    'formElement' => in_array($key, ['header', 'footer'], true) ? 'textarea' : 'input',
+                    'notice' => __('XML column lists are comma-separated names; * selects all columns.')
+                ];
+            }
+        } else {
+            $sections['general']['output_params_format']['notice'] =
+                __('XML uses the destination preset automatically. Use a .xml file name.');
+        }
+        if ($model->getType() === 'openai_google_compatible') {
+            $sections['general']['output_params_format']['options'] = [
+                ['value' => 'delimited', 'label' => __('Delimited')]
             ];
+            $sections['general']['output_params_format']['notice'] =
+                __('This destination has no supported XML preset.');
         }
         $sections['general']['output_params_delimiter_other'] = ['label' => __('Other Delimiter')];
         if ($model->getType() === 'generic') {
@@ -354,15 +366,15 @@ class Fields
     {
         $notes = [
             // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
-            'meta_catalog' => (string)__('Generate and review the TSV file, then add its public URL as a scheduled data feed in Meta Commerce Manager. Schedule generation before Meta fetches it. Review condition, brand, GTIN/MPN, and variant mappings in Columns Map. Match feed IDs to your Meta Pixel or Conversions API content IDs. This template does not configure tracking or synchronize orders.'),
+            'meta_catalog' => (string)__('Generate and review the TSV or XML file, then add its public URL as a scheduled data feed in Meta Commerce Manager. Schedule generation before Meta fetches it. Review condition, brand, GTIN/MPN, and variant mappings in Columns Map. Match feed IDs to your Meta Pixel or Conversions API content IDs. This template does not configure tracking or synchronize orders.'),
             // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
-            'microsoft_merchant_center' => (string)__('Generate and review the tab-delimited TXT file. In Microsoft Merchant Center, create an online product feed and choose Automatically download file from URL. Use a public URL and schedule generation before the fetch. Match the store domain and target currency. Review identifiers, tax treatment, apparel fields, and shipping requirements for your target country; shipping is required for Austria and Germany. This template does not configure UET tracking or synchronize orders.'),
+            'microsoft_merchant_center' => (string)__('Generate and review the tab-delimited TXT or XML file. In Microsoft Merchant Center, create an online product feed and choose Automatically download file from URL. Use a public URL and schedule generation before the fetch. Match the store domain and target currency. Review identifiers, tax treatment, apparel fields, and shipping requirements for your target country; shipping is required for Austria and Germany. This template does not configure UET tracking or synchronize orders.'),
             // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
-            'tiktok_catalog' => (string)__('Generate and review the CSV file, then add its public URL through Data Feed Schedule in TikTok Ads Manager > Assets > Catalog. Match the catalog currency and targeting location. Schedule generation before the fetch and keep sale prices current; TikTok does not use sale_price_effective_date to expire discounts. Match sku_id values to your TikTok Pixel content IDs. Review brand, identifiers, images, and variant mappings. This template does not configure tracking or synchronize TikTok Shop orders.'),
+            'tiktok_catalog' => (string)__('Generate and review the CSV or XML file, then add its public URL through Data Feed Schedule in TikTok Ads Manager > Assets > Catalog. Match the catalog currency and targeting location. Schedule generation before the fetch and keep sale prices current; TikTok does not use sale_price_effective_date to expire discounts. Match sku_id values to your TikTok Pixel content IDs. Review brand, identifiers, images, and variant mappings. This template does not configure tracking or synchronize TikTok Shop orders.'),
             // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
             'openai_google_compatible' => (string)__('Confirm the Google-compatible profile with OpenAI before uploading. Register the merchant name and supported markets, map brand and real GTIN/MPN identifiers, and supply availability_date for preorders and backorders. Upload only products intended for discovery: search opt-out columns do not work in this profile. Generate full snapshots at least daily and use the agreed SFTP destination with a stable filename. Expiration and sale dates are metadata, not automatic removal or sale scheduling. This template does not enable checkout or account access.'),
             // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
-            'pinterest_catalog' => (string)__('Generate and review the TSV file. In Pinterest Catalogs and product groups, add a data source with its public URL and choose TSV. Review country, language, currency, and claimed website before creating Pins. Schedule generation before the daily fetch; hosted URLs must use port 80 or 443. Use clear primary images at least 1000 by 1500 pixels and change image URLs when replacing images. Keep variant group IDs and tracking IDs consistent. This template does not configure the Pinterest tag or synchronize orders.'),
+            'pinterest_catalog' => (string)__('Generate and review the TSV or XML file. In Pinterest Catalogs and product groups, add a data source with its public URL and choose the matching file format. Review country, language, currency, and claimed website before creating Pins. Schedule generation before the daily fetch; hosted URLs must use port 80 or 443. Use clear primary images at least 1000 by 1500 pixels and change image URLs when replacing images. Keep variant group IDs and tracking IDs consistent. This template does not configure the Pinterest tag or synchronize orders.'),
         ];
         return $notes[$type] ?? '';
     }

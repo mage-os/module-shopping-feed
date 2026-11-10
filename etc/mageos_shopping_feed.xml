@@ -904,11 +904,15 @@
         <delimiter_other><![CDATA[]]></delimiter_other>
         <encoding><![CDATA[UTF-8]]></encoding>
         <format>delimited</format>
-        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><products>]]></xml_header>
-        <xml_item>product</xml_item>
-        <xml_footer><![CDATA[</products>]]></xml_footer>
-        <xml_optional_columns/>
+        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><rss xmlns:g="http://base.google.com/ns/1.0" version="2.0"><channel><title>{{title}}</title><link>{{link}}</link><description>{{title}}</description>]]></xml_header>
+        <xml_item>item</xml_item>
+        <xml_footer><![CDATA[</channel></rss>]]></xml_footer>
+        <xml_optional_columns>*</xml_optional_columns>
         <xml_cdata_columns/>
+        <xml_preset>rss</xml_preset>
+        <xml_field_aliases>{}</xml_field_aliases>
+        <xml_compound_fields>{"shipping":["country","region","service","price"],"tax":["country","region","rate","tax_ship"]}</xml_compound_fields>
+        <xml_list_fields>additional_image_link</xml_list_fields>
       </output_params>
       <file>
         <feed><![CDATA[mageos_shopping_feed_%s.txt]]></feed>
@@ -1341,11 +1345,16 @@
         <delimiter_other><![CDATA[]]></delimiter_other>
         <encoding><![CDATA[UTF-8]]></encoding>
         <format>delimited</format>
-        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><products>]]></xml_header>
-        <xml_item>product</xml_item>
-        <xml_footer><![CDATA[</products>]]></xml_footer>
-        <xml_optional_columns/>
+        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><rss xmlns:g="http://base.google.com/ns/1.0" version="2.0"><channel><title>{{title}}</title><link>{{link}}</link><description>{{title}}</description>]]></xml_header>
+        <xml_item>item</xml_item>
+        <xml_footer><![CDATA[</channel></rss>]]></xml_footer>
+        <xml_optional_columns>*</xml_optional_columns>
         <xml_cdata_columns/>
+        <xml_preset>rss</xml_preset>
+        <xml_field_aliases>{}</xml_field_aliases>
+        <xml_compound_fields>{"shipping":["country","region","service","price"],"tax":["country","region","rate","tax_ship"]}</xml_compound_fields>
+        <xml_list_fields>additional_image_link</xml_list_fields>
+        <xml_unprefixed_fields>additional_image_link</xml_unprefixed_fields>
       </output_params>
       <file>
         <feed><![CDATA[mageos_meta_catalog_%s.tsv]]></feed>
@@ -1781,11 +1790,16 @@
         <delimiter_other><![CDATA[]]></delimiter_other>
         <encoding><![CDATA[UTF-8]]></encoding>
         <format>delimited</format>
-        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><products>]]></xml_header>
-        <xml_item>product</xml_item>
-        <xml_footer><![CDATA[</products>]]></xml_footer>
-        <xml_optional_columns/>
+        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><rss xmlns:g="http://base.google.com/ns/1.0" version="2.0"><channel><title>{{title}}</title><link>{{link}}</link><description>{{title}}</description>]]></xml_header>
+        <xml_item>item</xml_item>
+        <xml_footer><![CDATA[</channel></rss>]]></xml_footer>
+        <xml_optional_columns>*</xml_optional_columns>
         <xml_cdata_columns/>
+        <xml_preset>rss</xml_preset>
+        <xml_field_aliases>{}</xml_field_aliases>
+        <xml_compound_fields>{"shipping":["country","region","service","price"],"tax":["country","region","rate","tax_ship"]}</xml_compound_fields>
+        <xml_list_fields>additional_image_link</xml_list_fields>
+        <xml_unprefixed_fields>title,description,link,sale_price</xml_unprefixed_fields>
       </output_params>
       <file>
         <feed><![CDATA[mageos_pinterest_catalog_%s.tsv]]></feed>
@@ -2229,11 +2243,15 @@
         <delimiter_other><![CDATA[]]></delimiter_other>
         <encoding><![CDATA[UTF-8]]></encoding>
         <format>delimited</format>
-        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><products>]]></xml_header>
-        <xml_item>product</xml_item>
-        <xml_footer><![CDATA[</products>]]></xml_footer>
-        <xml_optional_columns/>
+        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><rss xmlns:g="http://base.google.com/ns/1.0" version="2.0"><channel><title>{{title}}</title><link>{{link}}</link><description>{{title}}</description>]]></xml_header>
+        <xml_item>item</xml_item>
+        <xml_footer><![CDATA[</channel></rss>]]></xml_footer>
+        <xml_optional_columns>*</xml_optional_columns>
         <xml_cdata_columns/>
+        <xml_preset>rss</xml_preset>
+        <xml_field_aliases>{"sku_id":"id"}</xml_field_aliases>
+        <xml_compound_fields>{}</xml_compound_fields>
+        <xml_list_fields></xml_list_fields>
       </output_params>
       <file>
         <feed><![CDATA[mageos_tiktok_catalog_%s.csv]]></feed>
@@ -2242,7 +2260,7 @@
     </default_feed_config>
   </feed>
   <feed name="microsoft_merchant_center" translate="label,description" taxonomyProvider="MageOS\ShoppingFeed\Model\Taxonomy\Type\GoogleShopping">
-    <label>Microsoft Merchant Center (TSV)</label>
+    <label>Microsoft Merchant Center</label>
     <description>Tab-delimited product catalog for Microsoft Merchant Center.</description>
     <directives>
       <directive name="directive_static_value" translate="label">
@@ -2677,11 +2695,15 @@
         <delimiter_other><![CDATA[]]></delimiter_other>
         <encoding><![CDATA[UTF-8]]></encoding>
         <format>delimited</format>
-        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><products>]]></xml_header>
-        <xml_item>product</xml_item>
-        <xml_footer><![CDATA[</products>]]></xml_footer>
-        <xml_optional_columns/>
+        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><rss xmlns:g="http://base.google.com/ns/1.0" version="2.0"><channel><title>{{title}}</title><link>{{link}}</link><description>{{title}}</description>]]></xml_header>
+        <xml_item>item</xml_item>
+        <xml_footer><![CDATA[</channel></rss>]]></xml_footer>
+        <xml_optional_columns>*</xml_optional_columns>
         <xml_cdata_columns/>
+        <xml_preset>rss</xml_preset>
+        <xml_field_aliases>{}</xml_field_aliases>
+        <xml_compound_fields>{"shipping":["country","region","service","price"],"tax":["country","region","rate","tax_ship"]}</xml_compound_fields>
+        <xml_list_fields>additional_image_link</xml_list_fields>
       </output_params>
       <file>
         <feed><![CDATA[mageos_microsoft_%s.txt]]></feed>
@@ -3392,11 +3414,15 @@
         <delimiter_other><![CDATA[]]></delimiter_other>
         <encoding><![CDATA[UTF-8]]></encoding>
         <format>delimited</format>
-        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><products>]]></xml_header>
-        <xml_item>product</xml_item>
-        <xml_footer><![CDATA[</products>]]></xml_footer>
-        <xml_optional_columns/>
+        <xml_header><![CDATA[<?xml version="1.0" encoding="UTF-8"?><rss xmlns:g="http://base.google.com/ns/1.0" version="2.0"><channel><title>{{title}}</title><link>{{link}}</link><description>{{title}}</description>]]></xml_header>
+        <xml_item>item</xml_item>
+        <xml_footer><![CDATA[</channel></rss>]]></xml_footer>
+        <xml_optional_columns>*</xml_optional_columns>
         <xml_cdata_columns/>
+        <xml_preset>rss</xml_preset>
+        <xml_field_aliases>{}</xml_field_aliases>
+        <xml_compound_fields>{"pickup_cost":["pickup_cost_flat_rate","pickup_cost_free_threshold"]}</xml_compound_fields>
+        <xml_list_fields></xml_list_fields>
       </output_params>
       <file>
         <feed><![CDATA[mageos_shopping_feed_%s.txt]]></feed>

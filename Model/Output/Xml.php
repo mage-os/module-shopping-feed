@@ -62,11 +62,46 @@ class Xml
      */
     public function row(array $fields): string
     {
-        $xml = '<' . $this->item . '>';
+        $xml = '<' . $this->item . '>' . $this->renderFields($fields) . '</' . $this->item . ">\n";
+        $this->validateDocument($this->header . $xml . $this->footer);
+        return $xml;
+    }
+
+    /**
+     * Validate even optional columns against the wrapper namespace declarations before saving.
+     *
+     * @param array<scalar> $columns
+     * @return void
+     */
+    public function validateColumns(array $columns): void
+    {
+        $markup = '';
+        foreach ($columns as $name) {
+            $this->validateName((string)$name);
+            $markup .= '<' . $name . '/>';
+        }
+        $this->validateDocument($this->header . '<' . $this->item . '>' . $markup
+            . '</' . $this->item . '>' . $this->footer);
+    }
+
+    /**
+     * Render scalar fields and explicitly nested groups without accepting raw XML values.
+     *
+     * @param array<string,mixed> $fields
+     * @return string
+     */
+    private function renderFields(array $fields): string
+    {
+        $xml = '';
         foreach ($fields as $name => $values) {
             $name = (string)$name;
             $this->validateName($name);
+            $values = MappedValue::text($values);
             foreach (is_array($values) ? $values : [$values] as $value) {
+                if (is_array($value)) {
+                    $xml .= '<' . $name . '>' . $this->renderFields($value) . '</' . $name . '>';
+                    continue;
+                }
                 if ($value !== null && !is_scalar($value)) {
                     throw new LocalizedException(__('XML values must be scalar: %1.', $name));
                 }
@@ -76,7 +111,7 @@ class Xml
                 }
                 $characters = '/^[\x{9}\x{A}\x{D}\x{20}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]*$/uD';
                 if (preg_match($characters, $value) !== 1) {
-                    throw new LocalizedException(__('Invalid UTF-8 or XML character in column %1.', $name));
+                    throw new InvalidValueException(__('Invalid UTF-8 or XML character in column %1.', $name));
                 }
                 // phpcs:ignore Magento2.Functions.DiscouragedFunction -- XML requires ENT_XML1, not HTML escaping.
                 $text = htmlspecialchars($value, ENT_XML1 | ENT_QUOTES, 'UTF-8');
@@ -86,9 +121,6 @@ class Xml
                 $xml .= '<' . $name . '>' . $text . '</' . $name . '>';
             }
         }
-        $xml .= '</' . $this->item . ">\n";
-        // Namespace declarations belong to the header and must cover mapped qualified names too.
-        $this->validateDocument($this->header . $xml . $this->footer);
         return $xml;
     }
 
@@ -113,7 +145,12 @@ class Xml
      */
     private function validateName(string $name): void
     {
-        if (!preg_match('/^[A-Za-z_][A-Za-z0-9_.-]*(?::[A-Za-z_][A-Za-z0-9_.-]*)?$/D', $name)) {
+        // XML 1.0 (fifth edition) NCName ranges, with at most one namespace separator.
+        $start = 'A-Z_a-z\\x{C0}-\\x{D6}\\x{D8}-\\x{F6}\\x{F8}-\\x{2FF}\\x{370}-\\x{37D}'
+            . '\\x{37F}-\\x{1FFF}\\x{200C}-\\x{200D}\\x{2070}-\\x{218F}\\x{2C00}-\\x{2FEF}'
+            . '\\x{3001}-\\x{D7FF}\\x{F900}-\\x{FDCF}\\x{FDF0}-\\x{FFFD}\\x{10000}-\\x{EFFFF}';
+        $part = '[' . $start . '][' . $start . '0-9.\\x{B7}\\x{300}-\\x{36F}\\x{203F}-\\x{2040}-]*';
+        if (preg_match('/^' . $part . '(?::' . $part . ')?$/uD', $name) !== 1) {
             throw new LocalizedException(__('Invalid XML element name: %1.', $name));
         }
     }

@@ -1,6 +1,6 @@
 # Mage-OS Shopping Feed
 
-Unreleased: XML output supports configurable document wrappers, optional tags, and CDATA. See [XML output](docs/wiki/XML-Output.md).
+Unreleased: XML output includes automatic presets for Google Shopping, Google Local Inventory, Microsoft, Pinterest, TikTok, and Meta. Generic feeds retain configurable wrappers, optional tags, and CDATA. See [XML output](docs/wiki/XML-Output.md).
 
 [![Check Extension on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml?query=branch%3Amain)
 

@@ -89,3 +89,33 @@ test('framework value links preserve null parameters before form initialization'
         assert.equal(field.getInitialValue(), stored);
     }
 });
+
+const dependentInput = amd(path.join(root, 'view/adminhtml/web/js/form/dependent-input.js'), [base]);
+const nativeTextarea = amd(path.join(ui, 'view/base/web/js/form/element/textarea.js'), [base]);
+const dependentTextarea = amd(path.join(root, 'view/adminhtml/web/js/form/dependent-textarea.js'), [{
+    extend: definition => ({...nativeTextarea, ...definition,
+        defaults: {...nativeTextarea.defaults, ...definition.defaults}})
+}]);
+test('XML wrappers use a textarea template that preserves multiline values', () => {
+    assert.equal(dependentTextarea.defaults.elementTmpl, 'ui/form/element/textarea');
+    assert.equal(dependentTextarea.defaults.cols, 15);
+    assert.equal(dependentTextarea.defaults.rows, 2);
+    const template = fs.readFileSync(path.join(ui, 'view/base/web/templates/form/element/textarea.html'), 'utf8');
+    assert.match(template, /<textarea/);
+    assert.match(template, /value: value/);
+});
+test('Other Delimiter follows both its delimiter selection and the output format visibility', () => {
+    const component = Object.assign({}, dependentInput, {
+        showWhen: 'other', parentVisible: true, visible: observable(false)
+    });
+    component.updateVisibility('other');
+    assert.equal(component.visible(), true);
+    component.updateParentVisibility(false);
+    assert.equal(component.visible(), false);
+    component.updateVisibility('other');
+    assert.equal(component.visible(), false);
+    component.updateParentVisibility(true);
+    assert.equal(component.visible(), true);
+    component.updateVisibility(',');
+    assert.equal(component.visible(), false);
+});

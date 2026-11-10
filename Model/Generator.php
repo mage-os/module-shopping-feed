@@ -499,9 +499,7 @@ class Generator extends DataObject
     public function getCollection()
     {
         if ($this->collection === null) {
-            if ($this->isTestMode()) {
-                $this->collectionProvider->setTestSku($this->testSku);
-            }
+            $this->collectionProvider->setTestSku($this->testSku);
             $this->collection = $this->collectionProvider
                 ->getCollection($this->feed);
 
@@ -522,9 +520,7 @@ class Generator extends DataObject
     public function getTotalItems()
     {
         if (!$this->hasData('total_items')) {
-            if ($this->isTestMode()) {
-                $this->collectionProvider->setTestSku($this->testSku);
-            }
+            $this->collectionProvider->setTestSku($this->testSku);
             $countCollection = $this->collectionProvider->getCollection($this->feed);
             $countCollection->getSelect()->reset(\Magento\Framework\DB\Select::GROUP);
             $this->setData('total_items', $countCollection->getSize());
@@ -558,7 +554,18 @@ class Generator extends DataObject
                 && ($productAdapter instanceof \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable
                     || $productAdapter->getParentAdapter()
                         instanceof \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable);
-            $this->writeFeed($row, true, $requiresItemGroupId);
+            try {
+                $this->writeFeed($row, true, $requiresItemGroupId);
+            } catch (Output\InvalidValueException $exception) {
+                $this->updateCountSkip();
+                $identifier = $row['id'] ?? $row['sku_id'] ?? '';
+                $this->getLogger()->warning(sprintf(
+                    'Skipped XML row %s for product SKU %s: %s Review Columns Map and product data.',
+                    is_scalar($identifier) ? (string)$identifier : '(no id)',
+                    $productAdapter->getProduct()?->getSku() ?? '(unknown)',
+                    $exception->getMessage()
+                ));
+            }
         }
         return $this;
     }
@@ -610,8 +617,8 @@ class Generator extends DataObject
                 default => [$this->metaCatalogValidator, 'Meta Catalog'],
             };
             $validation = ($isPinterestFeed || $isOpenAiFeed)
-                ? $validator->validate($fields, $requiresItemGroupId)
-                : $validator->validate($fields);
+                ? $validator->validate(Output\MappedValue::text($fields), $requiresItemGroupId)
+                : $validator->validate(Output\MappedValue::text($fields));
             $identifier = $fields[$isTikTokFeed ? 'sku_id' : 'id'] ?? null;
             $id = is_scalar($identifier) ? (string)$identifier : '(no id)';
             if ($validation['errors']) {
@@ -652,7 +659,7 @@ class Generator extends DataObject
             $xml = $addNewLine ? $writer->row($output) : $writer->header();
             if ($this->isTestMode()) {
                 $preview = [];
-                foreach ($output as $name => $values) {
+                foreach (Output\MappedValue::text($output) as $name => $values) {
                     foreach (is_array($values) ? $values : [$values] as $value) {
                         $preview[] = ['label' => $name, 'value' => $value];
                     }
@@ -976,20 +983,7 @@ class Generator extends DataObject
     private function getXmlWriter(): Output\Xml
     {
         if ($this->xmlWriter === null) {
-            $columns = fn (string $key): array => array_values(array_filter(array_map(
-                'trim',
-                explode(',', (string)$this->feed->getConfig('output_params_' . $key, ''))
-            ), static fn (string $value): bool => $value !== ''));
-            $this->xmlWriter = new Output\Xml(
-                (string)$this->feed->getConfig(
-                    'output_params_xml_header',
-                    '<?xml version="1.0" encoding="UTF-8"?><products>'
-                ),
-                (string)$this->feed->getConfig('output_params_xml_item', 'product'),
-                (string)$this->feed->getConfig('output_params_xml_footer', '</products>'),
-                $columns('xml_optional_columns'),
-                $columns('xml_cdata_columns')
-            );
+            $this->xmlWriter = $this->feed->createXmlWriter();
         }
         return $this->xmlWriter;
     }

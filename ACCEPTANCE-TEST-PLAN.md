@@ -428,3 +428,23 @@ Live admin and database acceptance remains pending. On a disposable Magento inst
 4. Publish a valid feed, then try malformed wrappers or an undeclared namespace. Generation must fail and preserve the published file.
 5. Run Test SKU; verify mapped values still render. Switch to delimited output, save/reload, and compare the generated CSV/TSV with the prior output.
 6. Configure the same XML options in an extension preset and create a feed from it. Verify defaults survive save/reload and generation.
+
+### SHO-1 destination XML presets
+
+For each of Google Shopping, Google Local Inventory, Microsoft, Pinterest, TikTok, and Meta, select XML and an `.xml` filename, save/reload, and generate without entering wrappers or renaming columns. Verify RSS/channel/item structure, namespace-qualified fields, channel metadata from the selected store, and empty-value omission. Repeat on a feed with saved generic wrappers and confirm the canonical preset wins.
+
+Verify shipping and tax nested groups for Google, Microsoft, Pinterest, and Meta, repeated additional images, TikTok's sku_id to g:id mapping, Local Inventory store codes and quantities, and unchanged delimited output when switching back. Confirm that only generic feeds show manual XML structure settings. OpenAI must not offer XML or generate it through a saved XML setting.
+
+Local automated checks cover these serialization and configuration paths. Browser/database acceptance and real destination sample ingestion remain pending. Meta's current documentation blocked access; the TikTok XML template download requires Ads Manager access, so both still need direct provider sample confirmation.
+
+### SHO-1 independent-review regressions
+
+- Put a single XML-invalid control character in one synthetic product description. Generate and preview: other products publish, skipped count increases, and Log Output identifies the SKU and column. Repeat with a bad product in the last cron batch.
+- Use a shipping service title containing both a comma and colon. Verify one intact nested service value, including persistent-cache reuse and switching formats.
+- Verify that an additional-image URL containing a comma remains one URL in XML.
+- Edit and save multiline XML header/footer fields in Admin. Verify exact stored newlines and successful generation.
+- Reject invalid element names, undeclared prefixes, malformed wrappers, DTDs, and whitespace before the declaration on save; accept valid Unicode names.
+- Toggle XML/Delimited and Other Delimiter; show only applicable settings. OpenAI must not offer XML, including with a historical invalid stored selection.
+- Compare Meta/Pinterest namespaces to the provider samples; verify configured Local Inventory pickup-cost nesting without inventing merchant values.
+
+See [the 2026-11-10 fixes and retest report](docs/reviews/2026-11-10-sho-1-independent-findings-fixed.md) for executed results and boundaries.

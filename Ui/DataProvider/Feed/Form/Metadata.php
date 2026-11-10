@@ -134,8 +134,24 @@ class Metadata
             'other'
         );
 
+        foreach (['delimiter', 'enclose_cell', 'enclose_escape', 'default_value', 'encoding'] as $key) {
+            if (isset($meta['general']['children']['output_params_' . $key])) {
+                $this->dependency(
+                    $meta['general']['children']['output_params_' . $key],
+                    'general.output_params_format',
+                    'delimited'
+                );
+            }
+        }
+        $other = &$meta['general']['children']['output_params_delimiter_other']['arguments']['data']['config'];
+        $other['imports']['parentVisible'] = '${ $.ns }.${ $.ns }.general.output_params_delimiter:visible';
+        $other['imports']['__disableTmpl']['parentVisible'] = false;
+
         $columns = $this->select(__('Column'), 'Columns');
         foreach (['header', 'item', 'footer', 'optional_columns', 'cdata_columns'] as $key) {
+            if (!isset($meta['general']['children']['output_params_xml_' . $key])) {
+                continue;
+            }
             $this->dependency(
                 $meta['general']['children']['output_params_xml_' . $key],
                 'general.output_params_format',
@@ -317,7 +333,8 @@ class Metadata
         }
         // Native selects otherwise replace an unavailable stored option with their first option.
         if (in_array($config['formElement'], ['select', 'multiselect'], true)) {
-            $config['component'] = 'MageOS_ShoppingFeed/js/form/' . $config['formElement'];
+            $config['component'] = ($scope === 'config.output_params_format'
+                ? 'Magento_Ui/js/form/element/' : 'MageOS_ShoppingFeed/js/form/') . $config['formElement'];
         }
         return $this->node($config);
     }
@@ -374,7 +391,7 @@ class Metadata
         $config = &$field['arguments']['data']['config'];
         $element = $config['formElement'] ?? 'input';
         $config['component'] = 'MageOS_ShoppingFeed/js/form/dependent-'
-            . ($element === 'textarea' ? 'input' : $element);
+            . $element;
         $config['imports']['dependency'] = '${ $.ns }.${ $.ns }.' . $source . ':value';
         $config['imports']['__disableTmpl']['dependency'] = false;
         $config['showWhen'] = $value;

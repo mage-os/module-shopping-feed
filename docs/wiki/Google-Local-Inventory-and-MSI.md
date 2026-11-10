@@ -100,3 +100,11 @@ Use at least two enabled sources and one reservation. Confirm:
 * Merchant Center accepts a non-serving test file.
 
 The earlier nine controlled simple-product scenarios are recorded in `docs/reviews/2026-10-02-docker-operations-acceptance.md`. Candidate `133af71` adds fifteen native configurable MSI scenarios per Magento Open Source 2.4.8/2.4.9 profile: parent-only, child-only, and combined modes across baseline, reservation, compensation, source-item disablement, and restoration. Native stock APIs and indexers establish the custom stock. Quantities, availability, source filtering, and duplicate protection pass. See `docs/reviews/2026-10-03-local-acceptance.md` for the exact data, corrections, and cleanup. Checkout-order placement, asynchronous consumers, and recipient ingestion remain separate checks.
+
+## XML and optional pickup data (unreleased SHO-1)
+
+Select **XML** in **General > Output Format** and use an `.xml` file name. The Local Inventory preset supplies the RSS structure. Default inventory mappings do not enable pickup or infer a store's pickup policy.
+
+For pickup-enabled products, add `pickup_sla` and any applicable `pickup_method` in **Columns Map** using values that match your store's service. Map `pickup_cost` as `flat_rate:free_threshold`, including currencies, for example `3 EUR:20 EUR`. Use `3 EUR:` when there is no free threshold. XML automatically nests these as `g:pickup_cost_flat_rate` and `g:pickup_cost_free_threshold` inside `g:pickup_cost`; blank subfields are omitted.
+
+Google's pickup-cost requirement applies to pickup-enabled products in the UK, EU, and EFTA when the website charges pickup fees, rather than every Local Inventory feed. Check the [current Local Inventory specification](https://support.google.com/merchants/answer/14819809?hl=en-GB) and [pickup-cost attribute](https://support.google.com/merchants/answer/16988704?hl=en). The XML structure does not supply or validate the merchant's pickup policy.

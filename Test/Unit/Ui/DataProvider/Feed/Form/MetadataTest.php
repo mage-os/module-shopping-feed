@@ -46,7 +46,7 @@ class MetadataTest extends TestCase
         $meta = $metadata->get($feed);
         $xmlHeader = $meta['general']['children']['output_params_xml_header']['arguments']['data']['config'];
         self::assertSame('textarea', $xmlHeader['formElement']);
-        self::assertSame('MageOS_ShoppingFeed/js/form/dependent-input', $xmlHeader['component']);
+        self::assertSame('MageOS_ShoppingFeed/js/form/dependent-textarea', $xmlHeader['component']);
         self::assertSame('xml', $xmlHeader['showWhen']);
         $children = $meta['promotions']['children']['rule_12']['children'];
         foreach (['date_from', 'date_to', 'display_from', 'display_to'] as $key) {

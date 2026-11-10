@@ -3571,12 +3571,6 @@ parameters:
 			path: Model/Product/Shipping.php
 
 		-
-			message: '#^Method MageOS\\ShoppingFeed\\Model\\Product\\Shipping\:\:getFormatedValue\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: Model/Product/Shipping.php
-
-		-
 			message: '#^Method MageOS\\ShoppingFeed\\Model\\Product\\Shipping\:\:getShippingTerritory\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1

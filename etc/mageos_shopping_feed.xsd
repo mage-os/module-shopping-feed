@@ -205,6 +205,11 @@
                                     <xs:element name="xml_footer" type="xs:string" minOccurs="0"/>
                                     <xs:element name="xml_optional_columns" type="xs:string" minOccurs="0"/>
                                     <xs:element name="xml_cdata_columns" type="xs:string" minOccurs="0"/>
+                                    <xs:element name="xml_preset" type="xs:string" minOccurs="0"/>
+                                    <xs:element name="xml_field_aliases" type="xs:string" minOccurs="0"/>
+                                    <xs:element name="xml_compound_fields" type="xs:string" minOccurs="0"/>
+                                    <xs:element name="xml_list_fields" type="xs:string" minOccurs="0"/>
+                                    <xs:element name="xml_unprefixed_fields" type="xs:string" minOccurs="0"/>
                                 </xs:sequence>
                             </xs:complexType>
                         </xs:element>

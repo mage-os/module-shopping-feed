@@ -10,7 +10,10 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class XmlConfigurationTest extends TestCase
 {
-    /** @param array<string,mixed> $settings */
+    /**
+     * @param array<string,mixed> $settings
+     * @dataProvider settings
+     */
     #[\PHPUnit\Framework\Attributes\DataProvider('settings')]
     public function testSaveValidation(string $type, array $settings, bool $valid): void
     {

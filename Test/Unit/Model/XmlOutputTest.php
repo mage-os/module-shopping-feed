@@ -47,6 +47,7 @@ class XmlOutputTest extends TestCase
         $writer->row(['description' => "bad\x0Btext"]);
     }
 
+    /** @dataProvider invalidColumns */
     #[\PHPUnit\Framework\Attributes\DataProvider('invalidColumns')]
     public function testValidateColumnsRejectsInvalidOrUndeclaredNames(string $name): void
     {

@@ -11,7 +11,9 @@ All notable changes to this project will be documented here.
 
 ### Fixed
 
+- Restore Static Value as the default for new Columns Map and Replace Empty Values rows across all feed types, so an empty parameter does not create an invalid conditional rule (SHO-2).
 - Preserve exact condition values and null clearing; reject unsupported or malformed imported rules. Handle Unicode SKU wildcards and calendar-day comparisons for Date and Time attributes. Keep validation failures in the correct feed log, count repeated candidate checks once, and cache parent lookups within each generation (SHO-3).
+- Render the Conditional Value editor only after its data exists, so switching an existing mapping no longer leaves its controls blank in Magento Admin (SHO-2).
 
 ## 1.2.5 - 2026-10-22
 

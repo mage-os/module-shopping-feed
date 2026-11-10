@@ -52,6 +52,8 @@ For the 1.2.0 UI Component editor, use single-line output names without tabs or 
 
 The unreleased source adds **Conditional Value** to all eight feed types. In **Columns Map**, select it as the source, then add between 1 and 50 product conditions. Choose **All conditions** or **Any condition** and configure both **If matching** and **Otherwise**. The same directive is available in **Replace Empty Values**.
 
+New rows in both sections default to **Static Value** and allow an empty parameter. Select **Conditional Value** explicitly when you need a rule; a conditional rule requires at least one condition.
+
 Each output supports:
 
 | Output type | Result |

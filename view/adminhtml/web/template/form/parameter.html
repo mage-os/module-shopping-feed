@@ -12,7 +12,7 @@
     <!-- ko if: kind() === 'multiselect' -->
     <select class="admin__control-multiselect" multiple="multiple" size="5" data-bind="options: parameterOptions, optionsText: 'label', optionsValue: 'value', selectedOptions: value, disable: disabled, attr: {id: uid}"></select>
     <!-- /ko -->
-    <!-- ko if: kind() === 'conditional' -->
+    <!-- ko if: kind() === 'conditional' && conditionalEditor() -->
     <div data-bind="template: {name: 'MageOS_ShoppingFeed/form/conditional-value', data: conditionalEditor}"></div>
     <!-- /ko -->
     <!-- ko if: kind() === 'unsupported' -->

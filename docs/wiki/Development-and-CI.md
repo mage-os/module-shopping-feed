@@ -70,6 +70,8 @@ Run `MAGENTO_ROOT=/path/to/magento node --test dev/tests/magento-ui-form.test.cj
 
 Run `MAGENTO_ROOT=/path/to/magento node --test dev/tests/product-selection-editor.test.cjs` for the shared SHO-2/SHO-3 editor using the platform's actual Knockout observables. The SHO-3 installed-store acceptance and browser save/reopen evidence are recorded in `docs/reviews/2026-11-10-sho-3-product-selection.md`.
 
+Conditional Value transitions also need Magento's remote template engine in a real browser. Follow `dev/tests/browser/README.md` for the self-running regression and the separate installed Admin save, reopen, and generation checks. These checks are not included in the Node suite or current CI.
+
 The consolidated validation checks package and module identity, feed configuration, Magento XML, schema whitelist alignment, isolated runtime identifiers, storefront integration markers, and selected regression-sensitive behaviors. Wiki validation checks navigation, page baselines, and known legacy instructions.
 
 ## Disposable database regressions

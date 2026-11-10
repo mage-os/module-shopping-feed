@@ -69,6 +69,9 @@ class Generator extends DataObject
      */
     protected $skippedData = [];
 
+    /** @var array<string, true> Selection exclusions in the current collection product. */
+    private array $selectionExclusions = [];
+
     /**
      * @var \Magento\Catalog\Model\ResourceModel\Product\Collection|null
      */
@@ -215,6 +218,7 @@ class Generator extends DataObject
      * @param Feed\Validation\PinterestCatalog $pinterestCatalogValidator
      * @param Feed\Validation\OpenAiGoogleCompatible $openAiGoogleCompatibleValidator
      * @param Logger\Rotator $logRotator
+     * @param \MageOS\ShoppingFeed\Model\ProductSelection\Selection $productSelection
      * @param Generator\Queue|null $queue
      * @param string|null $testSku
      * @param array $data
@@ -245,6 +249,7 @@ class Generator extends DataObject
         \MageOS\ShoppingFeed\Model\Feed\Validation\PinterestCatalog $pinterestCatalogValidator,
         \MageOS\ShoppingFeed\Model\Feed\Validation\OpenAiGoogleCompatible $openAiGoogleCompatibleValidator,
         \MageOS\ShoppingFeed\Model\Logger\Rotator $logRotator,
+        private \MageOS\ShoppingFeed\Model\ProductSelection\Selection $productSelection,
         ?\MageOS\ShoppingFeed\Model\Generator\Queue $queue = null,
         $testSku = null,
         $data = []
@@ -303,6 +308,21 @@ class Generator extends DataObject
             throw new FeedException(
                 new \Magento\Framework\Phrase('Generator must be created using existing feed - no Feed Id found!')
             );
+        }
+
+        // Bind the shared logger before validation or events can fail. Each run owns its handler.
+        $this->unsetData('feed_log_file');
+        $this->logger->resetHandler();
+        $logger = $this->getLogger();
+        try {
+            $this->productSelection->beginRun($this->feed->getData(
+                'config',
+                \MageOS\ShoppingFeed\Model\ProductSelection\Selection::CONFIG_KEY
+            ));
+        } catch (\Magento\Framework\Exception\LocalizedException $exception) {
+            $logger->error($exception->getMessage());
+            $this->updateStatus(\MageOS\ShoppingFeed\Model\Feed\Source\Status::STATUS_ERROR);
+            throw $exception;
         }
 
         $this->eventManager->dispatch(
@@ -402,6 +422,7 @@ class Generator extends DataObject
      */
     public function processProductCallback($args)
     {
+        $this->selectionExclusions = [];
         $row = $args['row'];
 
         // Skip if product type is not enabled
@@ -986,6 +1007,28 @@ class Generator extends DataObject
     }
 
     /**
+     * Count each rejected output candidate once, even when an adapter evaluates it repeatedly.
+     *
+     * @param int|string|null $productId
+     * @param int|string|null $parentId
+     * @return void
+     */
+    public function addSelectionExclusion($productId, $parentId = null): void
+    {
+        $key = $productId . ':' . $parentId;
+        if (isset($this->selectionExclusions[$key])) {
+            return;
+        }
+        $this->selectionExclusions[$key] = true;
+        $reason = 'product selection conditions did not match.';
+        if ($parentId !== null) {
+            $reason .= ' Parent context: ' . $parentId . '.';
+        }
+        $this->addSkippedProduct($reason, $productId);
+        $this->updateCountSkip();
+    }
+
+    /**
      * Collect a skipped product id under its skip reason for the next progress log.
      *
      * @param string $reason
@@ -1060,7 +1103,7 @@ class Generator extends DataObject
     {
         if (!$this->hasData('feed_log_file') && !$this->isTestMode()) {
             $feedLogFile = '/' . $this->outputPath->getLogFile($this->feed, false);
-            $this->logger->addHandler($feedLogFile, $this->scopeConfig->getValue(self::XML_LOG_LEVEL));
+            $this->logger->setHandler($feedLogFile, $this->scopeConfig->getValue(self::XML_LOG_LEVEL));
             $this->setData('feed_log_file', $feedLogFile);
         }
         return $this->logger;

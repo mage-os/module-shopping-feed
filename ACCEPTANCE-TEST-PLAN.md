@@ -415,3 +415,19 @@ No open High or Medium defect may be accepted for the first production release w
 | Release owner | | Approve / Reject | | |
 
 Approval applies only to the recorded commit and tested configuration. Any code change after sign-off requires affected checks to be rerun and a new release decision.
+
+
+## SHO-3 product selection (unreleased)
+
+Use synthetic products and feeds without schedules or uploads. Existing filters must remain in effect.
+
+- Confirm an existing feed without selection conditions exports the same rows.
+- In Product Filters, add All/Any conditions on arbitrary product attributes, SKU wildcards, image presence, visibility, and parent status. Save, reopen, and check the exact condition scopes, operators, and values.
+- Generate matching and nonmatching products. Check raw store-view values, missing attributes, option IDs, dates, multiselect values, wildcard case sensitivity, and blank/`no_selection` images.
+- Check configurable, grouped, and bundle children independently of the parent row. A parent failing selection must not suppress a matching child. A rejected child must not be marked processed by duplicate tracking.
+- For standalone rows, check enabled and disabled direct parents, multiple parents, and absent parents. All parent conditions must match the same parent; an active generation parent takes precedence over other links.
+- Verify malformed saved/imported rules fail before persistence and malformed stored rules fail before generation, including an empty catalog. Remove all conditions and verify the filter is disabled.
+- Combine SHO-3 selection and SHO-2 Conditional Value in one feed. Verify actual exported rows and values, preview, and a resumed batch.
+- Confirm read-only roles cannot edit conditions and unavailable saved attribute choices remain visible for correction.
+
+The local implementation record is [SHO-3 verification](docs/reviews/2026-11-10-sho-3-product-selection.md). It distinguishes completed checks from untested platforms and workloads.

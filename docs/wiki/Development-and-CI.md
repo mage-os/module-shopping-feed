@@ -68,6 +68,8 @@ MAGENTO_ROOT=/path/to/magento /path/to/magento/vendor/bin/phpunit -c phpunit.xml
 
 Run `MAGENTO_ROOT=/path/to/magento node --test dev/tests/magento-ui-form.test.cjs` for promotion-date conversion and directive initialization against the installed platform's actual date, abstract-field, and value-link components. This separate suite needs a framework checkout and covers three Admin locale formats plus preservation of null directive parameters.
 
+Run `MAGENTO_ROOT=/path/to/magento node --test dev/tests/product-selection-editor.test.cjs` for the shared SHO-2/SHO-3 editor using the platform's actual Knockout observables. The SHO-3 installed-store acceptance and browser save/reopen evidence are recorded in `docs/reviews/2026-11-10-sho-3-product-selection.md`.
+
 The consolidated validation checks package and module identity, feed configuration, Magento XML, schema whitelist alignment, isolated runtime identifiers, storefront integration markers, and selected regression-sensitive behaviors. Wiki validation checks navigation, page baselines, and known legacy instructions.
 
 ## Disposable database regressions

@@ -53,7 +53,9 @@ class Metadata
         }
         $keys = array_merge([], ...$sectionKeys);
         $keys = array_unique(
-            array_merge($keys, FeedFormData::ROW_CONFIG, ['categories_provider_taxonomy_by_category'])
+            array_merge($keys, FeedFormData::ROW_CONFIG, [
+                'categories_provider_taxonomy_by_category', 'filters_product_conditions'
+            ])
         );
         if ($feed->getType() === 'google_shopping') {
             $keys[] = 'promotions_provider_widget';
@@ -140,6 +142,18 @@ class Metadata
             'elementTmpl' => 'MageOS_ShoppingFeed/form/parameter', 'definitions' => $this->parameters->get($feed),
             'imports' => ['attribute' => '${ $.parentName }.attribute:value', '__disableTmpl' => ['attribute' => false]]
         ];
+        $meta['filters']['children']['filters_product_conditions'] = $this->field(
+            'config.filters_product_conditions',
+            [
+                'label' => __('Product selection conditions'),
+                'component' => 'MageOS_ShoppingFeed/js/form/product-selection',
+                'elementTmpl' => 'MageOS_ShoppingFeed/form/product-selection',
+                'definition' => ($parameter['definitions']['directive_conditional_value'] ?? [])
+                    + ['selection' => true],
+                'sortOrder' => 35,
+                'notice' => __('Only matching output products are included. Leave conditions empty to disable.')
+            ]
+        );
         $mapping = ['order' => ['label' => __('Order')],
             'column' => ['label' => __('Column'), 'required' => true],
             'attribute' => $this->select(__('Attribute or Directive'), 'DirectivesAndAttributes')

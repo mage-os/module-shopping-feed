@@ -602,6 +602,22 @@ class FeedTest extends ModelFramework
         $this->assertInstanceOf('MageOS\ShoppingFeed\Model\Feed', $this->feed->afterSave());
     }
 
+    public function testNumericLookingConditionEditsArePersistedExactly(): void
+    {
+        $before = ['conditions' => [['attribute' => 'sku', 'value' => '00123']]];
+        $after = ['conditions' => [['attribute' => 'sku', 'value' => '123']]];
+        $this->feed->setData('config', new \Magento\Framework\DataObject([
+            'filters_product_conditions' => $after
+        ]));
+        $this->feed->setData('schedules', []);
+        $this->configMock->method('getData')->willReturnCallback(
+            static fn ($key) => $key === 'path' ? 'filters_product_conditions' : $before
+        );
+        $this->configMock->expects(self::once())->method('setData')->with('value', $after)->willReturnSelf();
+        $this->configMock->expects(self::once())->method('save');
+        $this->feed->afterSave();
+    }
+
     public function testSaveSchedules()
     {
         $this->feed->setId($this->feedId);

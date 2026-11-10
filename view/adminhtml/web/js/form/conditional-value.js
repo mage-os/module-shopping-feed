@@ -5,6 +5,7 @@ define(['ko', './preserve-options', 'mage/translate'], function (ko, preserve, $
         var data = stored && typeof stored === 'object' && !Array.isArray(stored) ? stored : {},
             choices = definition.conditions || {},
             editor = {
+                selection: !!definition.selection,
                 aggregator: ko.observable(data.aggregator || 'all'),
                 conditions: ko.observableArray([]),
                 attributes: definition.attributes || [],
@@ -32,17 +33,23 @@ define(['ko', './preserve-options', 'mage/translate'], function (ko, preserve, $
             return {type: value.type(), value: value.value(), attribute: value.attribute(), percent: value.percent()};
         }
         function save() {
-            onChange({
+            var result = {
                 aggregator: editor.aggregator(),
                 conditions: editor.conditions().map(function (row) {
-                    return {attribute: row.attribute(), operator: row.operator(), value: row.value()};
-                }),
-                if_true: plainBranch(editor.ifTrue),
-                if_false: plainBranch(editor.ifFalse)
-            });
+                    var value = {attribute: row.attribute(), operator: row.operator(), value: row.value()};
+                    if (editor.selection || row.scope() !== 'product') { value.scope = row.scope(); }
+                    return value;
+                })
+            };
+            if (!editor.selection) {
+                result.if_true = plainBranch(editor.ifTrue);
+                result.if_false = plainBranch(editor.ifFalse);
+            }
+            onChange(result);
         }
         function condition(value) {
             var row = {
+                scope: ko.observable(value.scope || 'product'),
                 attribute: ko.observable(value.attribute || ''),
                 operator: ko.observable(value.operator || '=='),
                 value: ko.observable(value.value === undefined ? '' : value.value),
@@ -67,13 +74,18 @@ define(['ko', './preserve-options', 'mage/translate'], function (ko, preserve, $
                 row.value('');
                 save();
             });
+            row.scope.subscribe(save);
             row.operator.subscribe(save);
             row.value.subscribe(save);
             return row;
         }
         editor.ifTrue = branch(data.if_true);
         editor.ifFalse = branch(data.if_false);
-        editor.conditions((data.conditions || []).map(condition));
+        // Preserve legacy keyed rows for repair; every subsequent save emits a list.
+        var storedConditions = data.conditions && typeof data.conditions === 'object' ? data.conditions : [];
+        editor.conditions(Object.keys(storedConditions).map(function (key) {
+            return condition(storedConditions[key] || {});
+        }));
         editor.aggregator.subscribe(save);
         editor.addCondition = function () {
             if (editor.conditions().length < 50) {

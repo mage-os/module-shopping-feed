@@ -6,7 +6,12 @@ All notable changes to this project will be documented here.
 
 ### Added
 
+- SHO-3: Product selection by All/Any attribute conditions, with product or parent scope, SKU wildcards, base-image presence, visibility, and parent status. Shares the validated condition engine and editor with Conditional Value; existing eligibility filters remain in effect.
 - Add **Conditional Value** to every feed type, with All/Any product conditions using Magento rule comparisons, separate matching and fallback outputs, store-view attribute labels, and raw numeric percentage adjustments (SHO-2). Provide structured controls in the active Admin editor and validate configuration during save and generation.
+
+### Fixed
+
+- Preserve exact condition values and null clearing; reject unsupported or malformed imported rules. Handle Unicode SKU wildcards and calendar-day comparisons for Date and Time attributes. Keep validation failures in the correct feed log, count repeated candidate checks once, and cache parent lookups within each generation (SHO-3).
 
 ## 1.2.5 - 2026-10-22
 

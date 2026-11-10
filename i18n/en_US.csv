@@ -571,3 +571,25 @@
 "Unknown Conditional Value attribute: %1.","Unknown Conditional Value attribute: %1."
 "Use 10 to increase by 10%, or -10 to decrease by 10%. An empty source stays empty.","Use 10 to increase by 10%, or -10 to decrease by 10%. An empty source stays empty."
 "When conditions match","When conditions match"
+Has base image,Has base image
+matches wildcard,matches wildcard
+does not match wildcard,does not match wildcard
+Invalid condition scope.,Invalid condition scope.
+Has base image requires Yes or No.,Has base image requires Yes or No.
+Condition values must not exceed 4096 bytes.,Condition values must not exceed 4096 bytes.
+Product selection requires a loaded product.,Product selection requires a loaded product.
+Product selection cannot read parent relationships.,Product selection cannot read parent relationships.
+Product selection conditions,Product selection conditions
+Only matching output products are included. Leave conditions empty to disable.,Only matching output products are included. Leave conditions empty to disable.
+Read attribute from,Read attribute from
+Parent product,Parent product
+"For lists, enter comma-separated option IDs or values. For dates, use YYYY-MM-DD. SKU wildcards: * matches any number of characters; ? matches one character. Matching is case-sensitive.","For lists, enter comma-separated option IDs or values. For dates, use YYYY-MM-DD. SKU wildcards: * matches any number of characters; ? matches one character. Matching is case-sensitive."
+"A rule requires a list of between 1 and 50 conditions and All or Any.","A rule requires a list of between 1 and 50 conditions and All or Any."
+"Invalid rule condition.","Invalid rule condition."
+"Invalid condition operator for %1.","Invalid condition operator for %1."
+"Condition dates must use YYYY-MM-DD.","Condition dates must use YYYY-MM-DD."
+"Invalid product attribute.","Invalid product attribute."
+"Unknown product attribute: %1.","Unknown product attribute: %1."
+"Unsupported condition attribute: %1.","Unsupported condition attribute: %1."
+"Use option values for condition attribute: %1.","Use option values for condition attribute: %1."
+"For lists, enter comma-separated option IDs or values. Date fields, including Date and Time, compare the stored day using YYYY-MM-DD. SKU wildcards: * matches any number of characters; ? matches one Unicode character. Matching is case-sensitive.","For lists, enter comma-separated option IDs or values. Date fields, including Date and Time, compare the stored day using YYYY-MM-DD. SKU wildcards: * matches any number of characters; ? matches one Unicode character. Matching is case-sensitive."

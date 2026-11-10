@@ -231,6 +231,7 @@ class AdapterAbstract extends \Magento\Framework\DataObject
      * @param \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory
      * @param \MageOS\ShoppingFeed\Model\Inventory\Api $sourceInventoryApi
      * @param \Magento\Framework\Serialize\SerializerInterface $jsonSerializer
+     * @param \MageOS\ShoppingFeed\Model\ProductSelection\Selection $productSelection
      * @param array $data
      * @throws FeedException
      */
@@ -261,6 +262,7 @@ class AdapterAbstract extends \Magento\Framework\DataObject
         \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
         \MageOS\ShoppingFeed\Model\Inventory\Api $sourceInventoryApi,
         \Magento\Framework\Serialize\SerializerInterface $jsonSerializer,
+        protected \MageOS\ShoppingFeed\Model\ProductSelection\Selection $productSelection,
         array $data = []
     ) {
         $this->setFeed($feed);
@@ -1027,7 +1029,7 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     public function internalMap(bool $checkDuplicates = true, bool $mapAssociatedProducts = true): array
     {
         $rows = [];
-        if ($checkDuplicates && $this->isDuplicate()) {
+        if ($this->isExcludedByConditions() || ($checkDuplicates && $this->isDuplicate())) {
             return $rows;
         }
 
@@ -1049,6 +1051,31 @@ class AdapterAbstract extends \Magento\Framework\DataObject
         $rows[] = $fields;
 
         return $rows;
+    }
+
+    /**
+     * Filter the current output row without rejecting a composite product's children.
+     *
+     * @return bool
+     */
+    public function isExcludedByConditions(): bool
+    {
+        $product = $this->getProduct();
+        if ($product === null) {
+            throw new FeedException(__('Product selection requires a loaded product.'));
+        }
+        if (!$this->productSelection->isExcluded(
+            $this->getFeed(),
+            $product,
+            $this->getParentAdapter()?->getProduct()
+        )) {
+            return false;
+        }
+        $this->getGenerator()->addSelectionExclusion(
+            $product->getId(),
+            $this->getParentAdapter()?->getProduct()?->getId()
+        );
+        return true;
     }
 
     /**

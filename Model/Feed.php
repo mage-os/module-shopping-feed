@@ -421,7 +421,7 @@ class Feed extends AbstractModel
                 $path = $configObject->getData('path');
                 $value = $configObject->getData('value');
                 if (array_key_exists($path, $config)) {
-                    if ($config[$path] != $value) {
+                    if ($config[$path] !== $value) {
                         $configObject->setData('value', $config[$path]);
                         $configObject->save();
                     }

@@ -74,6 +74,46 @@ class GeneratorTest extends ModelFramework
         );
     }
 
+    public function testSelectionFailureBindsTheFeedLoggerBeforeValidation(): void
+    {
+        $feed = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Feed::class)
+            ->disableOriginalConstructor()->onlyMethods([])->getMock();
+        $feed->setData('id', 123);
+        $logger = $this->createMock(\MageOS\ShoppingFeed\Model\Logger::class);
+        $selection = $this->createMock(\MageOS\ShoppingFeed\Model\ProductSelection\Selection::class);
+        $exception = new \Magento\Framework\Exception\LocalizedException(__('Invalid rule'));
+        $selection->method('validate')->willThrowException($exception);
+        $selection->method('beginRun')->willThrowException($exception);
+        $generator = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Generator::class)
+            ->disableOriginalConstructor()->onlyMethods(['getLogger', 'updateStatus'])->getMock();
+        foreach (['feed' => $feed, 'logger' => $logger, 'productSelection' => $selection] as $name => $value) {
+            (new \ReflectionProperty(\MageOS\ShoppingFeed\Model\Generator::class, $name))
+                ->setValue($generator, $value);
+        }
+        $generator->expects(self::once())->method('getLogger')->willReturn($logger);
+        $logger->expects(self::once())->method('error')->with('Invalid rule');
+        $generator->expects(self::once())->method('updateStatus')->with(5);
+        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
+        $generator->run();
+    }
+
+    public function testRepeatedSelectionChecksCountOneCandidatePerParentContext(): void
+    {
+        $generator = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Generator::class)
+            ->disableOriginalConstructor()->onlyMethods([])->getMock();
+        $generator->addSelectionExclusion(7);
+        $generator->addSelectionExclusion(7);
+        $generator->addSelectionExclusion(7, 10);
+        $generator->addSelectionExclusion(7, 10);
+        $generator->addSelectionExclusion(7, 20);
+        self::assertSame(3, $generator->getCountProductsSkipped());
+        $logged = (new \ReflectionProperty($generator, 'skippedData'))->getValue($generator);
+        self::assertCount(3, $logged);
+        foreach ($logged as $ids) {
+            self::assertSame([7], $ids);
+        }
+    }
+
     /** @dataProvider temporaryFileEncodingCases */
     #[\PHPUnit\Framework\Attributes\DataProvider('temporaryFileEncodingCases')]
     public function testTemporaryFileEncoding(string $type, bool $batchEnabled, bool $newBatch, bool $expectBom): void

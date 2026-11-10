@@ -37,7 +37,7 @@ class ConditionalValueTest extends CompatibilityTestCase
             $attribute = $this->getMockBuilder(Attribute::class)->disableOriginalConstructor()
                 ->onlyMethods([])->getMock();
             $attribute->setData([
-                'id' => 1, 'attribute_id' => 1, 'attribute_code' => $code,
+                'id' => 1, 'attribute_id' => 1, 'attribute_code' => $code, 'frontend_label' => $code,
                 'frontend_input' => ['manufacturer' => 'select', 'color' => 'multiselect',
                     'release_date' => 'date'][$code] ?? 'text',
                 'backend_type' => $code === 'release_date' ? 'datetime' : 'varchar'
@@ -56,6 +56,11 @@ class ConditionalValueTest extends CompatibilityTestCase
                 static fn () => $attributes[$condition->getAttribute()] ?? null
             );
             $condition->loadOperatorOptions();
+            $condition->setData('value_option', ['1' => 'One']);
+            $condition->setData('value_select_options', array_map(
+                static fn ($value) => ['value' => $value, 'label' => $value],
+                ['0', '1', '2', '3', '4', '12', 'Acme', 'Other']
+            ));
             return $condition;
         });
         $this->configuration = new Configuration($eav, $this->factory);
@@ -74,7 +79,8 @@ class ConditionalValueTest extends CompatibilityTestCase
         $filter = $this->createMock(Filter::class);
         $filter->method('cleanField')->willReturnCallback(static fn ($value) => $value);
         $adapter->method('getFilter')->willReturn($filter);
-        $this->mapper = new ConditionalValue($this->createMock(Logger::class), $this->configuration, $this->factory);
+        $matcher = new \MageOS\ShoppingFeed\Model\ConditionalValue\Matcher($this->configuration, $this->factory);
+        $this->mapper = new ConditionalValue($this->createMock(Logger::class), $this->configuration, $matcher);
         $this->mapper->addAdapter($adapter);
     }
 

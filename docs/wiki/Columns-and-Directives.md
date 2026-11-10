@@ -62,7 +62,7 @@ Each output supports:
 
 For example, match **Attribute Set** to Clothing and return the **manufacturer** attribute for `brand`. Match **Price > 100** and return fixed text `premium` for `custom_label_0`. To reduce a raw price by 10%, choose **Percentage adjustment**, source `price`, and percentage `-10`.
 
-Conditions use Magento's rule operators against the current feed product's store-view data. Custom condition attributes appear when **Use for Promo Rule Conditions** is enabled. Dropdown conditions offer option labels but store their IDs. List operators take comma-separated raw values or option IDs; dates use `YYYY-MM-DD`. Category conditions use category IDs. A missing attribute only matches **is undefined**; it does not trigger a default-store product reload.
+Conditions use Magento's rule operators against the current feed product's store-view data. The unreleased SHO-3 shared engine lists product attributes without requiring **Use for Promo Rule Conditions** and adds SKU wildcard operators and **Has base image**. Dropdown conditions offer option labels but store their IDs. List operators take comma-separated raw values or option IDs; dates use `YYYY-MM-DD`. Category conditions use category IDs. A missing attribute only matches **is undefined**; it does not trigger a default-store product reload.
 
 Percentage outputs do not apply tax, currency conversion, catalog-rule pricing, or the Price directive's formatting. They are appropriate for numeric exports whose destination accepts that representation. An empty source stays empty, and a nonnumeric source stops generation with an error. The permitted adjustment range is -100 through 100000 percent. Use the existing Price directive when its pricing behavior is required.
 

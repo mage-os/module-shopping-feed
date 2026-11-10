@@ -384,7 +384,7 @@ class ModelFramework extends CompatibilityTestCase
         $this->adapterMock = $this->getModelMock(
             'MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple',
             ['getProduct', 'getData', 'getFilter', 'getFeed', 'getMapAttribute', 'getAttributeValue',
-                'getMapValue', 'mapEmptyValues', 'getTimezone', 'getStore', 'getPrices',
+                'isExcludedByConditions', 'getMapValue', 'mapEmptyValues', 'getTimezone', 'getStore', 'getPrices',
                 'getOptionProcessor', 'getOptions', 'hasParentAdapter', 'getParentAdapter',
                 'getInventoryCount', 'getSalePriceEffectiveDates', 'hasSpecialPrice', 'getUrlOptions',
                 'isSkipped', 'isDuplicate', 'map', 'setTestMode', 'getConfig', 'getGenerator', 'getSkipProduct',

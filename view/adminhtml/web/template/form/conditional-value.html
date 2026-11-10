@@ -10,6 +10,15 @@
     </label>
     <div data-bind="foreach: conditions">
         <fieldset class="admin__fieldset">
+            <!-- ko if: $parent.selection -->
+            <label>
+                <span data-bind="i18n: 'Read attribute from'"></span>
+                <select class="admin__control-select" data-bind="value: scope">
+                    <option value="product" data-bind="i18n: 'Product'"></option>
+                    <option value="parent" data-bind="i18n: 'Parent product'"></option>
+                </select>
+            </label>
+            <!-- /ko -->
             <label>
                 <span data-bind="i18n: 'Condition attribute'"></span>
                 <select class="admin__control-select" data-bind="options: attributes, optionsText: 'label', optionsValue: 'value', optionsCaption: chooseAttribute, value: attribute, valueAllowUnset: true"></select>
@@ -33,7 +42,8 @@
         </fieldset>
     </div>
     <button class="action-add" type="button" data-bind="click: addCondition, disable: conditions().length >= 50, i18n: 'Add condition'"></button>
-    <p class="admin__field-note" data-bind="i18n: 'For lists, enter comma-separated option IDs or values. For dates, use YYYY-MM-DD. Enable Use for Promo Rule Conditions on custom attributes to list them here.'"></p>
+    <p class="admin__field-note" data-bind="i18n: 'For lists, enter comma-separated option IDs or values. Date fields, including Date and Time, compare the stored day using YYYY-MM-DD. SKU wildcards: * matches any number of characters; ? matches one Unicode character. Matching is case-sensitive.'"></p>
+    <!-- ko ifnot: selection -->
     <fieldset class="admin__fieldset">
         <legend data-bind="i18n: 'If matching'"></legend>
         <div data-bind="template: {name: 'MageOS_ShoppingFeed/form/conditional-output', data: ifTrue}"></div>
@@ -42,5 +52,6 @@
         <legend data-bind="i18n: 'Otherwise'"></legend>
         <div data-bind="template: {name: 'MageOS_ShoppingFeed/form/conditional-output', data: ifFalse}"></div>
     </fieldset>
+    <!-- /ko -->
 </fieldset>
 <!-- /ko -->

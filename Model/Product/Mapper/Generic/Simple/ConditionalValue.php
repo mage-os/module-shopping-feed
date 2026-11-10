@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple;
 
-use MageOS\ShoppingFeed\Model\ConditionalValue\Condition;
-use MageOS\ShoppingFeed\Model\ConditionalValue\ConditionFactory;
+use MageOS\ShoppingFeed\Model\ConditionalValue\Matcher;
 use MageOS\ShoppingFeed\Model\ConditionalValue\Configuration;
 use MageOS\ShoppingFeed\Model\Logger;
 use MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
@@ -17,20 +16,17 @@ class ConditionalValue extends MapperAbstract
     /** @var array<string, array<string, mixed>> */
     private array $validated = [];
 
-    /** @var array<string, list<Condition>> */
-    private array $conditions = [];
-
     /**
      * Constructor.
      *
      * @param Logger $logger
      * @param Configuration $configurationValidator
-     * @param ConditionFactory $conditionFactory
+     * @param Matcher $matcher
      */
     public function __construct(
         Logger $logger,
         private Configuration $configurationValidator,
-        private ConditionFactory $conditionFactory
+        private Matcher $matcher
     ) {
         parent::__construct($logger);
     }
@@ -54,28 +50,15 @@ class ConditionalValue extends MapperAbstract
             // Bound long-running consumers that encounter many feed configurations.
             if (count($this->validated) >= 100) {
                 $this->validated = [];
-                $this->conditions = [];
             }
             $this->validated[$key] = $this->configurationValidator->validate($parameter);
-            $this->conditions[$key] = [];
-            foreach ($this->validated[$key]['conditions'] as $row) {
-                $condition = $this->conditionFactory->create();
-                $condition->setAttribute($row['attribute']);
-                $condition->setOperator($row['operator']);
-                $condition->setValue($row['value']);
-                $this->conditions[$key][] = $condition;
-            }
         }
         $configuration = $this->validated[$key];
-        $all = $configuration['aggregator'] === 'all';
-        $matches = $all;
-        foreach ($this->conditions[$key] as $condition) {
-            $valid = (clone $condition)->validate($product);
-            if ($valid !== $all) {
-                $matches = !$all;
-                break;
-            }
-        }
+        $matches = $this->matcher->matches(
+            $configuration,
+            $product,
+            $this->getAdapter()->getParentAdapter()?->getProduct()
+        );
         $output = $configuration[$matches ? 'if_true' : 'if_false'];
         return $this->getAdapter()->getFilter()->cleanField($this->output($output), $params);
     }

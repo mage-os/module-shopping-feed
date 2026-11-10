@@ -95,6 +95,7 @@ class Composite extends AdapterAbstract
      * @param \Magento\Framework\Serialize\SerializerInterface $jsonSerializer
      * @param \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Concatenate $concatenateMapper
      * @param LinkedProductCollectionFactory $linkedProductCollectionFactory
+     * @param \MageOS\ShoppingFeed\Model\ProductSelection\Selection $productSelection
      * @param array $data
      */
     public function __construct(
@@ -126,6 +127,7 @@ class Composite extends AdapterAbstract
         \Magento\Framework\Serialize\SerializerInterface $jsonSerializer,
         \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Concatenate $concatenateMapper,
         \Magento\Catalog\Model\ResourceModel\Product\Link\Product\CollectionFactory $linkedProductCollectionFactory,
+        \MageOS\ShoppingFeed\Model\ProductSelection\Selection $productSelection,
         array $data = []
     ) {
         $this->concatenateMapper = $concatenateMapper;
@@ -158,6 +160,7 @@ class Composite extends AdapterAbstract
             $categoryCollectionFactory,
             $sourceInventoryApi,
             $jsonSerializer,
+            $productSelection,
             $data
         );
     }
@@ -229,7 +232,7 @@ class Composite extends AdapterAbstract
         $associatedMode = $this->getAssociatedProductsMode();
         $rows = [];
 
-        if (in_array($associatedMode, $this->allowed_parent)) {
+        if (in_array($associatedMode, $this->allowed_parent) && !$this->isExcludedByConditions()) {
             $this->setData('map_parent', true);
             // Map current product
             $fields = [];
@@ -299,6 +302,7 @@ class Composite extends AdapterAbstract
 */
         foreach ($associatedProductAdapters as $associatedProductAdapter) {
             if ($associatedProductAdapter->isSkipped()
+                || $associatedProductAdapter->isExcludedByConditions()
                 || ($checkDuplicates && $associatedProductAdapter->isDuplicate())
             ) {
                 continue;

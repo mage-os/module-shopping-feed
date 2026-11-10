@@ -2,7 +2,7 @@
 
 The safest first feed has one store view, no upload destination, no schedule, and a small set of known products. Generate it, inspect it, correct it, then add automation.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: released behavior plus unreleased SHO-1, as marked below. Last reviewed: 2026-11-10.
 
 Read [Admin UI Component forms](Admin-UI-Component-Forms) for the 1.2.0 editor. Its collapsible sections replace the old tabs; category generation and promotion-date preservation pass the recorded acceptance checks. Start with disabled test feeds before enabling delivery.
 
@@ -14,7 +14,7 @@ In the Admin, go to **Catalog > Mage-OS Shopping Feed > Feeds Management**.
 
 Choose one of the available templates:
 
-* **Generic** for a custom delimited product feed
+* **Generic** for a custom product feed (delimited by default; manual XML in unreleased SHO-1)
 * **Google Shopping** for a Google product data source
 * **Google Local Inventory** for location-specific inventory data
 
@@ -28,7 +28,7 @@ On **General Configuration** in 1.1, or **General** in the UI Component editor:
 2. Select the store view.
 3. Select the feed currency.
 4. Keep the output under `pub/media/mageos-shopping-feed`.
-5. Review delimiter and stock behavior.
+5. Review output format, filename, and stock behavior. Delimited output uses the configured delimiter. With unreleased SHO-1, select XML and a `.xml` filename for a supported channel or Generic feed; see [XML Output](XML-Output).
 6. Open **Run Schedule** in 1.1, or **Schedule** in 1.2.0, and remove any default schedule before the first save. New feeds can start with a daily schedule.
 7. Confirm **Uploads** is empty, then save before configuring fields that depend on the current column map.
 
@@ -75,7 +75,8 @@ Check:
 * Product count and skipped count
 * IDs, URLs, prices, sale dates, availability, and images
 * Configurable parent and child behavior
-* Delimiter handling for quotes, tabs, commas, line breaks, and Unicode
+* Delimiter handling for quotes, tabs, commas, line breaks, and Unicode in delimited files
+* XML parsing, namespaces, optional tags, repeated/nested values, and CDATA when using unreleased SHO-1
 * The file location and public URL, if one is shown
 
 Only after the file is accepted should you add [schedules](Scheduling-and-Queues) or [upload destinations](Uploads).

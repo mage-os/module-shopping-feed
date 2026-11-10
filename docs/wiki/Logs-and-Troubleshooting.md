@@ -2,7 +2,7 @@
 
 Start with the feed-specific log and the feed grid status. They distinguish queue problems, product skips, generation failures, and upload failures.
 
-> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
+> Documentation baseline: released behavior plus unreleased SHO-1, as marked below. Last reviewed: 2026-11-10.
 
 The original `9f07e46` category and promotion-date defects are repaired in 1.2.0, with runtime acceptance at `133af71`. Consult [Admin UI Component forms](Admin-UI-Component-Forms) for the exact deployed revision and acceptance evidence. Code updates do not reconstruct dates already erased by an earlier save.
 
@@ -73,3 +73,9 @@ Capture the minimum useful evidence before reporting a defect:
 * Whether the problem reproduces without upload destinations
 
 For slow or incomplete large feeds, continue with [Performance and large catalogs](Performance-and-Large-Catalogs).
+
+## XML output (unreleased SHO-1)
+
+If a Generic XML feed will not save, check element names, declared prefixes, matching header/footer elements, and whitespace before the XML declaration. DTDs and entity declarations are not supported.
+
+Invalid product text or malformed manually mapped compound values skip the affected row; inspect the source SKU, mapped row ID, and column in Test Feed or View Log. A parent SKU can be the source for a composite row. Fix the data or mapping and regenerate. Configuration or file-write errors stop generation and preserve the prior published file. Inspect its timestamp rather than assuming an existing download is the new run. See [XML Output](XML-Output#validation-and-failed-rows).

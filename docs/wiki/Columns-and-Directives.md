@@ -2,7 +2,7 @@
 
 Columns Map controls the output schema. Each row gives the output column a name and maps it to a Magento product attribute or a module directive.
 
-> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
+> Documentation baseline: released behavior plus unreleased SHO-1, as marked below. Last reviewed: 2026-11-10.
 
 ## How a column is built
 
@@ -18,6 +18,8 @@ Save the feed after changing Columns Map. Several filters and inheritance contro
 Since 1.2.5, dropdown and multiselect option labels are read in the feed's **Store View**, falling back to the admin label when that store has no override. Multiselect output keeps the selected values' order and joins their labels with `, `. Cached labels are separate for each store, and option rows from custom source models without a usable value are skipped. Releases up to 1.2.4 always use the admin labels; sources that ignore the attribute store, such as country of manufacture, keep the process locale's labels.
 
 For the 1.2.0 UI Component editor, use single-line output names without tabs or other control characters. The editor rejects those characters at model save and preserves literal values, structured parameters, and null defaults. The historical 1.2.0 `mageos-latest` deployment also fixes null product-URL parameters under PHP 8.4 error handling. See [Admin UI Component forms](Admin-UI-Component-Forms) for deployment status and test limits.
+
+With unreleased SHO-1 XML, mapped names must also be valid XML element names and any prefixes must be declared. Channel presets supply their namespace rules automatically; Generic feeds require manual wrappers. See [XML Output](XML-Output).
 
 ## Common directives
 
@@ -87,7 +89,7 @@ Its default columns are:
 
 ## Sale-price behavior
 
-Google Shopping and Local Inventory leave `sale_price` and `sale_price_effective_date` empty when the rendered sale price is not lower than the regular price. The header remains present, and every row must retain the same number of positional columns.
+Google Shopping and Local Inventory leave `sale_price` and `sale_price_effective_date` empty when the rendered sale price is not lower than the regular price. In delimited output, the header remains present and every row retains the same number of positional columns. With unreleased SHO-1 XML presets, empty optional fields are omitted as described in [XML Output](XML-Output).
 
 Generic feeds preserve their custom names, ordering, and values. Google sale-price suppression does not apply to Generic output. See [Generic feeds](Generic-Feeds) for CSV quoting and [Google Shopping](Google-Shopping) for identifier and backorder-date configuration.
 

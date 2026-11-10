@@ -2,7 +2,7 @@
 
 General Configuration defines the store context, output location, delimiter, price behavior, and stock behavior for one feed.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: released behavior plus unreleased SHO-1, as marked below. Last reviewed: 2026-11-10.
 
 The 1.2.0 editor labels this section **General**. Its [Admin form guide](Admin-UI-Component-Forms) covers save controls, store-view reloads, and current acceptance results and limits.
 
@@ -15,7 +15,8 @@ The 1.2.0 editor labels this section **General**. Its [Admin form guide](Admin-U
 | Feed Currency | The currency used when formatting price directives. Allowed currencies populate the choices; the 1.2.0 editor also preserves an unavailable saved selection for review. |
 | Feed Path | The output directory. Output is restricted to `pub/media/mageos-shopping-feed` and safe subdirectories. |
 | File Name | The output filename; `%s` substitutes the feed ID. A literal name is retained when cloning, so review it before generating a clone. |
-| Delimiter | The field separator for generated rows. Google templates default to tabs. Generic comma output quotes CSV fields by default. |
+| Output Format (unreleased SHO-1) | Delimited by default; XML for six channel presets and Generic. See [XML Output](XML-Output). OpenAI remains delimited only. |
+| Delimiter | The field separator for delimited rows. Google templates default to tabs. Generic comma output quotes CSV fields by default. |
 | Cell Enclosure (Generic) | Optional enclosure for each header and value. Blank uses double quotes for comma output and no enclosure for other delimiters. |
 | Enclosure Escape (Generic) | Prefix for an enclosure inside a cell. Blank doubles the enclosure character. |
 | Empty Cell Value (Generic) | Optional replacement for empty values. Numeric zero is retained. |
@@ -92,3 +93,9 @@ After changing general settings:
 4. Generate a non-production file and compare row counts and values with the previous accepted file.
 
 Text settings beginning with `[` or `{` remain text after saving and reloading. Structured array settings retain their array values. Version 1.0.0 also preserves malformed legacy text instead of failing while loading it as JSON.
+
+## XML settings (unreleased SHO-1)
+
+Set **Output Format** to XML and choose an `.xml` filename. Neither setting changes the other automatically. The six supported channel presets supply their XML structure without merchant configuration. Generic feeds expose XML Header, XML Item Element, XML Footer, XML Optional Columns, and XML CDATA Columns. See [XML Output](XML-Output) for the format table and complete setup examples.
+
+Delimiter, enclosure, escape, and Empty Cell Value settings apply only to delimited output. XML always uses UTF-8. Review the public URL and recipient data-source format when switching; a previously published file at the old filename may remain available.

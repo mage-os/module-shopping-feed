@@ -420,12 +420,12 @@ Approval applies only to the recorded commit and tested configuration. Any code 
 
 Automated coverage includes XML parsing and escaping, repeated elements, CDATA terminators, namespaces, optional empty values, zero preservation, invalid characters, DTD rejection, generator row dispatch, batch boundaries, and UTF-8 filtering.
 
-Live admin and database acceptance remains pending. On a disposable Magento installation:
+Local Admin, persistence, generation, and batch checks are recorded in the [November 10 retest](docs/reviews/2026-11-10-sho-1-independent-findings-fixed.md). Repeat these acceptance scenarios for the target installation:
 
 1. Create a custom feed, select XML, set an `.xml` filename, and save a header, item element, footer, optional columns, and CDATA columns. Reload and verify every value.
 2. Map a product containing ampersands, Unicode, and `]]>`; map a zero value, an empty optional value, and repeated image values. Generate and parse the downloaded file. Check values and tag counts.
 3. Generate with one product per batch, then with no matching products. Verify exactly one header/footer and publication only after the final batch.
-4. Publish a valid feed, then try malformed wrappers or an undeclared namespace. Generation must fail and preserve the published file.
+4. Publish a valid feed, then try saving malformed wrappers or an undeclared namespace. Save must fail. Separately inject invalid stored configuration in a disposable fixture; generation must fail and preserve the published file.
 5. Run Test SKU; verify mapped values still render. Switch to delimited output, save/reload, and compare the generated CSV/TSV with the prior output.
 6. Configure the same XML options in an extension preset and create a feed from it. Verify defaults survive save/reload and generation.
 
@@ -435,7 +435,7 @@ For each of Google Shopping, Google Local Inventory, Microsoft, Pinterest, TikTo
 
 Verify shipping and tax nested groups for Google, Microsoft, Pinterest, and Meta, repeated additional images, TikTok's sku_id to g:id mapping, Local Inventory store codes and quantities, and unchanged delimited output when switching back. Confirm that only generic feeds show manual XML structure settings. OpenAI must not offer XML or generate it through a saved XML setting.
 
-Local automated checks cover these serialization and configuration paths. Browser/database acceptance and real destination sample ingestion remain pending. Meta's current documentation blocked access; the TikTok XML template download requires Ads Manager access, so both still need direct provider sample confirmation.
+Local automated, installed-store, and Admin results are recorded in the [November 10 retest](docs/reviews/2026-11-10-sho-1-independent-findings-fixed.md). Meta and Pinterest namespace corrections were checked against provider samples. No preset has been submitted to a destination as part of local testing; TikTok XML field compatibility remains unverified. Recipient ingestion and production-volume acceptance are separate checks.
 
 ### SHO-1 independent-review regressions
 

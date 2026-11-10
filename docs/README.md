@@ -1,15 +1,16 @@
 # Documentation
 
-The current stable release is [1.2.4](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.2.4), published at `75dd335f930aef78ae693f62c3039e469c2d26f6`. Current operating guides were reviewed against that tag on October 20, 2026. Documentation changes and public wiki publication have their own commits.
+These guides cover released behavior through 1.2.5 and explicitly marked unreleased features on this branch. Check each page's documentation baseline and review date before applying it to an installed version. Dated verification reports describe their tested revision; documentation commits do not publish a package release or synchronize the separate public wiki.
 
 ## Current guides
 
 | Task | Guide |
 | --- | --- |
 | Install or upgrade | [Installation and upgrade](wiki/Installation-and-Upgrade.md) |
-| Review 1.2.4 changes | [Release notes](releases/1.2.4.md) and [changelog](../CHANGELOG.md) |
+| Review 1.2.5 changes | [Release notes](releases/1.2.5.md) and [changelog](../CHANGELOG.md) |
 | Confirm platform and theme support | [Status and compatibility](wiki/Status-and-Compatibility.md) |
 | Create and operate feeds | [Wiki home](wiki/Home.md), [Quick start](wiki/Quick-Start.md), and the wiki sidebar |
+| Configure XML and channel presets (unreleased SHO-1) | [XML output](wiki/XML-Output.md) |
 | Configure SFTP, FTP, or gzip | [Uploads](wiki/Uploads.md) |
 | Move from Rocket Shopping Feeds | [Migration and coexistence](../MIGRATION.md) and [optional companion](wiki/Rocket-Web-Migration.md) |
 | Customize the Admin editor | [Developer contract](ui-component-editor.md) |

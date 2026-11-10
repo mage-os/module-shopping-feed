@@ -60,6 +60,41 @@ The `mageos_shopping_feed_feed_prepare_save` event remains available and receive
 
 Modifier authors must mask secrets before returning data. Upload model data retain ciphertext in 1.2.4. The built-in projection is redacted before `modifyData()` runs, so a modifier must not add decrypted upload passwords or other private model fields back into the response. Preserve unknown configuration and child ownership when adding fields; cover failed-save recovery as well as successful saves. Custom `config` keys are an intentional extension contract and may be consumed by downstream directives or modules. Validate known fields without replacing that contract with a built-in-only key allowlist. Custom controls must enforce their own permission and escaping requirements.
 
+## Unreleased SHO-2 and SHO-3 structured rules
+
+Conditional Value uses the mapping source `directive_conditional_value`. Its decoded mapping `param` is an object with `aggregator`, a list of `conditions`, and both `if_true` and `if_false` outputs. For example:
+
+```json
+{
+  "aggregator": "all",
+  "conditions": [{"attribute": "price", "operator": ">", "value": "100"}],
+  "if_true": {"type": "static", "value": "premium"},
+  "if_false": {"type": "static", "value": "standard"}
+}
+```
+
+Other output shapes are `{"type":"attribute","attribute":"manufacturer"}` and `{"type":"percent","attribute":"price","percent":"-10"}`. Preserve literal values such as `0`, empty strings, and leading-zero strings. Both output branches are required and validated. The `conditional` renderer supports Columns Map and Replace Empty Values; newly added mapping rows use Static Value until the user selects Conditional Value. Initialize conditional template bindings only after the structured editor exists, including when switching from an input renderer.
+
+Product Selection stores an expression under `config.filters_product_conditions`, with `aggregator` and `conditions` but no output branches:
+
+```json
+{
+  "aggregator": "all",
+  "conditions": [
+    {"scope": "product", "attribute": "sku", "operator": "glob", "value": "SALE-*"},
+    {"scope": "product", "attribute": "has_image", "operator": "==", "value": "1"}
+  ]
+}
+```
+
+Use `all` or `any`, with a JSON list of at most 50 conditions. Conditional Value requires at least one condition; an empty selection disables selection. Programmatic `null` clears selection and persists as an empty list. Keyed condition objects are invalid on save/import; the editor can load legacy keyed rows for repair and writes a list after editing. Strict persistence comparisons retain edits such as `00123` to `123`.
+
+The shared validator checks existing attributes, attribute-specific operators, stored option IDs, scalar values of at most 4096 bytes, and calendar-day dates in `YYYY-MM-DD`. Use the server-supplied condition metadata rather than inventing a fixed operator list. `glob` and `!glob` apply to SKU; `has_image` uses `1`/`0`. Percentage outputs accept finite numeric adjustments from -100 through 100000. Do not instantiate classes from rule input or rely on client validation alone.
+
+The scope selector is rendered only for Product Selection. Conditional Value defaults to product scope; imported `parent` scopes are retained but not shown as a selector. Its mapper passes only the active parent, whereas Product Selection can look up direct website parents for standalone candidates. Keep this distinction when extending the UI. See [Conditional values](wiki/Conditional-Values.md) and [Product selection](wiki/Product-Selection.md) for user-facing semantics.
+
+Export/import and extension code must preserve structured parameters through the existing form encoder/decoder. Removing rules or switching a mapping back to another directive is the application-level rollback; do not assume older module versions can interpret these configuration keys and directive parameters.
+
 ## Grid permissions and extensions
 
 The standard grid checks `MageOS_ShoppingFeed::save` for Create New Feed, Configure, Enable, Disable, and Clone; `MageOS_ShoppingFeed::generate` for Run Now and the Test Feed controller/editor buttons; and `MageOS_ShoppingFeed::delete` for bulk Delete. View Log and Export remain available with the grid permission. Both standard and Nebula grids can still display Test Feed to a read-only user, but the controller denies the request. Do not treat link visibility as permission to run a preview. The bulk-action dropdown is omitted when no permitted actions remain. Controller ACL and POST/form-key checks still enforce requests independently of visibility.

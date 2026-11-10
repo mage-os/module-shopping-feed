@@ -417,6 +417,20 @@ No open High or Medium defect may be accepted for the first production release w
 Approval applies only to the recorded commit and tested configuration. Any code change after sign-off requires affected checks to be rerun and a new release decision.
 
 
+## SHO-2 conditional values (unreleased)
+
+Use synthetic products and a disabled feed with no schedule or uploads. Follow the [Conditional values guide](docs/wiki/Conditional-Values.md).
+
+- In every feed type, add Columns Map and Replace Empty Values rows. Verify Static Value is the default, then explicitly select Conditional Value. Test both new rows and switching an existing saved mapping. Save and reopen; all controls and values must remain visible.
+- Configure All and Any groups with a matching and a nonmatching product. Verify Fixed text, Product attribute, and Percentage adjustment outputs, including zero, empty strings, store-view option labels, and positive/negative adjustments.
+- Test empty and nonnumeric percentage sources and the permitted percentage bounds. Verify invalid configuration is rejected rather than silently taking Otherwise; both branches must validate.
+- Exercise condition option IDs, dates, missing values, and output transformations. Verify Replace Empty Values does not overwrite a populated column and respects replacement order.
+- Test inheritance with parent/child fixtures. The Conditional Value editor creates product-scoped conditions; imported parent scopes use only the active mapping parent, without standalone parent lookup.
+- Reject empty/oversized condition groups, unknown attributes, invalid operators, malformed imports, and incomplete outputs. Verify preserved structured values through export/import.
+- Compare Test Feed results with complete generated output, including interaction with Product Selection and existing required-column filters.
+
+The [editor-switch report](docs/reviews/2026-11-10-sho-2-editor-switch.md) records successful Admin switching, save/reopen, and generated outputs. The later [default-row report](docs/reviews/2026-11-10-sho-2-default-mapping.md) records unit and persistence coverage but leaves its browser save/reopen follow-up incomplete. Repeat that check before claiming complete browser acceptance of the default-row change.
+
 ## SHO-3 product selection (unreleased)
 
 Use synthetic products and feeds without schedules or uploads. Existing filters must remain in effect.
@@ -430,4 +444,4 @@ Use synthetic products and feeds without schedules or uploads. Existing filters 
 - Combine SHO-3 selection and SHO-2 Conditional Value in one feed. Verify actual exported rows and values, preview, and a resumed batch.
 - Confirm read-only roles cannot edit conditions and unavailable saved attribute choices remain visible for correction.
 
-The local implementation record is [SHO-3 verification](docs/reviews/2026-11-10-sho-3-product-selection.md). It distinguishes completed checks from untested platforms and workloads.
+The [initial SHO-3 verification](docs/reviews/2026-11-10-sho-3-product-selection.md) is supplemented by the [independent-finding fixes and retest](docs/reviews/2026-11-10-sho-3-independent-fixes.md), covering persistence, malformed inputs, Unicode wildcards, date boundaries, parent contexts, skip counts, store isolation, and batching. These records distinguish completed local checks from untested platforms, recipient ingestion, and production workloads.

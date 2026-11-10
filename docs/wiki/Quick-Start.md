@@ -2,7 +2,7 @@
 
 The safest first feed has one store view, no upload destination, no schedule, and a small set of known products. Generate it, inspect it, correct it, then add automation.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: released behavior plus unreleased SHO-2 and SHO-3, as marked below. Last reviewed: 2026-11-10.
 
 Read [Admin UI Component forms](Admin-UI-Component-Forms) for the 1.2.0 editor. Its collapsible sections replace the old tabs; category generation and promotion-date preservation pass the recorded acceptance checks. Start with disabled test feeds before enabling delivery.
 
@@ -79,3 +79,7 @@ Check:
 * The file location and public URL, if one is shown
 
 Only after the file is accepted should you add [schedules](Scheduling-and-Queues) or [upload destinations](Uploads).
+
+## Optional attribute rules (unreleased SHO-2 and SHO-3)
+
+To choose a column value from a condition, use [Conditional Value](Conditional-Values). To limit the exported products to an attribute rule, use [Product Selection](Product-Selection). Both are available in all eight feed types on this branch, not in 1.2.5. Save and reopen the rules, test one matching and one nonmatching product, then inspect a full generated file. Include parent and child fixtures when using parent scope.

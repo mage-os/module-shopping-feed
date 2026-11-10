@@ -2,7 +2,7 @@
 
 Product Filters decides which products reach the output and how selected column values are changed. Rule order matters.
 
-> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
+> Documentation baseline: released behavior plus unreleased SHO-2 and SHO-3, as marked below. Last reviewed: 2026-11-10.
 
 ## Catalog selection
 
@@ -84,28 +84,6 @@ For every filter change, keep one fixture that should be included and one that s
 
 ## Product selection conditions (unreleased SHO-3)
 
-In **Product Filters > Product selection conditions**, add up to 50 conditions and choose **All conditions** or **Any condition**. Only matching output products are included. Remove every condition to disable this filter. Existing feeds without conditions retain their existing behavior.
+Use **Product Filters > Product selection conditions** to include products matching one All/Any group of up to 50 attribute conditions. Removing all conditions disables this filter. Conditions narrow existing eligibility; they do not override stock, visibility, category, product exclusion, or required-field filters.
 
-Each condition reads either the **Product** or **Parent product** in the feed's store view. Available choices include product attributes without requiring **Use for Promo Rule Conditions**, visibility, status, category IDs, attribute set, and **Has base image**. Select options compare stored option IDs. **Date** and **Date and Time** attributes use `YYYY-MM-DD` and compare the stored calendar day, ignoring the time of day; no timezone conversion is applied. For example, `2026-03-01 15:30:00` matches `2026-03-01`. List operators accept comma-separated raw values or IDs. Price conditions compare the stored attribute value, before output currency conversion or price directives.
-
-SKU supports **matches wildcard** and **does not match wildcard**: `*` matches zero or more characters and `?` matches one character. Matching is case-sensitive and covers the whole SKU. For example, `SALE-*` selects SKUs starting with `SALE-`; `*-BLUE` selects SKUs ending with `-BLUE`. Other punctuation is literal, not a regular expression.
-
-**Has base image** checks whether the product's base `image` attribute contains a value other than blank or `no_selection`. It does not check whether the image file exists, inspect the media gallery, or apply column inheritance.
-
-For associated output rows, parent conditions read the parent currently being mapped. For standalone rows, they examine direct configurable, grouped, and bundle parents assigned to the feed website, including disabled parents. If several parents exist, the complete expression must match against at least one parent; different parent conditions cannot be satisfied by different parents. A product without a parent never satisfies a parent condition, including a negative or undefined comparison. A product-only alternative in an Any rule can still match it.
-
-Examples:
-
-* Product **SKU matches wildcard `SALE-*`** and product **Has base image is Yes**.
-* Product **Visibility is Catalog, Search** to narrow rows to that visibility.
-* Parent product **Enable Product is Enabled** to require an enabled parent, or **Disabled** to select rows with a disabled parent. Products without parents fail either condition.
-
-Selection applies before duplicate tracking and separately to parent and associated output rows. A parent failing selection does not suppress its matching children. The existing type, stock, category, visibility, status, per-product skip, and column filters still apply: conditions can narrow eligibility but cannot re-enable products those filters excluded. In particular, hidden standalone products do not become eligible merely by adding a visibility condition; hidden associated products can be filtered within their existing parent context.
-
-The shared condition engine also powers [Conditional Value](Columns-and-Directives#conditional-value-unreleased-sho-2). Saved or imported malformed conditions are rejected, including keyed condition objects, unsupported structured attributes, and unknown option values; generation validates selection before processing products. Rules are evaluated after products are loaded, so they reduce exported rows rather than database scan counts. Parent lookups reuse a bounded cache of store-scoped parents during each generation or batch and load only attributes used by the rule. Large catalogs still need workload-specific performance testing.
-
-After saving, reopen the feed to check its rules, then use **Test Feed** and generate a full local file. Check both included and excluded SKUs in the output and the feed log.
-
-Selection skips count rejected output candidates, identified by product and parent context. Repeated checks of the same candidate during mapping count once. A standalone row and a row under a parent are separate candidates, so skipped rows can exceed scanned products. Logs identify the parent context when present. The counter does not estimate how many option or inventory rows a rejected candidate would have produced.
-
-Programmatic `null` clears selection and is saved as an empty list. Numeric-looking strings such as `00123` remain distinct from `123` when rules are saved. The editor preserves legacy keyed rows for repair and saves them as a list after an edit.
+See the [Product selection guide](Product-Selection) for a worked example, SKU wildcards, option/date comparisons, parent matching, skipped-candidate counts, persistence, and recovery. Use [Conditional Value](Conditional-Values) when you want to change a column instead of excluding the product.

@@ -2,7 +2,7 @@
 
 Start with the feed-specific log and the feed grid status. They distinguish queue problems, product skips, generation failures, and upload failures.
 
-> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
+> Documentation baseline: released behavior plus unreleased SHO-2 and SHO-3, as marked below. Last reviewed: 2026-11-10.
 
 The original `9f07e46` category and promotion-date defects are repaired in 1.2.0, with runtime acceptance at `133af71`. Consult [Admin UI Component forms](Admin-UI-Component-Forms) for the exact deployed revision and acceptance evidence. Code updates do not reconstruct dates already erased by an earlier save.
 
@@ -74,3 +74,9 @@ Capture the minimum useful evidence before reporting a defect:
 * Whether the problem reproduces without upload destinations
 
 For slow or incomplete large feeds, continue with [Performance and large catalogs](Performance-and-Large-Catalogs).
+
+## Conditional rules (unreleased SHO-2 and SHO-3)
+
+For rejected saves or generation errors, review the selected attributes, valid option IDs, operator types, date format, and both Conditional Value outputs. A nonnumeric percentage source is an error; it does not select Otherwise. See [Conditional values](Conditional-Values#troubleshooting-and-verification).
+
+Product Selection skip counts describe product/parent candidates, not distinct SKUs or expanded inventory rows. Rules do not override existing exclusions. Review [Product selection](Product-Selection#logs-performance-and-recovery) for counts, invalid-rule recovery, and the distinction between active-parent and standalone-parent evaluation.

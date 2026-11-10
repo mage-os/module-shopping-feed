@@ -41,7 +41,12 @@ In production mode, also run `bin/magento setup:di:compile` and `bin/magento set
 
 ## Unreleased development
 
-SHO-2 adds a **Conditional Value** directive with product conditions and fixed-text, attribute, or percentage-adjusted outputs. See the [configuration guide](docs/wiki/Columns-and-Directives.md#conditional-value-unreleased-sho-2) and [local verification record](docs/reviews/2026-11-09-sho-2-conditional-values.md). This feature is not part of 1.2.5.
+This branch adds two features, neither included in 1.2.5:
+
+* **SHO-2: [Conditional Value](docs/wiki/Conditional-Values.md)** chooses a column's fixed text, product attribute, or percentage-adjusted value using one All/Any condition group. It also works in Replace Empty Values.
+* **SHO-3: [Product Selection](docs/wiki/Product-Selection.md)** includes only products matching attribute conditions, with product/parent scope, SKU wildcards, and image checks. Existing eligibility filters still apply.
+
+See the [editor-switch verification](docs/reviews/2026-11-10-sho-2-editor-switch.md), [mapping-default verification and remaining browser limit](docs/reviews/2026-11-10-sho-2-default-mapping.md), and [selection verification](docs/reviews/2026-11-10-sho-3-independent-fixes.md).
 
 ## Configuration
 
@@ -103,7 +108,7 @@ Choose **Create New Feed** and a preset, or open an existing feed. Every setting
 | Cell Enclosure, Enclosure Escape, Empty Cell Value (Generic only) | Empty | CSV quoting and the value written for empty cells. A comma feed without an enclosure is quoted with `"` automatically. |
 | Use for microdata (Google Shopping only) | Yes for a new Google Shopping feed | Makes this feed the source of storefront microdata. Only one feed per store view can have it. |
 
-**Columns Map**: rows of Order, Column, Attribute or Directive, and Parameters. Each preset starts with its required columns. Directives compute values such as prices, availability, URLs, images, categories and identifiers; the Parameters control changes with the directive. See [Columns and directives](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Columns-and-Directives.md).
+**Columns Map**: rows of Order, Column, Attribute or Directive, and Parameters. Unreleased SHO-2 adds [Conditional Value](docs/wiki/Conditional-Values.md) for if/else output; new rows default to Static Value. Each preset starts with its required columns. Directives compute values such as prices, availability, URLs, images, categories and identifiers; the Parameters control changes with the directive. See [Columns and directives](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Columns-and-Directives.md).
 
 **Categories Map**
 
@@ -121,6 +126,7 @@ See [Categories and taxonomy](https://github.com/mage-os-lab/module-shopping-fee
 
 | Setting | Default | What it does |
 | --- | --- | --- |
+| Product selection conditions (unreleased SHO-3) | None | Include products matching one All/Any group of attribute conditions. See [Product selection](docs/wiki/Product-Selection.md). |
 | Allow Out of Stock | Yes | When No, out-of-stock products are left out. |
 | Submit only products of these types | All standard types | Product types included. |
 | Submit only products that have these attribute sets | All | Attribute sets included. |

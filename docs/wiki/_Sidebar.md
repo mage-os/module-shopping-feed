@@ -36,6 +36,8 @@
 
 * [General configuration](General-Configuration)
 * [Columns and directives](Columns-and-Directives)
+* [Conditional values (unreleased)](Conditional-Values)
+* [Product selection (unreleased)](Product-Selection)
 * [Categories and taxonomy](Categories-and-Taxonomy)
 * [Filters and transformations](Filters-and-Transformations)
 * [Product options](Product-Options)

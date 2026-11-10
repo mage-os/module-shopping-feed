@@ -12,7 +12,7 @@ Mage-OS Shopping Feed generates product feeds from Mage-OS and Magento Open Sour
 
 The [1.1 upgrade checklist](Installation-and-Upgrade#upgrading-from-10-to-11) covers the required schema update and changes to saved Google and comma-delimited feeds. [Release 1.0.0](Release-1-0-0) remains available as a historical record.
 
-> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
+> Documentation baseline: released behavior plus unreleased SHO-2 and SHO-3, as marked below. Last reviewed: 2026-11-10.
 
 The [Admin UI Component forms](Admin-UI-Component-Forms) in 1.2.0 change the editor and its customization hooks. The historical 1.2.0 runtime `133af71` was verified on `mageos-latest`, with form, grid-permission, preview, stock-selection, Local Inventory, frontend-scope, and currency-preservation corrections. Magento Open Source 2.4.8 and 2.4.9 retain production-mode form/output and six-role acceptance. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records that historical acceptance, including extended operational checks and remaining limits. Historical version 1.1 continues to use the previous editor.
 
@@ -25,6 +25,10 @@ Version 1.2.4 is [published](https://github.com/mage-os-lab/module-shopping-feed
 **Upgrading:** run `setup:upgrade`. In 1.2.5 it creates the exclusion attribute. From 1.2.3 or earlier, also enter a trusted fingerprint for every SFTP destination before resuming transfers. Test Feed requires **Generate Feed** permission since 1.2.4.
 
 **OpenAI beta:** the bundled Google-compatible preset differs from the current public OpenAI product-feed contract. Confirm acceptance of an actual sample before use; see [the documented format gaps](OpenAI-ChatGPT).
+
+## Unreleased features
+
+[Conditional Value](Conditional-Values) chooses a column value using product conditions. [Product Selection](Product-Selection) filters whole output products using attribute conditions. Both are available across all eight feed types in this branch and are not included in 1.2.5. The guides cover setup, parent context, examples, and verification.
 
 ## What the module does
 

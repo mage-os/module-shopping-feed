@@ -518,7 +518,7 @@ class ModelFramework extends CompatibilityTestCase
 
         $this->loggerMock = $this->getModelMock(
             'MageOS\ShoppingFeed\Model\Logger',
-            ['info', 'notice', 'warning', 'debug', 'addHandler']
+            ['info', 'notice', 'warning', 'debug', 'addHandler', 'getHandlers']
         );
 
         $this->priceCurrencyMock = $this->getModelMock(

@@ -1,0 +1,76 @@
+diff --git a/Model/Generator.php b/Model/Generator.php
+index 4e59fbf..ea00bfc 100644
+--- a/Model/Generator.php
++++ b/Model/Generator.php
+@@ -315,7 +315,14 @@ class Generator extends DataObject
+ 
+         // Bind the shared logger before validation or events can fail. Each run owns its handler.
+         $this->unsetData('feed_log_file');
++        $previewHandlers = $this->isTestMode() ? array_filter(
++            $this->logger->getHandlers(),
++            static fn ($handler) => $handler instanceof Logger\Handler\MemoryStream
++        ) : [];
+         $this->logger->resetHandler();
++        foreach ($previewHandlers as $handler) {
++            $this->logger->pushHandler($handler);
++        }
+         $logger = $this->getLogger();
+         try {
+             $this->productSelection->beginRun($this->feed->getData(
+diff --git a/Test/Unit/Model/GeneratorTest.php b/Test/Unit/Model/GeneratorTest.php
+index 079892f..dba8e2c 100644
+--- a/Test/Unit/Model/GeneratorTest.php
++++ b/Test/Unit/Model/GeneratorTest.php
+@@ -114,6 +114,39 @@ class GeneratorTest extends ModelFramework
+         }
+     }
+ 
++    public function testPreviewKeepsMemoryDiagnosticsAndDropsPreviousFeedHandlers(): void
++    {
++        $feed = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Feed::class)
++            ->disableOriginalConstructor()->onlyMethods([])->getMock();
++        $feed->setData('id', 123);
++        $logger = new \MageOS\ShoppingFeed\Model\Logger(
++            $this->createMock(\MageOS\ShoppingFeed\Model\Logger\HandlerFactory::class)
++        );
++        $memory = new \MageOS\ShoppingFeed\Model\Logger\Handler\MemoryStream();
++        $previousHandler = new \Monolog\Handler\TestHandler();
++        $logger->pushHandler($previousHandler)->pushHandler($memory);
++        $selection = $this->createMock(\MageOS\ShoppingFeed\Model\ProductSelection\Selection::class);
++        $selection->method('beginRun')->willThrowException(
++            new \Magento\Framework\Exception\LocalizedException(__('Invalid preview rule'))
++        );
++        $generator = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Generator::class)
++            ->disableOriginalConstructor()->onlyMethods([])->getMock();
++        foreach (['feed' => $feed, 'logger' => $logger, 'productSelection' => $selection] as $name => $value) {
++            (new \ReflectionProperty(\MageOS\ShoppingFeed\Model\Generator::class, $name))
++                ->setValue($generator, $value);
++        }
++        $generator->setTestSku('preview-sku');
++        try {
++            $generator->run();
++            self::fail('Expected invalid preview selection to fail.');
++        } catch (\Magento\Framework\Exception\LocalizedException $exception) {
++            self::assertSame('Invalid preview rule', $exception->getMessage());
++        }
++        self::assertStringContainsString('Invalid preview rule', $memory->getLogContent());
++        self::assertSame([$memory], $logger->getHandlers());
++        self::assertFalse($previousHandler->hasErrorRecords());
++    }
++
+     /** @dataProvider temporaryFileEncodingCases */
+     #[\PHPUnit\Framework\Attributes\DataProvider('temporaryFileEncodingCases')]
+     public function testTemporaryFileEncoding(string $type, bool $batchEnabled, bool $newBatch, bool $expectBom): void
+diff --git a/Test/Unit/Model/ModelFramework.php b/Test/Unit/Model/ModelFramework.php
+index c7c85d4..882e008 100644
+--- a/Test/Unit/Model/ModelFramework.php
++++ b/Test/Unit/Model/ModelFramework.php
+@@ -518,7 +518,7 @@ class ModelFramework extends CompatibilityTestCase
+ 
+         $this->loggerMock = $this->getModelMock(
+             'MageOS\ShoppingFeed\Model\Logger',
+-            ['info', 'notice', 'warning', 'debug', 'addHandler']
++            ['info', 'notice', 'warning', 'debug', 'addHandler', 'getHandlers']
+         );
+ 
+         $this->priceCurrencyMock = $this->getModelMock(

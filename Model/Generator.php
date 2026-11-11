@@ -312,7 +312,14 @@ class Generator extends DataObject
 
         // Bind the shared logger before validation or events can fail. Each run owns its handler.
         $this->unsetData('feed_log_file');
+        $previewHandlers = $this->isTestMode() ? array_filter(
+            $this->logger->getHandlers(),
+            static fn ($handler) => $handler instanceof Logger\Handler\MemoryStream
+        ) : [];
         $this->logger->resetHandler();
+        foreach ($previewHandlers as $handler) {
+            $this->logger->pushHandler($handler);
+        }
         $logger = $this->getLogger();
         try {
             $this->productSelection->beginRun($this->feed->getData(

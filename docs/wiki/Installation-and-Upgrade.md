@@ -100,6 +100,8 @@ bin/magento cache:clean
 
 In production mode, complete the normal deployment steps for the project, including dependency-injection compilation and static-content deployment where required.
 
+When updating Admin JavaScript or templates in an existing deployment, back up and clear this module's published `MageOS_ShoppingFeed` directories for each deployed Admin theme and locale, together with its matching files under `var/view_preprocessed`. Rebuild Admin static content and verify the published files match `view/adminhtml/web` in the installed package. An overlay of vendor files alone can leave an older editor in place even when static deployment reports success. Reload the Admin page after deployment.
+
 ## Source installation
 
 Place or symlink the source at:

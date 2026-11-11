@@ -1,0 +1,65 @@
+{
+    "id": "13",
+    "name": "QA 20261111 virtual reference",
+    "status": "0",
+    "store": "2",
+    "config": {
+        "columns_product_columns": [
+            {
+                "column": "id",
+                "attribute": "sku",
+                "param": "",
+                "order": 0
+            },
+            {
+                "column": "result",
+                "attribute": "directive_conditional_value",
+                "param": {
+                    "aggregator": "all",
+                    "conditions": [
+                        {
+                            "attribute": "price",
+                            "operator": ">=",
+                            "value": "0"
+                        }
+                    ],
+                    "if_true": {
+                        "type": "static",
+                        "value": "admin accepted & tested",
+                        "attribute": "price",
+                        "percent": "-10"
+                    },
+                    "if_false": {
+                        "type": "static",
+                        "value": "admin fallback",
+                        "attribute": "",
+                        "percent": ""
+                    }
+                },
+                "order": 0
+            }
+        ],
+        "filters_product_types": [
+            "virtual"
+        ],
+        "filters_map_replace_empty_columns": [],
+        "output_params_format": "xml",
+        "output_params_xml_header": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<products>\n",
+        "output_params_xml_item": "product",
+        "output_params_xml_footer": "<\/products>",
+        "output_params_xml_optional_columns": "",
+        "output_params_xml_cdata_columns": "",
+        "filters_product_conditions": {
+            "aggregator": "all",
+            "conditions": [
+                {
+                    "attribute": "sku",
+                    "operator": "glob",
+                    "value": "*",
+                    "scope": "product"
+                }
+            ]
+        }
+    },
+    "eligible": 11
+}

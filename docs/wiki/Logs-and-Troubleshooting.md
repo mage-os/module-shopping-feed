@@ -30,6 +30,7 @@ Use **View Log** from the Feeds Management grid, or inspect the file as the Mage
 | An unchanged editor save changes a legacy blank currency | Candidate `133af71` preserves the effective generation currency. Review earlier explicit selections against a backup; the fix does not silently reverse them. |
 | Feed stock inclusion conflicts with storefront out-of-stock hiding | The stock correction in 1.2.0 makes feed-specific inclusion settings take precedence. Recompile after upgrading, then check simple and associated-product settings. |
 | Frontend feature overrides appear ignored | The scope correction in 1.2.0 honors website/store overrides. Check the effective store value and clear the applicable caches. |
+| Conditional Value shows its label but no condition controls after an update | Compare the published `js/form/parameter.js`, `template/form/parameter.html`, and conditional editor assets with the installed package. Back up/clear stale module Admin assets and rebuild each active theme/locale as described in [Installation and upgrade](Installation-and-Upgrade). Reload before testing again. |
 | Feed stays Pending | Confirm Magento cron, the `mageos_shopping_feed` cron group, and the process command are running. |
 | Direct command says generation failed | Check whether another process holds the per-feed lock, then open the feed log. |
 | Feed reaches Error | Read the first exception or error for that run, not only the final status line. |

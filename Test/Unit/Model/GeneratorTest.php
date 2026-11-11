@@ -114,6 +114,41 @@ class GeneratorTest extends ModelFramework
         }
     }
 
+    public function testPreviewKeepsMemoryDiagnosticsAndDropsPreviousFeedHandlers(): void
+    {
+        $feed = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Feed::class)
+            ->disableOriginalConstructor()->onlyMethods([])->getMock();
+        $feed->setData('id', 123);
+        $logger = new \MageOS\ShoppingFeed\Model\Logger(
+            $this->createMock(\MageOS\ShoppingFeed\Model\Logger\HandlerFactory::class)
+        );
+        $memory = new \MageOS\ShoppingFeed\Model\Logger\Handler\MemoryStream();
+        $previousHandler = new \Monolog\Handler\TestHandler();
+        $logger->pushHandler($previousHandler)->pushHandler($memory);
+        $selection = $this->createMock(\MageOS\ShoppingFeed\Model\ProductSelection\Selection::class);
+        $selection->method('beginRun')->willThrowException(
+            new \Magento\Framework\Exception\LocalizedException(__('Invalid preview rule'))
+        );
+        $generator = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Generator::class)
+            ->disableOriginalConstructor()->onlyMethods([])->getMock();
+        foreach (['feed' => $feed, 'logger' => $logger, 'productSelection' => $selection] as $name => $value) {
+            (new \ReflectionProperty(\MageOS\ShoppingFeed\Model\Generator::class, $name))
+                ->setValue($generator, $value);
+        }
+        $generator->setTestSku('preview-sku');
+        try {
+            $generator->run();
+            self::fail('Expected invalid preview selection to fail.');
+        } catch (\Magento\Framework\Exception\LocalizedException $exception) {
+            self::assertSame('Invalid preview rule', $exception->getMessage());
+        }
+        $log = $memory->getLogContent();
+        self::assertIsString($log);
+        self::assertStringContainsString('Invalid preview rule', $log);
+        self::assertSame([$memory], $logger->getHandlers());
+        self::assertFalse($previousHandler->hasErrorRecords());
+    }
+
     /** @dataProvider temporaryFileEncodingCases */
     #[\PHPUnit\Framework\Attributes\DataProvider('temporaryFileEncodingCases')]
     public function testTemporaryFileEncoding(string $type, bool $batchEnabled, bool $newBatch, bool $expectBom): void

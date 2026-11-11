@@ -1,0 +1,21 @@
+1	Google Merchant Default	4
+2	QA 20261111 combined XML	0
+3	QA 20261111 combined XML	0
+4	QA 20261111 google_shopping	0
+5	QA 20261111 google_local_inventory	0
+6	QA 20261111 microsoft_merchant_center	0
+7	QA 20261111 pinterest_catalog	0
+8	QA 20261111 tiktok_catalog	0
+9	QA 20261111 meta_catalog	0
+10	QA 20261111 openai_google_compatible	0
+11	QA 20261111 attribute and percent	0
+12	QA 20261111 benchmark	0
+13	QA 20261111 virtual reference	0
+14	QA 20261111 virtual batch	0
+15	QA 20261111 empty selection	0
+16	QA 20261111 child selection	0
+17	QA 20261111 rule matrix	0
+18	QA 20261111 rule matrix_clone	0
+schedules	0
+uploads	0
+queue	0

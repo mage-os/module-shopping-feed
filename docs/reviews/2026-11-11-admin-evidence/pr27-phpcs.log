@@ -1,0 +1,56 @@
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.ClassNaming sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.Variables sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.PropertiesSorting sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.ColonSpacing sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.PropertiesLineBreak sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.ZeroUnits sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.AvoidId sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.TypeSelectors sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.ImportantProperty sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.CommentLevels sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.CombinatorIndentation sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.SelectorDelimiter sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.TypeSelectorConcatenation sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.ColourDefinition sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.Quotes sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.SemicolonSpacing sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.BracesFormatting sniff is listening for CSS.
+DEPRECATED: Scanning CSS/JS files is deprecated and support will be removed in PHP_CodeSniffer 4.0.
+The Magento2.Less.Indentation sniff is listening for CSS.
+DEPRECATED: Support for custom tokenizers will be removed in PHP_CodeSniffer 4.0.
+The Magento2.GraphQL.ValidArgumentName sniff is listening for GRAPHQL.
+DEPRECATED: Support for custom tokenizers will be removed in PHP_CodeSniffer 4.0.
+The Magento2.GraphQL.ValidFieldName sniff is listening for GRAPHQL.
+DEPRECATED: Support for custom tokenizers will be removed in PHP_CodeSniffer 4.0.
+The Magento2.GraphQL.ValidTopLevelFieldName sniff is listening for GRAPHQL.
+DEPRECATED: Support for custom tokenizers will be removed in PHP_CodeSniffer 4.0.
+The Magento2.GraphQL.ValidTypeName sniff is listening for GRAPHQL.
+DEPRECATED: Support for custom tokenizers will be removed in PHP_CodeSniffer 4.0.
+The Magento2.GraphQL.ValidEnumValue sniff is listening for GRAPHQL.
+
+WARNING: The MageOS_ShoppingFeed standard uses 1 deprecated sniff
+--------------------------------------------------------------------------------
+-  Squiz.CSS.NamedColours
+   This sniff has been deprecated since v3.9.0 and will be removed in v4.0.0.
+   Support for scanning CSS files will be removed completely in v4.0.0.
+
+Deprecated sniffs are still run, but will stop working at some point in the
+future.
+

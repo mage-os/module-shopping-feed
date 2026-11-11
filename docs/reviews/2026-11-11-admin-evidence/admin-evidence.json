@@ -1,0 +1,202 @@
+[
+  {
+    "store": "307107143",
+    "test": "existing-column cold and cached conditional transition",
+    "pass": true
+  },
+  {
+    "store": "307107154",
+    "test": "existing-column cold and cached conditional transition",
+    "pass": true
+  },
+  {
+    "store": "307107143",
+    "test": "save edited fixture",
+    "pass": true
+  },
+  {
+    "store": "307107154",
+    "test": "save edited fixture",
+    "pass": true
+  },
+  {
+    "store": "307107143",
+    "test": "conditional and Any/SKU/parent/image persisted",
+    "pass": true
+  },
+  {
+    "store": "307107154",
+    "test": "conditional and Any/SKU/parent/image persisted",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "invalid XML item name rejected",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "XML/Delimited controls toggle",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "conditional true preview and restored log",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "conditional true preview and restored log",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "XML/Delimited controls toggle and valid XML correction persists",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "conditional false branch preview",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "conditional false branch preview",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "product attribute output preview",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "percentage +10 on raw price 100 yields 110.00",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "missing SKU validation",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "missing SKU validation",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "product ID recovery and percentage -10 on price100 =90.00",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "product ID recovery and attribute output",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "nonmatching selection excludes preview product with diagnostics",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "nonmatching selection excludes preview product with diagnostics",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "invalid XML item rejected",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "clone retains XML, conditional output and virtual/SKU selection",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "clone retains XML, conditional output and virtual/SKU selection",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "delete temporary clone",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "delete temporary clone",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "new feed required-name validation; all eight presets exposed",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "new feed required-name validation; all eight presets exposed",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "create fresh Generic feed and delete through grid",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "create fresh Generic feed and delete through grid",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "Admin Run Now confirmation and queue submission",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "Admin Run Now confirmation and queue submission",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "Admin file link opens valid XML with 11 conditional rows",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "Admin file link opens valid XML with 11 conditional rows",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "final positive preview restored after exclusions and generation",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "final positive preview restored after exclusions and generation",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "View Log shows final completed 11-product run",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "View Log shows final completed 11-product run",
+    "pass": true
+  },
+  {
+    "store": "alpha",
+    "check": "final feed disabled; original rows/files preserved",
+    "pass": true
+  },
+  {
+    "store": "hyva",
+    "check": "final feed disabled; original rows/files preserved",
+    "pass": true
+  }
+]

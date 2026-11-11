@@ -1,30 +1,21 @@
 diff --git a/Model/Generator.php b/Model/Generator.php
-index 4e59fbf..ea00bfc 100644
+index ebae8a3..67be3aa 100644
 --- a/Model/Generator.php
 +++ b/Model/Generator.php
-@@ -315,7 +315,14 @@ class Generator extends DataObject
- 
-         // Bind the shared logger before validation or events can fail. Each run owns its handler.
-         $this->unsetData('feed_log_file');
+@@ -314,0 +315,4 @@ class Generator extends DataObject
 +        $previewHandlers = $this->isTestMode() ? array_filter(
 +            $this->logger->getHandlers(),
 +            static fn ($handler) => $handler instanceof Logger\Handler\MemoryStream
 +        ) : [];
-         $this->logger->resetHandler();
+@@ -315,0 +320,3 @@ class Generator extends DataObject
 +        foreach ($previewHandlers as $handler) {
 +            $this->logger->pushHandler($handler);
 +        }
-         $logger = $this->getLogger();
-         try {
-             $this->productSelection->beginRun($this->feed->getData(
 diff --git a/Test/Unit/Model/GeneratorTest.php b/Test/Unit/Model/GeneratorTest.php
-index 079892f..dba8e2c 100644
+index 2f00359..e237a85 100644
 --- a/Test/Unit/Model/GeneratorTest.php
 +++ b/Test/Unit/Model/GeneratorTest.php
-@@ -114,6 +114,39 @@ class GeneratorTest extends ModelFramework
-         }
-     }
- 
+@@ -116,0 +117,35 @@ class GeneratorTest extends ModelFramework
 +    public function testPreviewKeepsMemoryDiagnosticsAndDropsPreviousFeedHandlers(): void
 +    {
 +        $feed = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Feed::class)
@@ -53,24 +44,17 @@ index 079892f..dba8e2c 100644
 +        } catch (\Magento\Framework\Exception\LocalizedException $exception) {
 +            self::assertSame('Invalid preview rule', $exception->getMessage());
 +        }
-+        self::assertStringContainsString('Invalid preview rule', $memory->getLogContent());
++        $log = $memory->getLogContent();
++        self::assertIsString($log);
++        self::assertStringContainsString('Invalid preview rule', $log);
 +        self::assertSame([$memory], $logger->getHandlers());
 +        self::assertFalse($previousHandler->hasErrorRecords());
 +    }
 +
-     /** @dataProvider temporaryFileEncodingCases */
-     #[\PHPUnit\Framework\Attributes\DataProvider('temporaryFileEncodingCases')]
-     public function testTemporaryFileEncoding(string $type, bool $batchEnabled, bool $newBatch, bool $expectBom): void
 diff --git a/Test/Unit/Model/ModelFramework.php b/Test/Unit/Model/ModelFramework.php
 index c7c85d4..882e008 100644
 --- a/Test/Unit/Model/ModelFramework.php
 +++ b/Test/Unit/Model/ModelFramework.php
-@@ -518,7 +518,7 @@ class ModelFramework extends CompatibilityTestCase
- 
-         $this->loggerMock = $this->getModelMock(
-             'MageOS\ShoppingFeed\Model\Logger',
+@@ -521 +521 @@ class ModelFramework extends CompatibilityTestCase
 -            ['info', 'notice', 'warning', 'debug', 'addHandler']
 +            ['info', 'notice', 'warning', 'debug', 'addHandler', 'getHandlers']
-         );
- 
-         $this->priceCurrencyMock = $this->getModelMock(

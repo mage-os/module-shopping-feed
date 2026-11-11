@@ -23,4 +23,4 @@ Configuration: /Users/matt/code/module-shopping-feed/phpunit.xml.dist
 
 Time: 00:01.670, Memory: 92.50 MB
 
-[30;42mOK (1020 tests, 2864 assertions)[0m
+OK (1020 tests, 2864 assertions)

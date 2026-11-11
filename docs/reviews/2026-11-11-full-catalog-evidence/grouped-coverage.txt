@@ -1,0 +1,14 @@
+{'num': '497', 'type': 'method', 'name': 'checkEmptyColumns', 'visibility': 'protected', 'complexity': '6', 'crap': '6.01', 'count': '1'}
+{'num': '499', 'type': 'stmt', 'count': '1'}
+{'num': '501', 'type': 'stmt', 'count': '1'}
+{'num': '502', 'type': 'stmt', 'count': '1'}
+{'num': '503', 'type': 'stmt', 'count': '1'}
+{'num': '504', 'type': 'stmt', 'count': '1'}
+{'num': '505', 'type': 'stmt', 'count': '1'}
+{'num': '506', 'type': 'stmt', 'count': '1'}
+{'num': '507', 'type': 'stmt', 'count': '1'}
+{'num': '508', 'type': 'stmt', 'count': '1'}
+{'num': '509', 'type': 'stmt', 'count': '1'}
+{'num': '510', 'type': 'stmt', 'count': '1'}
+{'num': '511', 'type': 'stmt', 'count': '1'}
+{'num': '512', 'type': 'stmt', 'count': '1'}

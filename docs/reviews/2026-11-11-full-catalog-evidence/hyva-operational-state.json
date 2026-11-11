@@ -1,0 +1,16 @@
+{
+  "observed_at": "2026-11-11T19:22:00.319028+00:00",
+  "test_feeds": 19,
+  "all_test_feeds_disabled": true,
+  "counters": {
+    "schedules": 0,
+    "uploads": 0,
+    "queue": 0
+  },
+  "maintenance": false,
+  "cron": "running",
+  "php": "running",
+  "storefront_http_status": 200,
+  "generator_sha256": "db870986e2443d1b7b7b24fb051586c5984396ada37ddc07fdbbcde60a41d3b2",
+  "composite_sha256": "f62696cfbe130778f4d98526dfe772f57c8cf82557e13f12b81169e9020bcbc5"
+}

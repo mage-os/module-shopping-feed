@@ -1,0 +1,20 @@
+[
+  {
+    "feed_id": "22",
+    "url": "https://latest-hyva.rocketcode.com/media/mageos-shopping-feed/full_20261111_22.xml",
+    "http_status": 200,
+    "content_type": "text/xml; charset=UTF-8",
+    "bytes": 20726013,
+    "sha256": "c11661859e4646201c7f62af3f472ce68566b425a36583879780f330591388ab",
+    "matches_generated_file": true
+  },
+  {
+    "feed_id": "23",
+    "url": "https://latest-hyva.rocketcode.com/media/mageos-shopping-feed/full_20261111_23.xml",
+    "http_status": 200,
+    "content_type": "text/xml; charset=UTF-8",
+    "bytes": 146023264,
+    "sha256": "03a27f3982de12a51cf90bedbc5a3dcc0761d38922e08837aa13aff868299ea6",
+    "matches_generated_file": true
+  }
+]

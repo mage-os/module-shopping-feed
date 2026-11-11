@@ -1,11 +1,10 @@
 
- ! [NOTE] The Xdebug PHP extension is active, but "--xdebug" is not used.       
- !        The process was restarted and it will not halt at breakpoints.        
- !        Use "--xdebug" if you want to halt at breakpoints.                    
+ ! [NOTE] The Xdebug PHP extension is active, but "--xdebug" is not used.
+ !        The process was restarted and it will not halt at breakpoints.
+ !        Use "--xdebug" if you want to halt at breakpoints.
 
 /Users/matt/code/module-shopping-feed/Model/Generator.php
 /Users/matt/code/module-shopping-feed/Test/Unit/Model/GeneratorTest.php
 /Users/matt/code/module-shopping-feed/Test/Unit/Model/ModelFramework.php
 
- [OK] No errors                                                                 
-
+ [OK] No errors

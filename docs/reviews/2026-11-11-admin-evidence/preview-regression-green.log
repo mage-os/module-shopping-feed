@@ -7,4 +7,4 @@ Configuration: /private/tmp/shopping-feed-deploy-20261111/candidate/phpunit.xml.
 
 Time: 00:00.092, Memory: 38.00 MB
 
-[30;42mOK (1 test, 4 assertions)[0m
+OK (1 test, 4 assertions)

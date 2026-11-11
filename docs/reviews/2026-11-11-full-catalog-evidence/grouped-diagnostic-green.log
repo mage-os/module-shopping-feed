@@ -1,0 +1,10 @@
+PHPUnit 12.5.43 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.27
+Configuration: /Users/matt/code/module-shopping-feed/phpunit.xml.dist
+
+...                                                                 3 / 3 (100%)
+
+Time: 00:00.077, Memory: 34.00 MB
+
+OK (3 tests, 10 assertions)

@@ -1,0 +1,62 @@
+[
+    {
+        "product": {
+            "entity_id": "157982",
+            "sku": "WANDS-QA-GROUPED-01",
+            "type_id": "grouped"
+        },
+        "exported": 0,
+        "skipped": 1,
+        "log": "[18:43:10]: START GENERIC FEED #22\n[18:43:10]: 80.00 Mb/1.00 Gb | adding product - SKU #WANDS-QA-GROUPED-01, ID 157982\n[18:43:10]: product id 0 skipped - by product skip rule, has price empty.\n[18:43:10]: Processed 1 of 1 (100%)\n[18:43:10]: FINISHED | MEMORY USAGE: 8.00 Mb/1.00 Gb | TIME SPENT: 00:00:00\n"
+    },
+    {
+        "product": {
+            "entity_id": "157983",
+            "sku": "WANDS-QA-GROUPED-02",
+            "type_id": "grouped"
+        },
+        "exported": 0,
+        "skipped": 1,
+        "log": "[18:43:10]: START GENERIC FEED #22\n[18:43:10]: 86.00 Mb/1.00 Gb | adding product - SKU #WANDS-QA-GROUPED-02, ID 157983\n[18:43:10]: product id 0 skipped - by product skip rule, has price empty.\n[18:43:10]: Processed 1 of 1 (100%)\n[18:43:10]: FINISHED | MEMORY USAGE: 1.00 b/1.00 Gb | TIME SPENT: 00:00:00\n"
+    },
+    {
+        "product": {
+            "entity_id": "157984",
+            "sku": "WANDS-QA-GROUPED-03",
+            "type_id": "grouped"
+        },
+        "exported": 0,
+        "skipped": 1,
+        "log": "[18:43:10]: START GENERIC FEED #22\n[18:43:10]: 86.00 Mb/1.00 Gb | adding product - SKU #WANDS-QA-GROUPED-03, ID 157984\n[18:43:10]: product id 0 skipped - by product skip rule, has price empty.\n[18:43:10]: Processed 1 of 1 (100%)\n[18:43:10]: FINISHED | MEMORY USAGE: 1.00 b/1.00 Gb | TIME SPENT: 00:00:00\n"
+    },
+    {
+        "product": {
+            "entity_id": "157985",
+            "sku": "WANDS-QA-GROUPED-04",
+            "type_id": "grouped"
+        },
+        "exported": 0,
+        "skipped": 1,
+        "log": "[18:43:10]: START GENERIC FEED #22\n[18:43:10]: 86.00 Mb/1.00 Gb | adding product - SKU #WANDS-QA-GROUPED-04, ID 157985\n[18:43:10]: product id 0 skipped - by product skip rule, has price empty.\n[18:43:10]: Processed 1 of 1 (100%)\n[18:43:10]: FINISHED | MEMORY USAGE: 1.00 b/1.00 Gb | TIME SPENT: 00:00:00\n"
+    },
+    {
+        "product": {
+            "entity_id": "157986",
+            "sku": "WANDS-QA-GROUPED-05",
+            "type_id": "grouped"
+        },
+        "exported": 0,
+        "skipped": 1,
+        "log": "[18:43:10]: START GENERIC FEED #22\n[18:43:10]: 86.00 Mb/1.00 Gb | adding product - SKU #WANDS-QA-GROUPED-05, ID 157986\n[18:43:10]: product id 0 skipped - by product skip rule, has price empty.\n[18:43:10]: Processed 1 of 1 (100%)\n[18:43:10]: FINISHED | MEMORY USAGE: 1.00 b/1.00 Gb | TIME SPENT: 00:00:00\n"
+    },
+    {
+        "product": {
+            "entity_id": "157987",
+            "sku": "WANDS-QA-GROUPED-06",
+            "type_id": "grouped"
+        },
+        "exported": 0,
+        "skipped": 1,
+        "log": "[18:43:10]: START GENERIC FEED #22\n[18:43:10]: 86.00 Mb/1.00 Gb | adding product - SKU #WANDS-QA-GROUPED-06, ID 157987\n[18:43:10]: product id 0 skipped - by product skip rule, has price empty.\n[18:43:10]: Processed 1 of 1 (100%)\n[18:43:10]: FINISHED | MEMORY USAGE: 1.00 b/1.00 Gb | TIME SPENT: 00:00:00\n"
+    }
+]

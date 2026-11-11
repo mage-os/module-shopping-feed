@@ -53,4 +53,3 @@ WARNING: The MageOS_ShoppingFeed standard uses 1 deprecated sniff
 
 Deprecated sniffs are still run, but will stop working at some point in the
 future.
-

@@ -3,7 +3,7 @@ PHPUnit 12.5.43 by Sebastian Bergmann and contributors.
 Runtime:       PHP 8.4.27
 Configuration: /private/tmp/shopping-feed-deploy-20261111/candidate/phpunit.xml.dist
 
-[41;37mF[0m                                                                   1 / 1 (100%)
+F                                                                   1 / 1 (100%)
 
 Time: 00:00.097, Memory: 38.00 MB
 
@@ -14,5 +14,5 @@ Failed asserting that '' [ASCII](length: 0) contains "Invalid preview rule" [ASC
 
 /private/tmp/shopping-feed-deploy-20261111/candidate/Test/Unit/Model/GeneratorTest.php:145
 
-[37;41mFAILURES![0m
-[37;41mTests: 1[0m[37;41m, Assertions: 2[0m[37;41m, Failures: 1[0m[37;41m.[0m
+FAILURES!
+Tests: 1, Assertions: 2, Failures: 1.

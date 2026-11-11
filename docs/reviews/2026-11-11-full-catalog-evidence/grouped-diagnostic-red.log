@@ -1,0 +1,19 @@
+PHPUnit 12.5.43 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.27
+Configuration: /Users/matt/code/module-shopping-feed/phpunit.xml.dist
+
+F                                                                   1 / 1 (100%)
+
+Time: 00:00.073, Memory: 34.00 MB
+
+There was 1 failure:
+
+1) MageOS\ShoppingFeed\Test\Unit\Model\Product\Adapter\Type\CompositeDiagnosticsTest::testEmptyColumnDiagnosticPreservesTheMappedRowIdentifier
+Failed asserting that '[18:44:32]: product id 0 skipped - by product skip rule, has price empty.\n
+' [ASCII](length: 74) contains "product row id WANDS-QA-GROUPED-01 skipped - by product skip rule, has price empty." [ASCII](length: 83).
+
+/Users/matt/code/module-shopping-feed/Test/Unit/Model/Product/Adapter/Type/CompositeDiagnosticsTest.php:37
+
+FAILURES!
+Tests: 1, Assertions: 5, Failures: 1.

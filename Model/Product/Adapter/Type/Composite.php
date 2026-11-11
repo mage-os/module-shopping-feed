@@ -503,7 +503,7 @@ class Composite extends AdapterAbstract
                 if (isset($row[$column]) && $row[$column] == "") {
                     $this->getLogger()->info(
                         sprintf(
-                            "product id %d skipped - by product skip rule, has %s empty.",
+                            "product row id %s skipped - by product skip rule, has %s empty.",
                             array_key_exists('id', $row) ? $row['id'] : $this->getProduct()->getId(),
                             $column
                         )

@@ -8,6 +8,7 @@ This map records how the historical Rocket Web documentation is treated in the M
 | Installation and Magento Marketplace access | `Installation-and-Upgrade` | Replaced with the current package identity and source-install option |
 | Creating and managing feeds | `Quick-Start`, `Feed-Types-and-Lifecycle`, `Admin-UI-Component-Forms` | Current and historical editor behavior is distinguished; acceptance limits and customization migration are explicit |
 | General feed settings and output files | `General-Configuration`, `Commands-Paths-and-Settings` | Updated for safe output paths, current filenames, currency, delimiter, and stock behavior |
+| XML output and six channel presets (unreleased SHO-1) | `XML-Output` | Channel setup, generic wrappers, optional tags, CDATA, examples, and validation |
 | Column mapping and directive reference | `Columns-and-Directives` | Consolidated and checked against current feed configuration |
 | Conditional column values (unreleased SHO-2) | `Conditional-Values` | Setup, outputs, parent context, validation, and worked examples |
 | Attribute-based product eligibility (unreleased SHO-3) | `Product-Selection` | Setup, operators, parent matching, logging, and performance limits |

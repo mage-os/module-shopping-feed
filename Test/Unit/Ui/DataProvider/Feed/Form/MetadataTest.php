@@ -13,7 +13,10 @@ class MetadataTest extends TestCase
     {
         $fields = $this->createMock(\MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\Fields::class);
         $fields->method('get')->willReturn(['general' => ['name' => [],
-            'general_stock_attribute_code' => [], 'output_params_delimiter_other' => []]]);
+            'general_stock_attribute_code' => [], 'output_params_delimiter_other' => [],
+            'output_params_xml_header' => ['formElement' => 'textarea'],
+            'output_params_xml_item' => [], 'output_params_xml_footer' => ['formElement' => 'textarea'],
+            'output_params_xml_optional_columns' => [], 'output_params_xml_cdata_columns' => []]]);
         $options = $this->createMock(\MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\Options::class);
         $options->method('get')->willReturn([]);
         $parameters = $this->createMock(\MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\Parameters::class);
@@ -63,6 +66,11 @@ class MetadataTest extends TestCase
         self::assertArrayNotHasKey('action_delete', $readOnly['children']['record']['children']);
         $readOnlyValue = $readOnly['children']['record']['children']['value']['arguments']['data']['config'];
         self::assertTrue($readOnlyValue['disabled']);
+
+        $xmlHeader = $meta['general']['children']['output_params_xml_header']['arguments']['data']['config'];
+        self::assertSame('textarea', $xmlHeader['formElement']);
+        self::assertSame('MageOS_ShoppingFeed/js/form/dependent-textarea', $xmlHeader['component']);
+        self::assertSame('xml', $xmlHeader['showWhen']);
         $children = $meta['promotions']['children']['rule_12']['children'];
         foreach (['date_from', 'date_to', 'display_from', 'display_to'] as $key) {
             $config = $children[$key]['arguments']['data']['config'];

@@ -73,7 +73,8 @@ class Filter
             $this->findAndReplace($field, $params['column']);
         }
 
-        $charset = $this->feed->getConfig('output_params_encoding', "UTF-8");
+        $isXml = $this->feed->getConfig('output_params_format', 'delimited') === 'xml';
+        $charset = $isXml ? 'UTF-8' : $this->feed->getConfig('output_params_encoding', "UTF-8");
         if (extension_loaded('mbstring')) {
             $supportedEncodings = array_map('strtolower', mb_list_encodings());
             if (!is_string($charset) || !in_array(strtolower($charset), $supportedEncodings, true)) {
@@ -93,7 +94,8 @@ class Filter
         ];
         $activeDelimiter = $delimiter == 'other' ? $delimiter_other : ($delimiter == '\t' ? "\t" : $delimiter);
         $isCustomCsv = $this->feed->getData('type') === 'generic' && $activeDelimiter === ',';
-        $hasEnclosure = $isCustomCsv || (string)$this->feed->getConfig('output_params_enclose_cell', '') !== '';
+        $hasEnclosure = $isXml || $isCustomCsv
+            || (string)$this->feed->getConfig('output_params_enclose_cell', '') !== '';
         if ($activeDelimiter !== '' && !$hasEnclosure) {
             $replacements[$activeDelimiter] = ' ';
         }

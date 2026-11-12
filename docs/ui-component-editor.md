@@ -95,6 +95,14 @@ The scope selector is rendered only for Product Selection. Conditional Value def
 
 Export/import and extension code must preserve structured parameters through the existing form encoder/decoder. Removing rules or switching a mapping back to another directive is the application-level rollback; do not assume older module versions can interpret these configuration keys and directive parameters.
 
+## Unreleased SHO-1 XML controls
+
+The General fieldset exposes `config.output_params_format` with `delimited` as the default and `xml` for Generic and the six supported channel feeds. OpenAI remains delimited only. Generic XML controls use `config.output_params_xml_header`, `config.output_params_xml_item`, `config.output_params_xml_footer`, `config.output_params_xml_optional_columns`, and `config.output_params_xml_cdata_columns`. Header and footer use multiline textareas. Show these fields only for Generic XML; delimiter/enclosure/escape/empty-cell controls apply only to delimited output. A filename extension does not select the serializer.
+
+Channel RSS presets resolve their canonical structure from `mageos_shopping_feed.xml`, including aliases, compound fields, lists, and unprefixed fields. Saved generic wrappers do not override a destination's preset. Preserve this behavior in modifiers rather than exposing misleading editable structure fields on channel feeds. The [XML output guide](wiki/XML-Output.md#preset-configuration) documents preset configuration and user-facing behavior.
+
+Save/import validation checks XML names, wrappers, and declared namespaces. Generation validates product values; row data failures are logged and skipped, while configuration and I/O failures stop generation. Custom mappers should preserve structured shipping and image values through the supported XML path instead of flattening separators prematurely. Delimited consumers retain their existing representation.
+
 ## Grid permissions and extensions
 
 The standard grid checks `MageOS_ShoppingFeed::save` for Create New Feed, Configure, Enable, Disable, and Clone; `MageOS_ShoppingFeed::generate` for Run Now and the Test Feed controller/editor buttons; and `MageOS_ShoppingFeed::delete` for bulk Delete. View Log and Export remain available with the grid permission. Both standard and Nebula grids can still display Test Feed to a read-only user, but the controller denies the request. Do not treat link visibility as permission to run a preview. The bulk-action dropdown is omitted when no permitted actions remain. Controller ACL and POST/form-key checks still enforce requests independently of visibility.

@@ -634,6 +634,12 @@ class Feed extends AbstractModel
                 );
             }
         }
+        if ($this->getConfig('output_params_format', 'delimited') === 'xml') {
+            $this->createXmlWriter()->validateColumns(array_column(
+                (array)$this->getConfig('columns_product_columns', []),
+                'column'
+            ));
+        }
         return $this;
     }
 
@@ -694,6 +700,50 @@ class Feed extends AbstractModel
             }
         }
         return $this;
+    }
+
+    /**
+     * Build the same XML contract for save-time validation and generation.
+     *
+     * @return Output\Xml
+     */
+    public function createXmlWriter(): Output\Xml
+    {
+        if ($this->getType() === 'openai_google_compatible') {
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('This destination has no supported XML preset.')
+            );
+        }
+        $preset = $this->getXmlPreset();
+        if ($preset !== []) {
+            return new Output\Rss($preset, (string)$this->getName(), (string)$this->getStore()->getBaseUrl());
+        }
+        $columns = fn (string $key): array => array_values(array_filter(array_map(
+            'trim',
+            explode(',', (string)$this->getConfig('output_params_' . $key, ''))
+        ), static fn (string $value): bool => $value !== ''));
+        return new Output\Xml(
+            (string)$this->getConfig('output_params_xml_header', '<?xml version="1.0" encoding="UTF-8"?><products>'),
+            (string)$this->getConfig('output_params_xml_item', 'product'),
+            (string)$this->getConfig('output_params_xml_footer', '</products>'),
+            $columns('xml_optional_columns'),
+            $columns('xml_cdata_columns')
+        );
+    }
+
+    /**
+     * Get the destination XML contract independently of saved, generic wrapper settings.
+     *
+     * @return array<string,mixed>
+     */
+    public function getXmlPreset(): array
+    {
+        if ($this->getType() === 'generic') {
+            return [];
+        }
+        $type = $this->feedTypesConfig->getFeed($this->getType());
+        $params = $type['default_feed_config']['output_params'] ?? [];
+        return ($params['xml_preset'] ?? '') === 'rss' ? $params : [];
     }
 
     /**

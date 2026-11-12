@@ -1,5 +1,7 @@
 # Mage-OS Shopping Feed
 
+Unreleased: XML output includes automatic presets for Google Shopping, Google Local Inventory, Microsoft, Pinterest, TikTok, and Meta. Generic feeds retain configurable wrappers, optional tags, and CDATA. See [XML output](docs/wiki/XML-Output.md).
+
 [![Check Extension on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml?query=branch%3Amain)
 
 `MageOS_ShoppingFeed` turns a Mage-OS or Magento Open Source catalog into product data feeds for Google Shopping, Google Local Inventory, Google Promotions, Meta, Pinterest, TikTok, Microsoft Merchant Center, OpenAI Google-compatible and generic delimited recipients. Merchants define each feed's columns, filters, category taxonomy, schedule and optional FTP or SFTP delivery in the Admin. Cron writes the files under `pub/media/mageos-shopping-feed`. On the storefront, the module can add schema.org microdata for Google Automatic Item Updates, preselect product options from feed deep links, and send Google Ads `view_item` events.
@@ -97,7 +99,8 @@ Choose **Create New Feed** and a preset, or open an existing feed. Every setting
 | Store View | Default store view | Store context for the whole feed. Save and reopen after changing it to refresh store-dependent options. |
 | Feed Currency | Store default currency | Currency used for prices and microdata. |
 | Feed Path | `pub/media/mageos-shopping-feed` | Output directory; must stay inside that directory. |
-| Delimiter | Tab (TikTok: comma) | Field separator: tab, comma or **Other**. |
+| Output Format (unreleased SHO-1) | Delimited | XML uses automatic structure for six channel presets, or manual configuration for Generic. See [XML Output](docs/wiki/XML-Output.md). |
+| Delimiter | Tab (TikTok: comma) | Delimited output separator: tab, comma or **Other**. |
 | Other Delimiter | Empty | Custom separator when Delimiter is Other. |
 | Apply Catalog Price Rules | Yes | Uses catalog price rules when calculating sale prices. |
 | Use default Stock Statuses | Yes | When No, the attribute below supplies availability. |
@@ -105,7 +108,7 @@ Choose **Create New Feed** and a preset, or open an existing feed. Every setting
 | Use Qty Increments | No | Multiplies the unit price by the minimum sale quantity or quantity increment. |
 | Use Stock Reservations | No (Local Inventory: Yes) | Subtracts pending reservations from aggregate quantities. |
 | Complex Product Context Prioritization | No (catalog presets: Yes) | Skips a standalone simple product that belongs to an enabled configurable, bundle or grouped parent, so it is exported in the parent's context. |
-| File Name | Per preset, such as `mageos_shopping_feed_%s.txt` | Output file name; `%s` becomes the feed ID. |
+| File Name | Per preset, such as `mageos_shopping_feed_%s.txt` | Output file name; `%s` becomes the feed ID. With unreleased SHO-1, set an `.xml` name when selecting XML; changing format does not rename the file. |
 | Cell Enclosure, Enclosure Escape, Empty Cell Value (Generic only) | Empty | CSV quoting and the value written for empty cells. A comma feed without an enclosure is quoted with `"` automatically. |
 | Use for microdata (Google Shopping only) | Yes for a new Google Shopping feed | Makes this feed the source of storefront microdata. Only one feed per store view can have it. |
 

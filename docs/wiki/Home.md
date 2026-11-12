@@ -12,7 +12,7 @@ Mage-OS Shopping Feed generates product feeds from Mage-OS and Magento Open Sour
 
 The [1.1 upgrade checklist](Installation-and-Upgrade#upgrading-from-10-to-11) covers the required schema update and changes to saved Google and comma-delimited feeds. [Release 1.0.0](Release-1-0-0) remains available as a historical record.
 
-> Documentation baseline: released behavior plus unreleased SHO-2 and SHO-3, as marked below. Last reviewed: 2026-11-10.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 The [Admin UI Component forms](Admin-UI-Component-Forms) in 1.2.0 change the editor and its customization hooks. The historical 1.2.0 runtime `133af71` was verified on `mageos-latest`, with form, grid-permission, preview, stock-selection, Local Inventory, frontend-scope, and currency-preservation corrections. Magento Open Source 2.4.8 and 2.4.9 retain production-mode form/output and six-role acceptance. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records that historical acceptance, including extended operational checks and remaining limits. Historical version 1.1 continues to use the previous editor.
 
@@ -29,6 +29,10 @@ Version 1.2.4 is [published](https://github.com/mage-os-lab/module-shopping-feed
 ## Unreleased features
 
 [Conditional Value](Conditional-Values) chooses a column value using product conditions. [Product Selection](Product-Selection) filters whole output products using attribute conditions. Both are available across all eight feed types in this branch and are not included in 1.2.5. The guides cover setup, parent context, examples, and verification.
+
+## Unreleased XML output
+
+[XML Output](XML-Output) adds automatic presets for Google Shopping, Google Local Inventory, Microsoft, Pinterest, TikTok, and Meta. Generic feeds support manual XML configuration. The guide covers switching formats, filenames, optional tags, CDATA, and validation. This feature is not included in 1.2.5.
 
 ## What the module does
 

@@ -380,6 +380,40 @@ class GeneratorTest extends ModelFramework
         );
     }
 
+    /** @dataProvider collectionScopeMethods */
+    #[\PHPUnit\Framework\Attributes\DataProvider('collectionScopeMethods')]
+    public function testFullGenerationClearsSharedPreviewScope(string $method): void
+    {
+        $provider = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Product\CollectionProvider::class)
+            ->disableOriginalConstructor()->onlyMethods(['getCollection'])->getMock();
+        $activeSku = new \ReflectionProperty($provider, 'testSku');
+        $collection = $this->createMock(\Magento\Catalog\Model\ResourceModel\Product\Collection::class);
+        $provider->method('getCollection')->willReturn($collection);
+        $this->objectData['collectionProvider'] = $provider;
+        $collection->method('getSelect')->willReturn($this->createMock(\Magento\Framework\DB\Select::class));
+        $collection->method('getSize')->willReturnCallback(
+            static function () use ($activeSku, $provider): int {
+                return $activeSku->getValue($provider) === null ? 2 : 1;
+            }
+        );
+
+        $this->objectData['testSku'] = 'preview-sku';
+        $this->createModel();
+        $preview = $this->model->$method();
+        self::assertSame(1, $method === 'getCollection' ? $preview->getSize() : $preview);
+
+        $this->objectData['testSku'] = null;
+        $this->createModel();
+        $full = $this->model->$method();
+        self::assertSame(2, $method === 'getCollection' ? $full->getSize() : $full);
+    }
+
+    /** @return list<array{string}> */
+    public static function collectionScopeMethods(): array
+    {
+        return [['getCollection'], ['getTotalItems']];
+    }
+
     public function testProcessProductCallbackSkippedPhpLimit()
     {
         $args = [
@@ -754,7 +788,12 @@ class GeneratorTest extends ModelFramework
         $this->assertInstanceOf('MageOS\ShoppingFeed\Model\Generator', $this->model->run());
     }
 
-    protected function setTestRunMocks()
+    /**
+     * Configure the generation collaborators.
+     *
+     * @param array<string, mixed> $settings
+     */
+    protected function setTestRunMocks(array $settings = [])
     {
         $this->expectReturn($this->dateTimeMock, 'getTimestamp', 1000000);
         $this->expectReturn($this->feedMock, 'getType', 'generic');
@@ -766,7 +805,10 @@ class GeneratorTest extends ModelFramework
         $this->expectReturn($this->feedMock, 'getColumnsMap', []);
         $this->feedMock->expects($this->any())
             ->method('getConfig')
-            ->will($this->returnCallback(function ($key, $default = '') {
+            ->will($this->returnCallback(function ($key, $default = '') use ($settings) {
+                if (array_key_exists($key, $settings)) {
+                    return $settings[$key];
+                }
                 switch ($key) {
                     case 'filters_product_types':
                         return ['simple','configurable','bundle','virtual','downloadable'];
@@ -795,6 +837,47 @@ class GeneratorTest extends ModelFramework
         $this->expectSelf($this->iteratorMock, 'walk');
 
         $this->objectData['queue'] = null;
+    }
+
+    /** @dataProvider xmlBatchCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('xmlBatchCases')]
+    public function testXmlBatchDocumentBoundaries(bool $enabled, int $offset, int $total, string $expected): void
+    {
+        $this->setTestRunMocks(['output_params_format' => 'xml', 'output_params_xml_header' => '<products>']);
+        /** @var \MageOS\ShoppingFeed\Model\Feed&\PHPUnit\Framework\MockObject\MockObject $feed */
+        $feed = $this->feedMock;
+        /** @var \Magento\Framework\Filesystem\Driver\File&\PHPUnit\Framework\MockObject\MockObject $driver */
+        $driver = $this->fileDriverMock;
+        $feed->method('getId')->willReturn(1);
+        $feed->method('getUploadCollection')->willReturn([]);
+        $this->objectData['batch'] = new \MageOS\ShoppingFeed\Model\Generator\Batch([
+            'enabled' => $enabled, 'offset' => $offset,
+        ]);
+        $writes = [];
+        $driver->method('fileWrite')->willReturnCallback(
+            function ($handle, $value) use (&$writes) {
+                $writes[] = $value;
+                return strlen($value);
+            }
+        );
+        $driver->expects($total <= $offset ? $this->once() : $this->never())->method('rename');
+        $this->createModel();
+        self::assertNotNull($this->model);
+        $this->model->setData('total_items', $total);
+        (new \ReflectionProperty($this->model, 'currentIteration'))->setValue($this->model, $offset);
+        $this->model->run();
+        self::assertSame($expected, implode('', $writes));
+    }
+
+    /** @return array<string, array{bool, int, int, string}> */
+    public static function xmlBatchCases(): array
+    {
+        return [
+            'empty full feed' => [false, 0, 0, "<products>\n</products>\n"],
+            'first batch' => [true, 0, 2, "<products>\n"],
+            'middle batch' => [true, 1, 2, ''],
+            'last batch' => [true, 2, 2, "</products>\n"],
+        ];
     }
 
     public function testDesctruct()

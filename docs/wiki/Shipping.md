@@ -2,7 +2,7 @@
 
 The Shipping section configures the output produced by a column mapped to the **Shipping** directive. It does nothing unless that directive is present in Columns Map.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: released behavior plus unreleased SHO-1, as marked below. Last reviewed: 2026-11-10.
 
 Version 1.2.4 handles configurable products without a minimum-price product list and fixes the catalog tax helper used when the including-tax flag is omitted. Regenerate representative configurable weights and taxed shipping after upgrading; see [Release 1.2.4](Release-1-2-4).
 
@@ -38,3 +38,7 @@ Shipping requirements depend on target country and account configuration. Use th
 ## Performance
 
 Shipping is one of the more expensive directives because it can evaluate several methods and destinations for every product. If a large feed slows down, compare a test run with the Shipping directive removed before changing batch size or infrastructure.
+
+## XML shipping (unreleased SHO-1)
+
+Google Shopping, Microsoft, Pinterest, and Meta XML presets turn the built-in Shipping directive's output into nested shipping elements. Structured mapper values preserve commas and colons in service names. Manually mapped shipping strings use `country:region:service:price`, with comma-separated groups; avoid those separators inside manual subfield values. For example, `DE::Standard:6.49 EUR` supplies country, service, and price while omitting region. Malformed groups skip the row with a log message. TikTok retains packed shipping values. See [XML Output](XML-Output#preset-configuration) and review shipping mappings when switching formats.

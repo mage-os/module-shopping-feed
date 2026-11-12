@@ -97,6 +97,9 @@ class Generator extends DataObject
      */
     protected $feed;
 
+    /** @var Output\Xml|null */
+    private ?Output\Xml $xmlWriter = null;
+
     /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\MetaCatalog */
     private $metaCatalogValidator;
 
@@ -388,6 +391,11 @@ class Generator extends DataObject
             $addedItems = $addedItems - (int)$this->batch->getOffset();
         }
 
+        if (!$this->isTestMode() && $this->isXmlOutput() && $this->batch !== null
+            && (!$this->batch->isEnabled() || $this->getTotalItems() <= $this->currentIteration)
+        ) {
+            $this->fileDriver->fileWrite($this->getTemporaryHandle(), $this->getXmlWriter()->footer());
+        }
         $this->closeTemporaryHandle()
             ->copyDataFromTemporaryFeedFile();
 
@@ -519,9 +527,7 @@ class Generator extends DataObject
     public function getCollection()
     {
         if ($this->collection === null) {
-            if ($this->isTestMode()) {
-                $this->collectionProvider->setTestSku($this->testSku);
-            }
+            $this->collectionProvider->setTestSku($this->testSku);
             $this->collection = $this->collectionProvider
                 ->getCollection($this->feed);
 
@@ -542,9 +548,7 @@ class Generator extends DataObject
     public function getTotalItems()
     {
         if (!$this->hasData('total_items')) {
-            if ($this->isTestMode()) {
-                $this->collectionProvider->setTestSku($this->testSku);
-            }
+            $this->collectionProvider->setTestSku($this->testSku);
             $countCollection = $this->collectionProvider->getCollection($this->feed);
             $countCollection->getSelect()->reset(\Magento\Framework\DB\Select::GROUP);
             $this->setData('total_items', $countCollection->getSize());
@@ -578,7 +582,18 @@ class Generator extends DataObject
                 && ($productAdapter instanceof \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable
                     || $productAdapter->getParentAdapter()
                         instanceof \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable);
-            $this->writeFeed($row, true, $requiresItemGroupId);
+            try {
+                $this->writeFeed($row, true, $requiresItemGroupId);
+            } catch (Output\InvalidValueException $exception) {
+                $this->updateCountSkip();
+                $identifier = $row['id'] ?? $row['sku_id'] ?? '';
+                $this->getLogger()->warning(sprintf(
+                    'Skipped XML row %s for product SKU %s: %s Review Columns Map and product data.',
+                    is_scalar($identifier) ? (string)$identifier : '(no id)',
+                    $productAdapter->getProduct()?->getSku() ?? '(unknown)',
+                    $exception->getMessage()
+                ));
+            }
         }
         return $this;
     }
@@ -630,8 +645,8 @@ class Generator extends DataObject
                 default => [$this->metaCatalogValidator, 'Meta Catalog'],
             };
             $validation = ($isPinterestFeed || $isOpenAiFeed)
-                ? $validator->validate($fields, $requiresItemGroupId)
-                : $validator->validate($fields);
+                ? $validator->validate(Output\MappedValue::text($fields), $requiresItemGroupId)
+                : $validator->validate(Output\MappedValue::text($fields));
             $identifier = $fields[$isTikTokFeed ? 'sku_id' : 'id'] ?? null;
             $id = is_scalar($identifier) ? (string)$identifier : '(no id)';
             if ($validation['errors']) {
@@ -661,6 +676,30 @@ class Generator extends DataObject
             if (isset($fields['sale_price_effective_date'])) {
                 $fields['sale_price_effective_date'] = '';
             }
+        }
+
+        if ($this->isXmlOutput()) {
+            $writer = $this->getXmlWriter();
+            $output = [];
+            foreach ($this->getOutputColumns(false) as $map) {
+                $output[$map['column']] = $fields[$map['column']] ?? '';
+            }
+            $xml = $addNewLine ? $writer->row($output) : $writer->header();
+            if ($this->isTestMode()) {
+                $preview = [];
+                foreach (Output\MappedValue::text($output) as $name => $values) {
+                    foreach (is_array($values) ? $values : [$values] as $value) {
+                        $preview[] = ['label' => $name, 'value' => $value];
+                    }
+                }
+                $this->testOutput[] = $preview;
+            } else {
+                $this->fileDriver->fileWrite($this->getTemporaryHandle(), $xml);
+            }
+            if ($addNewLine) {
+                $this->countProductsExported++;
+            }
+            return $this;
         }
 
         $params = $this->getWriteFeedParams();
@@ -818,7 +857,9 @@ class Generator extends DataObject
             $handle = $this->fileDriver->fileOpen($this->getFeedFile() . '.tmp', $mode);
 
             // Microsoft TSV uses plain UTF-8 so the first header has no BOM prefix.
-            if ($mode === "w" && $this->feed->getData('type') !== 'microsoft_merchant_center') {
+            if ($mode === "w" && !$this->isXmlOutput()
+                && $this->feed->getData('type') !== 'microsoft_merchant_center'
+            ) {
                 $this->fileDriver->fileWrite($handle, self::UTF8_BOM);
             }
 
@@ -950,6 +991,29 @@ class Generator extends DataObject
                 : ''
         ];
         return $params;
+    }
+
+    /**
+     * Check the explicitly selected output format.
+     *
+     * @return bool
+     */
+    private function isXmlOutput(): bool
+    {
+        return $this->feed->getConfig('output_params_format', 'delimited') === 'xml';
+    }
+
+    /**
+     * Build and validate the XML configuration once per generation process.
+     *
+     * @return Output\Xml
+     */
+    private function getXmlWriter(): Output\Xml
+    {
+        if ($this->xmlWriter === null) {
+            $this->xmlWriter = $this->feed->createXmlWriter();
+        }
+        return $this->xmlWriter;
     }
 
     /**

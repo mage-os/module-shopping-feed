@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- XML generation skips invalid product rows with SKU and column diagnostics, preserves shipping/image value boundaries, and validates XML settings on save.
+- XML wrapper fields preserve multiline edits; irrelevant delimited controls hide in XML mode. Meta/Pinterest namespace rules follow their published samples, and Local Inventory supports nested pickup costs.
+
+- Clear the shared preview SKU filter before full generation and product counting. Rename the Microsoft destination to reflect its delimited and XML output options.
+
+- Supply automatic RSS XML presets for Google Shopping, Local Inventory, Microsoft, Pinterest, TikTok, and Meta, including namespaces, field aliases, empty-field omission, and configured compound fields. Keep manual XML structure controls on generic feeds.
+
+- Add XML feed output with configurable header, item element, footer, optional columns, and CDATA columns. Preserve delimited output as the default.
+
 All notable changes to this project will be documented here.
 
 ## Unreleased

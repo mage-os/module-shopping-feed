@@ -1,7 +1,17 @@
 define(['Magento_Ui/js/form/element/abstract'], function (Element) {
     'use strict';
     return Element.extend({
-        defaults: {listens: {dependency: 'updateVisibility'}},
-        updateVisibility: function (value) { this.visible(String(value) === this.showWhen); }
+        defaults: {
+            parentVisible: true,
+            listens: {dependency: 'updateVisibility', parentVisible: 'updateParentVisibility'}
+        },
+        updateVisibility: function (value) {
+            this.dependencyValue = value;
+            this.visible(this.parentVisible && String(value) === this.showWhen);
+        },
+        updateParentVisibility: function (value) {
+            this.parentVisible = value;
+            this.updateVisibility(this.dependencyValue);
+        }
     });
 });

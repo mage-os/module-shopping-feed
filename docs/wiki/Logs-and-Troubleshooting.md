@@ -2,7 +2,7 @@
 
 Start with the feed-specific log and the feed grid status. They distinguish queue problems, product skips, generation failures, and upload failures.
 
-> Documentation baseline: released behavior plus unreleased SHO-2 and SHO-3, as marked below. Last reviewed: 2026-11-10.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 The original `9f07e46` category and promotion-date defects are repaired in 1.2.0, with runtime acceptance at `133af71`. Consult [Admin UI Component forms](Admin-UI-Component-Forms) for the exact deployed revision and acceptance evidence. Code updates do not reconstruct dates already erased by an earlier save.
 
@@ -81,3 +81,9 @@ For slow or incomplete large feeds, continue with [Performance and large catalog
 For rejected saves or generation errors, review the selected attributes, valid option IDs, operator types, date format, and both Conditional Value outputs. A nonnumeric percentage source is an error; it does not select Otherwise. See [Conditional values](Conditional-Values#troubleshooting-and-verification).
 
 Product Selection skip counts describe product/parent candidates, not distinct SKUs or expanded inventory rows. Rules do not override existing exclusions. Review [Product selection](Product-Selection#logs-performance-and-recovery) for counts, invalid-rule recovery, and the distinction between active-parent and standalone-parent evaluation.
+
+## XML output (unreleased SHO-1)
+
+If a Generic XML feed will not save, check element names, declared prefixes, matching header/footer elements, and whitespace before the XML declaration. DTDs and entity declarations are not supported.
+
+Invalid product text or malformed manually mapped compound values skip the affected row; inspect the source SKU, mapped row ID, and column in Test Feed or View Log. A parent SKU can be the source for a composite row. Fix the data or mapping and regenerate. Configuration or file-write errors stop generation and preserve the prior published file. Inspect its timestamp rather than assuming an existing download is the new run. See [XML Output](XML-Output#validation-and-failed-rows).

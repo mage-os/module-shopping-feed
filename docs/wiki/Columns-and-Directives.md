@@ -2,7 +2,7 @@
 
 Columns Map controls the output schema. Each row gives the output column a name and maps it to a Magento product attribute or a module directive.
 
-> Documentation baseline: released behavior plus unreleased SHO-2, SHO-3 and SHO-5, as marked below. Last reviewed: 2026-11-11.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 ## How a column is built
 
@@ -45,6 +45,8 @@ Existing find/replace rules still run at their current mapping/formatting stage.
 Example: add Prepend with `Brand: ` for `title`, followed by Uppercase for `title`. A mapped value of `Red shoe` becomes `BRAND: RED SHOE`. Reversing those rows produces `Brand: RED SHOE`.
 
 Save, reopen, check row order and values, then use **Test Feed** and inspect the generated file. Validate configuration again on import; unsupported operations, malformed row lists, and invalid precision/date/currency arguments are rejected. See the [SHO-5 verification record](https://github.com/mage-os-lab/module-shopping-feed/blob/feature/sho-5-per-column-modifiers/docs/reviews/2026-11-11-sho-5-modifiers.md) for the checks performed and remaining acceptance work.
+
+With unreleased SHO-1 XML, mapped names must also be valid XML element names and any prefixes must be declared. Channel presets supply their namespace rules automatically; Generic feeds require manual wrappers. See [XML Output](XML-Output).
 
 ## Common directives
 
@@ -120,7 +122,7 @@ Its default columns are:
 
 ## Sale-price behavior
 
-Google Shopping and Local Inventory leave `sale_price` and `sale_price_effective_date` empty when the rendered sale price is not lower than the regular price. The header remains present, and every row must retain the same number of positional columns.
+Google Shopping and Local Inventory leave `sale_price` and `sale_price_effective_date` empty when the rendered sale price is not lower than the regular price. In delimited output, the header remains present and every row retains the same number of positional columns. With unreleased SHO-1 XML presets, empty optional fields are omitted as described in [XML Output](XML-Output).
 
 Generic feeds preserve their custom names, ordering, and values. Google sale-price suppression does not apply to Generic output. See [Generic feeds](Generic-Feeds) for CSV quoting and [Google Shopping](Google-Shopping) for identifier and backorder-date configuration.
 

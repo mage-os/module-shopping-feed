@@ -459,3 +459,36 @@ Local checks and remaining limits: [SHO-5 verification](docs/reviews/2026-11-11-
 
 - [ ] Retest SHO-5 Google mappings: interleave modifiers on `promotions_id` and `promotion_id`, verify their combined sequence on `promotion_id`, and apply a modifier to runtime-added `color`.
 - [ ] Reorder modifier rows using only the keyboard and the visible Order field. Save, reopen, and generate to prove the changed sequence. Check drag ordering and read-only permissions still work.
+
+## SHO-1 XML output acceptance (unreleased)
+
+Automated coverage includes XML parsing and escaping, repeated elements, CDATA terminators, namespaces, optional empty values, zero preservation, invalid characters, DTD rejection, generator row dispatch, batch boundaries, and UTF-8 filtering.
+
+Local Admin, persistence, generation, and batch checks are recorded in the [November 10 retest](docs/reviews/2026-11-10-sho-1-independent-findings-fixed.md). Repeat these acceptance scenarios for the target installation:
+
+1. Create a custom feed, select XML, set an `.xml` filename, and save a header, item element, footer, optional columns, and CDATA columns. Reload and verify every value.
+2. Map a product containing ampersands, Unicode, and `]]>`; map a zero value, an empty optional value, and repeated image values. Generate and parse the downloaded file. Check values and tag counts.
+3. Generate with one product per batch, then with no matching products. Verify exactly one header/footer and publication only after the final batch.
+4. Publish a valid feed, then try saving malformed wrappers or an undeclared namespace. Save must fail. Separately inject invalid stored configuration in a disposable fixture; generation must fail and preserve the published file.
+5. Run Test SKU; verify mapped values still render. Switch to delimited output, save/reload, and compare the generated CSV/TSV with the prior output.
+6. Configure the same XML options in an extension preset and create a feed from it. Verify defaults survive save/reload and generation.
+
+### SHO-1 destination XML presets
+
+For each of Google Shopping, Google Local Inventory, Microsoft, Pinterest, TikTok, and Meta, select XML and an `.xml` filename, save/reload, and generate without entering wrappers or renaming columns. Verify RSS/channel/item structure, namespace-qualified fields, channel metadata from the selected store, and empty-value omission. Repeat on a feed with saved generic wrappers and confirm the canonical preset wins.
+
+Verify shipping and tax nested groups for Google, Microsoft, Pinterest, and Meta, repeated additional images, TikTok's sku_id to g:id mapping, Local Inventory store codes and quantities, and unchanged delimited output when switching back. Confirm that only generic feeds show manual XML structure settings. OpenAI must not offer XML or generate it through a saved XML setting.
+
+Local automated, installed-store, and Admin results are recorded in the [November 10 retest](docs/reviews/2026-11-10-sho-1-independent-findings-fixed.md). Meta and Pinterest namespace corrections were checked against provider samples. No preset has been submitted to a destination as part of local testing; TikTok XML field compatibility remains unverified. Recipient ingestion and production-volume acceptance are separate checks.
+
+### SHO-1 independent-review regressions
+
+- Put a single XML-invalid control character in one synthetic product description. Generate and preview: other products publish, skipped count increases, and Log Output identifies the SKU and column. Repeat with a bad product in the last cron batch.
+- Use a shipping service title containing both a comma and colon. Verify one intact nested service value, including persistent-cache reuse and switching formats.
+- Verify that an additional-image URL containing a comma remains one URL in XML.
+- Edit and save multiline XML header/footer fields in Admin. Verify exact stored newlines and successful generation.
+- Reject invalid element names, undeclared prefixes, malformed wrappers, DTDs, and whitespace before the declaration on save; accept valid Unicode names.
+- Toggle XML/Delimited and Other Delimiter; show only applicable settings. OpenAI must not offer XML, including with a historical invalid stored selection.
+- Compare Meta/Pinterest namespaces to the provider samples; verify configured Local Inventory pickup-cost nesting without inventing merchant values.
+
+See [the 2026-11-10 fixes and retest report](docs/reviews/2026-11-10-sho-1-independent-findings-fixed.md) for executed results and boundaries.

@@ -12,6 +12,8 @@ These guides cover released behavior through 1.2.5 and explicitly marked unrelea
 | Create and operate feeds | [Wiki home](wiki/Home.md), [Quick start](wiki/Quick-Start.md), and the wiki sidebar |
 | Configure conditional output (unreleased SHO-2) | [Conditional values](wiki/Conditional-Values.md) |
 | Select products by attribute rules (unreleased SHO-3) | [Product selection](wiki/Product-Selection.md) |
+
+| Configure XML and channel presets (unreleased SHO-1) | [XML output](wiki/XML-Output.md) |
 | Configure SFTP, FTP, or gzip | [Uploads](wiki/Uploads.md) |
 | Move from Rocket Shopping Feeds | [Migration and coexistence](../MIGRATION.md) and [optional companion](wiki/Rocket-Web-Migration.md) |
 | Customize the Admin editor | [Developer contract](ui-component-editor.md) |

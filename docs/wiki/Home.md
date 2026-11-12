@@ -1,6 +1,6 @@
 # Mage-OS Shopping Feed
 
-**Version 1.2.5** creates the **Skip from Being Submitted** product attribute, so a product can be left out of feeds per store view, and reads dropdown and multiselect option labels for the feed's store view. Read [Release 1.2.5](Release-1-2-5) and its [upgrade checklist](Installation-and-Upgrade#upgrading-from-124-to-125). [Release 1.2.4](Release-1-2-4) added SFTP server-key verification, encrypted upload credentials, safe log rotation, and Test Feed permissions.
+**Version 1.3.0 is being prepared for release.** It combines [XML output](XML-Output), [Conditional Value](Conditional-Values), [Product Selection](Product-Selection), and [per-column modifiers](Columns-and-Directives#per-column-modifiers-130). See [Release 1.3.0](Release-1-3-0) and the [upgrade checklist](Installation-and-Upgrade#upgrading-to-130). The tag and Composer package are not published yet.
 
 **Migrating from Rocket Shopping Feeds?** Use the separate [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb). See the [installation and migration guide](Rocket-Web-Migration) for preview, import, output comparison, activation, and rollback.
 
@@ -26,13 +26,13 @@ Version 1.2.4 is [published](https://github.com/mage-os-lab/module-shopping-feed
 
 **OpenAI beta:** the bundled Google-compatible preset differs from the current public OpenAI product-feed contract. Confirm acceptance of an actual sample before use; see [the documented format gaps](OpenAI-ChatGPT).
 
-## Unreleased features
+## Conditions and selection in 1.3.0
 
 [Conditional Value](Conditional-Values) chooses a column value using product conditions. [Product Selection](Product-Selection) filters whole output products using attribute conditions. Both are available across all eight feed types in this branch and are not included in 1.2.5. The guides cover setup, parent context, examples, and verification.
 
-## Unreleased XML output
+## XML output in 1.3.0
 
-[XML Output](XML-Output) adds automatic presets for Google Shopping, Google Local Inventory, Microsoft, Pinterest, TikTok, and Meta. Generic feeds support manual XML configuration. The guide covers switching formats, filenames, optional tags, CDATA, and validation. This feature is not included in 1.2.5.
+[XML Output](XML-Output) adds automatic presets for Google Shopping, Google Local Inventory, Microsoft, Pinterest, TikTok, and Meta. Generic feeds support manual XML configuration. The guide covers switching formats, filenames, optional tags, CDATA, and validation. This feature first appears in 1.3.0.
 
 ## What the module does
 

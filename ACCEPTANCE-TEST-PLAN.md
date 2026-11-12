@@ -4,7 +4,7 @@
 
 Use this plan to decide whether a `MageOS_ShoppingFeed` release candidate is ready for production. Run it against the exact candidate commit on representative store copies before enabling live schedules or uploads.
 
-The [1.2.5 release notes](docs/releases/1.2.5.md) and [product-attribute verification record](docs/reviews/2026-10-22-pr-24-verification.md) identify the current patch scope. The [1.2.4 release notes](docs/releases/1.2.4.md) and [Mage-OS 3.6 security verification](docs/reviews/2026-10-20-standards-security-mageos36.md) cover the previous release. The earlier [Mage-OS 3.5 hardening record](docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) and [native theme follow-up](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) retain their recorded scope. The [October 3 local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) retains its `133af71` browser/operational scope. External recipient, target-store, and release approval remain separate gates. The checkboxes below are a reusable plan, not a completed acceptance record.
+The [1.3.0 candidate notes](docs/releases/1.3.0.md) and [preparation record](docs/reviews/2026-11-12-release-1.3.0-preparation.md) describe the current release candidate. The [1.2.5 release notes](docs/releases/1.2.5.md) and [product-attribute verification record](docs/reviews/2026-10-22-pr-24-verification.md) identify the current patch scope. The [1.2.4 release notes](docs/releases/1.2.4.md) and [Mage-OS 3.6 security verification](docs/reviews/2026-10-20-standards-security-mageos36.md) cover the previous release. The earlier [Mage-OS 3.5 hardening record](docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) and [native theme follow-up](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) retain their recorded scope. The [October 3 local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) retains its `133af71` browser/operational scope. External recipient, target-store, and release approval remain separate gates. The checkboxes below are a reusable plan, not a completed acceptance record.
 
 The current platform acceptance target is Mage-OS 3.6.0; Mage-OS 3.5.0 remains in CI coverage. Add another currently supported Magento Open Source store when available. A store with Multi-Source Inventory is required for Local Inventory acceptance.
 
@@ -417,7 +417,7 @@ No open High or Medium defect may be accepted for the first production release w
 Approval applies only to the recorded commit and tested configuration. Any code change after sign-off requires affected checks to be rerun and a new release decision.
 
 
-## SHO-2 conditional values (unreleased)
+## SHO-2 conditional values (1.3.0 candidate)
 
 Use synthetic products and a disabled feed with no schedule or uploads. Follow the [Conditional values guide](docs/wiki/Conditional-Values.md).
 
@@ -431,7 +431,7 @@ Use synthetic products and a disabled feed with no schedule or uploads. Follow t
 
 The [editor-switch report](docs/reviews/2026-11-10-sho-2-editor-switch.md) records successful Admin switching, save/reopen, and generated outputs. The later [default-row report](docs/reviews/2026-11-10-sho-2-default-mapping.md) records unit and persistence coverage but leaves its browser save/reopen follow-up incomplete. Repeat that check before claiming complete browser acceptance of the default-row change.
 
-## SHO-3 product selection (unreleased)
+## SHO-3 product selection (1.3.0 candidate)
 
 Use synthetic products and feeds without schedules or uploads. Existing filters must remain in effect.
 
@@ -446,7 +446,7 @@ Use synthetic products and feeds without schedules or uploads. Existing filters 
 
 The [initial SHO-3 verification](docs/reviews/2026-11-10-sho-3-product-selection.md) is supplemented by the [independent-finding fixes and retest](docs/reviews/2026-11-10-sho-3-independent-fixes.md), covering persistence, malformed inputs, Unicode wildcards, date boundaries, parent contexts, skip counts, store isolation, and batching. These records distinguish completed local checks from untested platforms, recipient ingestion, and production workloads.
 
-## SHO-5 per-column modifiers (unreleased)
+## SHO-5 per-column modifiers (1.3.0 candidate)
 
 Local checks and remaining limits: [SHO-5 verification](docs/reviews/2026-11-11-sho-5-modifiers.md).
 
@@ -460,7 +460,7 @@ Local checks and remaining limits: [SHO-5 verification](docs/reviews/2026-11-11-
 - [ ] Retest SHO-5 Google mappings: interleave modifiers on `promotions_id` and `promotion_id`, verify their combined sequence on `promotion_id`, and apply a modifier to runtime-added `color`.
 - [ ] Reorder modifier rows using only the keyboard and the visible Order field. Save, reopen, and generate to prove the changed sequence. Check drag ordering and read-only permissions still work.
 
-## SHO-1 XML output acceptance (unreleased)
+## SHO-1 XML output acceptance (1.3.0 candidate)
 
 Automated coverage includes XML parsing and escaping, repeated elements, CDATA terminators, namespaces, optional empty values, zero preservation, invalid characters, DTD rejection, generator row dispatch, batch boundaries, and UTF-8 filtering.
 
@@ -492,3 +492,9 @@ Local automated, installed-store, and Admin results are recorded in the [Novembe
 - Compare Meta/Pinterest namespaces to the provider samples; verify configured Local Inventory pickup-cost nesting without inventing merchant values.
 
 See [the 2026-11-10 fixes and retest report](docs/reviews/2026-11-10-sho-1-independent-findings-fixed.md) for executed results and boundaries.
+
+### Combined 1.3.0 feature checks
+
+- [ ] Combine Product Selection, Conditional Value, modifiers and XML in one generated feed. Check parsed Unicode values with inactive non-UTF-8 and semicolon delimited settings.
+- [ ] Confirm repeated additional-image URLs retain commas within each URL after Secure URL, and compound shipping values retain service punctuation after modifiers.
+- [ ] Confirm Google legacy/canonical column aliases and runtime-added variants work in both delimited and XML output.

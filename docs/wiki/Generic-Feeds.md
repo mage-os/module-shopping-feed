@@ -1,8 +1,8 @@
 # Generic feeds
 
-Use a Generic feed when the recipient needs a custom product file without a bundled destination template. Delimited output is the default; unreleased SHO-1 also supports manually configured XML.
+Use a Generic feed when the recipient needs a custom product file without a bundled destination template. Delimited output is the default; 1.3.0 also supports manually configured XML.
 
-> Documentation baseline: released behavior plus unreleased SHO-1, as marked below. Last reviewed: 2026-11-10.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 ## Starting schema
 
@@ -55,6 +55,6 @@ Parse the complete file using the recipient's delimiter and encoding rules. Conf
 * Complex products follow the chosen parent and associated-product modes.
 * The recipient accepts a non-production upload before scheduling begins.
 
-## Manual XML (unreleased SHO-1)
+## Manual XML (1.3.0)
 
 Choose **General > Output Format: XML**, set a `.xml` filename, and configure the document header, item element, footer, optional columns, and CDATA columns. Columns Map names become element names. The default wrapper is `products` with one `product` per mapped row. See [XML Output](XML-Output#configure-a-generic-xml-feed) for a complete example, namespace rules, and validation. If a bundled channel meets your needs, use that channel's automatic preset instead.

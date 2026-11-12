@@ -1,34 +1,31 @@
 # Changelog
 
-## Unreleased
-
-- XML generation skips invalid product rows with SKU and column diagnostics, preserves shipping/image value boundaries, and validates XML settings on save.
-- XML wrapper fields preserve multiline edits; irrelevant delimited controls hide in XML mode. Meta/Pinterest namespace rules follow their published samples, and Local Inventory supports nested pickup costs.
-
-- Clear the shared preview SKU filter before full generation and product counting. Rename the Microsoft destination to reflect its delimited and XML output options.
-
-- Supply automatic RSS XML presets for Google Shopping, Local Inventory, Microsoft, Pinterest, TikTok, and Meta, including namespaces, field aliases, empty-field omission, and configured compound fields. Keep manual XML structure controls on generic feeds.
-
-- Add XML feed output with configurable header, item element, footer, optional columns, and CDATA columns. Preserve delimited output as the default.
-
 All notable changes to this project will be documented here.
 
-## Unreleased
+## 1.3.0 - Unreleased
+
+[Release notes and upgrade requirements](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/releases/1.3.0.md).
 
 ### Added
 
-- SHO-5: Add ordered per-column modifiers in Columns Map for prepend/append, case changes, round/integer/decimal places, date/price formatting, strip tags/escape HTML, and HTTPS rewriting. Apply each chain once to final cells, then enforce output limits; validate Admin, imported, and stored configuration.
-
-- SHO-3: Product selection by All/Any attribute conditions, with product or parent scope, SKU wildcards, base-image presence, visibility, and parent status. Shares the validated condition engine and editor with Conditional Value; existing eligibility filters remain in effect.
-- Add **Conditional Value** to every feed type, with All/Any product conditions using Magento rule comparisons, separate matching and fallback outputs, store-view attribute labels, and raw numeric percentage adjustments (SHO-2). Provide structured controls in the active Admin editor and validate configuration during save and generation.
+- **XML output (SHO-1):** Automatic RSS presets for Google Shopping, Local Inventory, Microsoft, Pinterest, TikTok, and Meta. Generic feeds support configurable wrappers, item elements, optional columns and CDATA. Delimited output remains the default; OpenAI remains delimited only.
+- **Conditional Value (SHO-2):** All/Any product conditions choose between fixed text, product attributes, or percentage adjustments. Available in Columns Map and Replace Empty Values across all eight feed types.
+- **Product Selection (SHO-3):** All/Any attribute conditions filter output products, with product/parent scope, SKU wildcards, image presence, visibility and status. Existing exclusions and eligibility checks remain in effect.
+- **Per-column modifiers (SHO-5):** Ordered prepend/append, Unicode case changes, rounding, truncation, decimal padding, date and price formatting, Strip tags, Escape HTML and HTTPS rewriting. Chains run once per final value before output limits, with drag and keyboard ordering.
 
 ### Fixed
 
-- SHO-5: Reject Escape HTML with entity-conflicting unenclosed delimiters, remove script/style bodies during Strip tags, and format Round as plain decimal text independent of PHP precision settings. Reject unknown modifier columns on save and distinguish malformed lists from excessive row counts. Cover mixed delimiters crossing entity boundaries, resolve Google legacy and runtime-added column names consistently, preserve word boundaries in Strip tags, and support keyboard ordering through a visible Order field.
+- Preserve literal condition values, explicit clearing, structured parameters, Unicode wildcards, calendar-day comparisons, and shared parent context. Validate both conditional outputs and reject malformed imported rules.
+- Initialize conditional editors after their data arrives, including switches from existing mappings. New mapping rows default to Static Value.
+- Preserve composite row identifiers and preview diagnostics. Clear preview SKU filters before full generation and keep selection failures in the correct feed log.
+- Skip XML-invalid product rows with SKU/column diagnostics; preserve the prior file on configuration or write failure. Preserve multiline wrappers and structured shipping/image boundaries; omit optional empty fields, and keep zero values.
+- Reject Escape HTML with unsafe unenclosed delimiters, including mixed separators crossing entity boundaries. Strip tags retains word boundaries and removes script/style bodies. Round produces plain decimal text independent of PHP precision settings.
+- Resolve Google legacy and runtime-added column names consistently for modifiers. XML modifier processing uses UTF-8, ignores inactive delimiter settings and preserves repeated images and compound shipping values.
 
-- Restore Static Value as the default for new Columns Map and Replace Empty Values rows across all feed types, so an empty parameter does not create an invalid conditional rule (SHO-2).
-- Preserve exact condition values and null clearing; reject unsupported or malformed imported rules. Handle Unicode SKU wildcards and calendar-day comparisons for Date and Time attributes. Keep validation failures in the correct feed log, count repeated candidate checks once, and cache parent lookups within each generation (SHO-3).
-- Render the Conditional Value editor only after its data exists, so switching an existing mapping no longer leaves its controls blank in Magento Admin (SHO-2).
+### Documentation
+
+- Add guides and examples for XML, Conditional Value, Product Selection and modifiers, plus parent-value inheritance instructions, troubleshooting and cumulative upgrade/rollback guidance.
+- Preserve dated independent verification reports and the November 9 competitor comparison as historical evidence.
 
 ## 1.2.5 - 2026-10-22
 

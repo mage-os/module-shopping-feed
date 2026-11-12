@@ -1,6 +1,6 @@
 # TikTok Catalog
 
-> Documentation baseline: released behavior plus unreleased SHO-1, as marked below. Last reviewed: 2026-11-10.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 The **TikTok Catalog** preset defaults to a quoted UTF-8 CSV file for product catalogs in TikTok Ads Manager. It shares the module's generation, Test Feed, scheduling, and upload tools. An actual TikTok catalog import has not been verified.
 
@@ -47,6 +47,6 @@ The preset does not create campaigns, configure TikTok Pixel, or synchronize Tik
 
 Checked on 2026-09-29 against TikTok's [catalog product parameters](https://ads.tiktok.com/resources/help/article/catalog-product-parameters?lang=en), [catalog creation and scheduled feed instructions](https://ads.tiktok.com/resources/help/article/create-manage-catalogs?lang=en), and [catalog quality guidance](https://ads.tiktok.com/resources/help/article/best-practices-for-a-high-quality-catalog). Current provider specifications take precedence over third-party recommendations. Local validation does not establish destination acceptance.
 
-## Automatic XML preset (unreleased SHO-1)
+## Automatic XML preset (1.3.0)
 
 In **General**, select **Output Format: XML** and set **File Name** to a name ending in `.xml`. This channel supplies its RSS header, item wrapper, footer, and namespace rules automatically; no manual XML structure is required. Existing default mappings remain usable. Review custom compound fields when switching formats, and inspect a generated sample before changing the destination's data-source URL and format. Empty optional tags are omitted. See [XML Output](XML-Output) for setup, field conversions, and validation limits. Delimited output remains the default.

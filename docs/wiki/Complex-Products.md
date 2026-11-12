@@ -2,7 +2,7 @@
 
 Configurable, grouped, and bundle products can produce parent rows, associated rows, or both. Decide the row model first, then configure inheritance, URLs, stock, price, and duplicate handling around it.
 
-> Documentation baseline: released behavior plus unreleased SHO-2 and SHO-3, as marked below. Last reviewed: 2026-11-10.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 ## Associated-product modes
 
@@ -119,7 +119,7 @@ For each product type, record:
 
 Run the matrix for in-stock and out-of-stock combinations. For MSI Local Inventory, repeat it across at least two sources linked to the selected website stock.
 
-## Conditions and selection (unreleased SHO-2 and SHO-3)
+## Conditions and selection (1.3.0)
 
 [Conditional Value](Conditional-Values#conditions-and-parent-products) reads the current mapping product and its active parent. Existing inheritance settings still determine which product supplies a column. It does not search other parents for a standalone row.
 

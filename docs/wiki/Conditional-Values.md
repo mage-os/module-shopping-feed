@@ -1,6 +1,6 @@
 # Conditional values
 
-> Documentation baseline: unreleased SHO-2 and shared SHO-3 condition controls; not included in 1.2.5. Last reviewed: 2026-11-10.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 **Conditional Value** chooses what to write in one feed column. It is available in **Columns Map** and **Replace Empty Values** for all eight feed types. Use [Product Selection](Product-Selection) when you want to exclude entire products instead.
 

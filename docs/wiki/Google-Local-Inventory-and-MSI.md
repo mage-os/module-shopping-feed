@@ -2,7 +2,7 @@
 
 Google Local Inventory output connects a product ID with store-level availability, quantity, and price. With Magento Multi-Source Inventory enabled, the module can produce source-specific rows for sources linked to the selected website stock.
 
-> Documentation baseline: released behavior plus unreleased SHO-1, as marked below. Last reviewed: 2026-11-10.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 Version 1.2.3 includes the source and reservation corrections below. The [Mage-OS 3.5.0 hardening report](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.3/docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) records native quantities, website-stock isolation, compensation, disabled sources, and generated Local Inventory rows. Versions through 1.2.2 deducted reservations per source; review changed quantities after upgrading.
 
@@ -101,7 +101,7 @@ Use at least two enabled sources and one reservation. Confirm:
 
 The earlier nine controlled simple-product scenarios are recorded in `docs/reviews/2026-10-02-docker-operations-acceptance.md`. Candidate `133af71` adds fifteen native configurable MSI scenarios per Magento Open Source 2.4.8/2.4.9 profile: parent-only, child-only, and combined modes across baseline, reservation, compensation, source-item disablement, and restoration. Native stock APIs and indexers establish the custom stock. Quantities, availability, source filtering, and duplicate protection pass. See `docs/reviews/2026-10-03-local-acceptance.md` for the exact data, corrections, and cleanup. Checkout-order placement, asynchronous consumers, and recipient ingestion remain separate checks.
 
-## XML and optional pickup data (unreleased SHO-1)
+## XML and optional pickup data (1.3.0)
 
 Select **XML** in **General > Output Format** and use an `.xml` file name. The Local Inventory preset supplies the RSS structure. Default inventory mappings do not enable pickup or infer a store's pickup policy.
 
@@ -109,6 +109,6 @@ For pickup-enabled products, add `pickup_sla` and any applicable `pickup_method`
 
 Google's pickup-cost requirement applies to pickup-enabled products in the UK, EU, and EFTA when the website charges pickup fees, rather than every Local Inventory feed. Check the [current Local Inventory specification](https://support.google.com/merchants/answer/14819809?hl=en-GB) and [pickup-cost attribute](https://support.google.com/merchants/answer/16988704?hl=en). The XML structure does not supply or validate the merchant's pickup policy.
 
-## Automatic XML preset (unreleased SHO-1)
+## Automatic XML preset (1.3.0)
 
 In **General**, select **Output Format: XML** and set **File Name** to a name ending in `.xml`. This channel supplies its RSS header, item wrapper, footer, and namespace rules automatically; no manual XML structure is required. Existing default mappings remain usable. Review custom compound fields when switching formats, and inspect a generated sample before changing the destination's data-source URL and format. Empty optional tags are omitted. See [XML Output](XML-Output) for setup, field conversions, and validation limits. Delimited output remains the default.

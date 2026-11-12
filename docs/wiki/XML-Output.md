@@ -1,6 +1,6 @@
 # XML Output
 
-> Documentation baseline: unreleased SHO-1. Last reviewed: 2026-11-10.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 Select **XML** in the feed's **General > Output Format** field and set **File Name** to a name ending in `.xml`. Existing feeds default to delimited output.
 
@@ -21,7 +21,7 @@ The preset is loaded from the destination configuration even if the feed has sav
 | Generic | Manual document wrapper, mapped element names, optional tags, and CDATA |
 | OpenAI / ChatGPT beta | Delimited only |
 
-These are unreleased SHO-1 capabilities, not features of version 1.2.5. Delimited output remains the default. Google Promotions is a separate companion writer; selecting XML for the product feed does not change its format.
+These capabilities are included in the 1.3.0 candidate and are absent from 1.2.5. Delimited output remains the default. Google Promotions is a separate companion writer; selecting XML for the product feed does not change its format.
 
 ## Switch a channel feed to XML
 

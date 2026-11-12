@@ -1,6 +1,6 @@
 # Product selection
 
-> Documentation baseline: unreleased SHO-3; not included in 1.2.5. Last reviewed: 2026-11-10.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 **Product Filters > Product selection conditions** restricts a feed to products matching attribute rules. It is available for all eight feed types. Existing feeds have no conditions and retain their existing eligibility rules. Use [Conditional Value](Conditional-Values) to change a column's value instead of excluding a product.
 

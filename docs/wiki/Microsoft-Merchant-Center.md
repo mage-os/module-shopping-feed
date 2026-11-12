@@ -1,10 +1,10 @@
 # Microsoft Merchant Center
 
-> Documentation baseline: released behavior plus unreleased SHO-1, as marked below. Last reviewed: 2026-11-10.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The guide separates historical 1.2.0 browser checks from 1.2.4 Mage-OS 3.6 verification and records the remaining limits. Template generation checks do not establish provider ingestion acceptance.
 
-The **Microsoft Merchant Center** preset defaults to a UTF-8 tab-delimited `.txt` file. With the unreleased XML output feature, it also provides an automatic RSS XML preset: select **Output Format: XML** and use a `.xml` file name. The module supplies the XML structure. It shares the module's generation, Test Feed, scheduling, and upload tools. Microsoft import acceptance has not been verified.
+The **Microsoft Merchant Center** preset defaults to a UTF-8 tab-delimited `.txt` file. With XML output in 1.3.0, it also provides an automatic RSS XML preset: select **Output Format: XML** and use a `.xml` file name. The module supplies the XML structure. It shares the module's generation, Test Feed, scheduling, and upload tools. Microsoft import acceptance has not been verified.
 
 ## Create and map the feed
 

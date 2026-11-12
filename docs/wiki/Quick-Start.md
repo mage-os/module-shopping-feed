@@ -14,7 +14,7 @@ In the Admin, go to **Catalog > Mage-OS Shopping Feed > Feeds Management**.
 
 Choose one of the available templates:
 
-* **Generic** for a custom product feed (delimited by default; manual XML in unreleased SHO-1)
+* **Generic** for a custom product feed (delimited by default; manual XML in 1.3.0)
 * **Google Shopping** for a Google product data source
 * **Google Local Inventory** for location-specific inventory data
 
@@ -28,7 +28,7 @@ On **General Configuration** in 1.1, or **General** in the UI Component editor:
 2. Select the store view.
 3. Select the feed currency.
 4. Keep the output under `pub/media/mageos-shopping-feed`.
-5. Review output format, filename, and stock behavior. Delimited output uses the configured delimiter. With unreleased SHO-1, select XML and a `.xml` filename for a supported channel or Generic feed; see [XML Output](XML-Output).
+5. Review output format, filename, and stock behavior. Delimited output uses the configured delimiter. With 1.3.0, select XML and a `.xml` filename for a supported channel or Generic feed; see [XML Output](XML-Output).
 6. Open **Run Schedule** in 1.1, or **Schedule** in 1.2.0, and remove any default schedule before the first save. New feeds can start with a daily schedule.
 7. Confirm **Uploads** is empty, then save before configuring fields that depend on the current column map.
 
@@ -76,11 +76,11 @@ Check:
 * IDs, URLs, prices, sale dates, availability, and images
 * Configurable parent and child behavior
 * Delimiter handling for quotes, tabs, commas, line breaks, and Unicode in delimited files
-* XML parsing, namespaces, optional tags, repeated/nested values, and CDATA when using unreleased SHO-1
+* XML parsing, namespaces, optional tags, repeated/nested values, and CDATA when using 1.3.0
 * The file location and public URL, if one is shown
 
 Only after the file is accepted should you add [schedules](Scheduling-and-Queues) or [upload destinations](Uploads).
 
-## Optional attribute rules (unreleased SHO-2 and SHO-3)
+## Optional attribute rules (1.3.0)
 
 To choose a column value from a condition, use [Conditional Value](Conditional-Values). To limit the exported products to an attribute rule, use [Product Selection](Product-Selection). Both are available in all eight feed types on this branch, not in 1.2.5. Save and reopen the rules, test one matching and one nonmatching product, then inspect a full generated file. Include parent and child fixtures when using parent scope.

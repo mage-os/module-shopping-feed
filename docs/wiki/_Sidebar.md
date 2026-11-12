@@ -5,6 +5,7 @@
 **Start here**
 
 * [Status and compatibility](Status-and-Compatibility)
+* [Release 1.3.0 candidate](Release-1-3-0)
 * [Release 1.2.5](Release-1-2-5)
 * [Release 1.2.4](Release-1-2-4)
 * [Release 1.2.3](Release-1-2-3)
@@ -37,8 +38,8 @@
 
 * [General configuration](General-Configuration)
 * [Columns and directives](Columns-and-Directives)
-* [Conditional values (unreleased)](Conditional-Values)
-* [Product selection (unreleased)](Product-Selection)
+* [Conditional values (1.3.0)](Conditional-Values)
+* [Product selection (1.3.0)](Product-Selection)
 * [Categories and taxonomy](Categories-and-Taxonomy)
 * [Filters and transformations](Filters-and-Transformations)
 * [Product options](Product-Options)

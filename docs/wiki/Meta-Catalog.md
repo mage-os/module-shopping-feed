@@ -1,6 +1,6 @@
 # Meta Catalog
 
-> Documentation baseline: released behavior plus unreleased SHO-1, as marked below. Last reviewed: 2026-11-10.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The guide separates historical 1.2.0 browser checks from 1.2.4 Mage-OS 3.6 verification and records the remaining limits. Template generation checks do not establish provider ingestion acceptance.
 
@@ -68,6 +68,6 @@ Meta's [product data specification](https://www.facebook.com/business/help/12032
 
 The initial implementation also consulted Meta's public [Magento feed builder](https://github.com/facebookincubator/facebook-for-magento2/blob/main/Model/Product/Feed/Builder.php) and [Business SDK](https://github.com/facebook/facebook-php-business-sdk/blob/main/src/FacebookAds/Object/Values/ProductItemAvailabilityValues.php). The current product-feed specification takes precedence where the SDK's API values differ. Local validation does not replace an actual Commerce Manager import.
 
-## Automatic XML preset (unreleased SHO-1)
+## Automatic XML preset (1.3.0)
 
 In **General**, select **Output Format: XML** and set **File Name** to a name ending in `.xml`. This channel supplies its RSS header, item wrapper, footer, and namespace rules automatically; no manual XML structure is required. Existing default mappings remain usable. Review custom compound fields when switching formats, and inspect a generated sample before changing the destination's data-source URL and format. Empty optional tags are omitted. See [XML Output](XML-Output) for setup, field conversions, and validation limits. Delimited output remains the default.

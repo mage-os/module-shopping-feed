@@ -2,7 +2,7 @@
 
 Product Filters decides which products reach the output and how selected column values are changed. Rule order matters.
 
-> Documentation baseline: released behavior plus unreleased SHO-2 and SHO-3, as marked below. Last reviewed: 2026-11-10.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 ## Catalog selection
 
@@ -82,7 +82,7 @@ HTML entities are decoded before a final pass removes line breaks and, for outpu
 
 For every filter change, keep one fixture that should be included and one that should be excluded. Use **Test Feed** first, then compare expected product and skipped counts in a complete run.
 
-## Product selection conditions (unreleased SHO-3)
+## Product selection conditions (1.3.0)
 
 Use **Product Filters > Product selection conditions** to include products matching one All/Any group of up to 50 attribute conditions. Removing all conditions disables this filter. Conditions narrow existing eligibility; they do not override stock, visibility, category, product exclusion, or required-field filters.
 

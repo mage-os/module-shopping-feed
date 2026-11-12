@@ -2,11 +2,23 @@
 
 Install the module on staging first. Feed generation writes files and records queue, schedule, upload, and status data. A saved upload can also transfer completed files to an external system.
 
-> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
+> Documentation baseline: 1.3.0 release candidate; historical checklists retain their versions. Last reviewed: 2026-11-12.
 
 Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
 
-Upgrade checklists are cumulative. If skipping releases, review every section between the installed and target versions. Historical Composer constraints such as `^1.2.1` also allow later 1.x versions; check the resolved lock file and follow the requirements of the version actually installed. New installations should use the current 1.2.5 instructions below.
+Upgrade checklists are cumulative. If skipping releases, review every section between the installed and target versions. Historical Composer constraints such as `^1.2.1` also allow later 1.x versions; check the resolved lock file and follow the requirements of the version actually installed. This branch prepares 1.3.0; use its installation commands only after the tag is published and indexed.
+
+## Upgrading to 1.3.0
+
+The [1.3.0 candidate](Release-1-3-0) adds XML, conditional values, product selection and modifiers without new schema/data patches or changed platform requirements. It has not been tagged or published yet.
+
+1. Back up code, database, Composer lock, feed configuration and accepted files. Record schedules and destinations.
+2. After publication, update staging with `composer require 'mage-os/module-shopping-feed:^1.3.0' --no-update`, `composer update mage-os/module-shopping-feed --with-dependencies`, `bin/magento setup:upgrade`, and the store's normal compilation/static-content/cache steps.
+3. Compare complete outputs for existing feeds. Test new conditions, modifiers and XML on disabled copies, including save/reopen, preview, full generation and batches.
+4. Selecting XML does not rename the file. Choose an `.xml` name and validate the recipient format before changing its URL or enabling delivery.
+5. Before a downgrade, restore pre-upgrade configuration or remove new rules/directives/modifiers and switch back to delimited output. Older versions cannot be assumed to interpret new settings. Restore matching code/lock and database backups with schedules/uploads disabled, then verify output.
+
+The older checklists below are cumulative: pre-1.2.5 upgrades need the product exclusion attribute; pre-1.2.4 SFTP destinations need trusted fingerprints. See the [full notes](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/releases/1.3.0.md).
 
 ## Upgrading from 1.2.4 to 1.2.5
 
@@ -92,7 +104,7 @@ There is no old/new editor switch. Restoring the previous package and rebuilding
 The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.2 line:
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.2.5'
+composer require 'mage-os/module-shopping-feed:^1.3.0'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
@@ -110,7 +122,7 @@ Place or symlink the source at:
 app/code/MageOS/ShoppingFeed
 ```
 
-Use the `v1.2.5` tag for a reproducible installation, and record its resolved commit. Earlier tags remain available for historical installations.
+After publication, use the `v1.3.0` tag for a reproducible installation, and record its resolved commit. Earlier tags remain available for historical installations.
 
 A source copy does not install its Composer dependencies. Compare the application's installed packages with the tag's `require` section, including `phpseclib/phpseclib:^3.0`, and install missing compatible runtime dependencies through the application's root Composer project. Do not also install a second copy of `mage-os/module-shopping-feed`.
 

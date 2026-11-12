@@ -1,19 +1,20 @@
 # Documentation
 
-These guides cover released behavior through 1.2.5 and explicitly marked unreleased features on this branch. Check each page's documentation baseline and review date before applying it to an installed version. Dated verification reports describe their tested revision; documentation commits do not publish a package release or synchronize the separate public wiki.
+These guides describe the 1.3.0 release candidate and retain versioned history for earlier releases. Version 1.3.0 is not yet tagged or published. Check each page's documentation baseline and review date before applying it to an installed version. Dated verification reports describe their tested revision; documentation commits do not publish a package release or synchronize the separate public wiki.
 
 ## Current guides
 
 | Task | Guide |
 | --- | --- |
 | Install or upgrade | [Installation and upgrade](wiki/Installation-and-Upgrade.md) |
-| Review 1.2.5 changes | [Release notes](releases/1.2.5.md) and [changelog](../CHANGELOG.md) |
+| Review 1.3.0 changes | [Release notes](releases/1.3.0.md) and [changelog](../CHANGELOG.md) |
 | Confirm platform and theme support | [Status and compatibility](wiki/Status-and-Compatibility.md) |
 | Create and operate feeds | [Wiki home](wiki/Home.md), [Quick start](wiki/Quick-Start.md), and the wiki sidebar |
-| Configure conditional output (unreleased SHO-2) | [Conditional values](wiki/Conditional-Values.md) |
-| Select products by attribute rules (unreleased SHO-3) | [Product selection](wiki/Product-Selection.md) |
+| Configure conditional output (1.3.0) | [Conditional values](wiki/Conditional-Values.md) |
+| Select products by attribute rules (1.3.0) | [Product selection](wiki/Product-Selection.md) |
 
-| Configure XML and channel presets (unreleased SHO-1) | [XML output](wiki/XML-Output.md) |
+| Configure XML and channel presets (1.3.0) | [XML output](wiki/XML-Output.md) |
+| Transform column values (1.3.0) | [Per-column modifiers](wiki/Columns-and-Directives.md#per-column-modifiers-130) |
 | Configure SFTP, FTP, or gzip | [Uploads](wiki/Uploads.md) |
 | Move from Rocket Shopping Feeds | [Migration and coexistence](../MIGRATION.md) and [optional companion](wiki/Rocket-Web-Migration.md) |
 | Customize the Admin editor | [Developer contract](ui-component-editor.md) |

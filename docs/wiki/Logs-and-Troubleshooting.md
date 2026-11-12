@@ -76,13 +76,13 @@ Capture the minimum useful evidence before reporting a defect:
 
 For slow or incomplete large feeds, continue with [Performance and large catalogs](Performance-and-Large-Catalogs).
 
-## Conditional rules (unreleased SHO-2 and SHO-3)
+## Conditional rules (1.3.0)
 
 For rejected saves or generation errors, review the selected attributes, valid option IDs, operator types, date format, and both Conditional Value outputs. A nonnumeric percentage source is an error; it does not select Otherwise. See [Conditional values](Conditional-Values#troubleshooting-and-verification).
 
 Product Selection skip counts describe product/parent candidates, not distinct SKUs or expanded inventory rows. Rules do not override existing exclusions. Review [Product selection](Product-Selection#logs-performance-and-recovery) for counts, invalid-rule recovery, and the distinction between active-parent and standalone-parent evaluation.
 
-## XML output (unreleased SHO-1)
+## XML output (1.3.0)
 
 If a Generic XML feed will not save, check element names, declared prefixes, matching header/footer elements, and whitespace before the XML declaration. DTDs and entity declarations are not supported.
 

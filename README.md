@@ -1,10 +1,8 @@
 # Mage-OS Shopping Feed
 
-Unreleased: XML output includes automatic presets for Google Shopping, Google Local Inventory, Microsoft, Pinterest, TikTok, and Meta. Generic feeds retain configurable wrappers, optional tags, and CDATA. See [XML output](docs/wiki/XML-Output.md).
-
 [![Check Extension on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml?query=branch%3Amain)
 
-`MageOS_ShoppingFeed` turns a Mage-OS or Magento Open Source catalog into product data feeds for Google Shopping, Google Local Inventory, Google Promotions, Meta, Pinterest, TikTok, Microsoft Merchant Center, OpenAI Google-compatible and generic delimited recipients. Merchants define each feed's columns, filters, category taxonomy, schedule and optional FTP or SFTP delivery in the Admin. Cron writes the files under `pub/media/mageos-shopping-feed`. On the storefront, the module can add schema.org microdata for Google Automatic Item Updates, preselect product options from feed deep links, and send Google Ads `view_item` events.
+`MageOS_ShoppingFeed` turns a Mage-OS or Magento Open Source catalog into product data feeds for Google Shopping, Google Local Inventory, Google Promotions, Meta, Pinterest, TikTok, Microsoft Merchant Center, OpenAI Google-compatible and generic delimited or XML recipients. Merchants define each feed's columns, filters, category taxonomy, schedule and optional FTP or SFTP delivery in the Admin. Cron writes the files under `pub/media/mageos-shopping-feed`. On the storefront, the module can add schema.org microdata for Google Automatic Item Updates, preselect product options from feed deep links, and send Google Ads `view_item` events.
 
 The module consolidates four Rocket Web modules (generic, Google Shopping, Google Local Inventory and Google Promotions) into one independently named package. It has its own Composer name, namespace, module name, tables, configuration paths, routes, cron group, events and output names, so it can be installed beside the original Rocket Web packages without replacing or changing them. Moving from Rocket Shopping Feeds is a separate, explicit step; see [Migrating from Rocket Shopping Feeds](#migrating-from-rocket-shopping-feeds).
 
@@ -28,28 +26,29 @@ The [Check Extension workflow](https://github.com/mage-os-lab/module-shopping-fe
 
 ## Installation
 
-Install the stable 1.2 release line from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). See the [1.2.5 release notes](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/releases/1.2.5.md) for changes and upgrade requirements:
+This branch prepares **1.3.0**. The tag and Composer package have not been published. After publication, install or upgrade from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed) using the commands below. Review the [1.3.0 release notes](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/releases/1.3.0.md) first:
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.2.5'
+composer require 'mage-os/module-shopping-feed:^1.3.0'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
 ```
 
-**Upgrading to 1.2.5:** run `setup:upgrade`; it creates the **Skip from Being Submitted** product attribute. Upgrading from 1.2.3 or earlier also needs the 1.2.4 step: enter a trusted SHA256 host-key fingerprint for every SFTP destination, because destinations without a matching fingerprint cannot authenticate or upload. See [Uploads](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Uploads.md).
+**Upgrading to 1.3.0:** back up code, database, Composer lock and accepted feeds; run `setup:upgrade` and compare complete output on staging. There are no new schema/data patches in 1.3.0. If upgrading from before 1.2.5, `setup:upgrade` also creates the **Skip from Being Submitted** product attribute. Upgrading from 1.2.3 or earlier also needs the 1.2.4 step: enter a trusted SHA256 host-key fingerprint for every SFTP destination, because destinations without a matching fingerprint cannot authenticate or upload. See [Uploads](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Uploads.md).
 
-In production mode, also run `bin/magento setup:di:compile` and `bin/magento setup:static-content:deploy`. For a source checkout, use `v1.2.5` at `app/code/MageOS/ShoppingFeed`, ensure its runtime Composer requirements (including `phpseclib/phpseclib:^3.0`) are installed in the application, and run the Magento commands without installing a second copy of this package. See [source installation](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Installation-and-Upgrade.md#source-installation).
+In production mode, also run `bin/magento setup:di:compile` and `bin/magento setup:static-content:deploy`. For a source checkout, use `v1.3.0` after publication at `app/code/MageOS/ShoppingFeed`, ensure its runtime Composer requirements (including `phpseclib/phpseclib:^3.0`) are installed in the application, and run the Magento commands without installing a second copy of this package. See [source installation](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Installation-and-Upgrade.md#source-installation).
 
-## Unreleased development
+## New in 1.3.0
 
-This branch adds the following features, none included in 1.2.5:
+The 1.3.0 candidate brings these features together:
 
-* **SHO-2: [Conditional Value](docs/wiki/Conditional-Values.md)** chooses a column's fixed text, product attribute, or percentage-adjusted value using one All/Any condition group. It also works in Replace Empty Values.
-* **SHO-3: [Product Selection](docs/wiki/Product-Selection.md)** includes only products matching attribute conditions, with product/parent scope, SKU wildcards, and image checks. Existing eligibility filters still apply.
-* **SHO-5: [Per-column modifiers](docs/wiki/Columns-and-Directives.md#per-column-modifiers-unreleased-sho-5)** apply ordered text, numeric, date, price, HTML, and URL transformations before the final column limit.
+* **SHO-1: [XML output](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/wiki/XML-Output.md)** adds six destination presets and configurable Generic XML.
+* **SHO-2: [Conditional Value](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/wiki/Conditional-Values.md)** chooses a column's fixed text, product attribute, or percentage-adjusted value using one All/Any condition group. It also works in Replace Empty Values.
+* **SHO-3: [Product Selection](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/wiki/Product-Selection.md)** includes only products matching attribute conditions, with product/parent scope, SKU wildcards, and image checks. Existing eligibility filters still apply.
+* **SHO-5: [Per-column modifiers](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/wiki/Columns-and-Directives.md#per-column-modifiers-130)** apply ordered text, numeric, date, price, HTML, and URL transformations before the final column limit.
 
-See the [editor-switch verification](docs/reviews/2026-11-10-sho-2-editor-switch.md), [mapping-default verification and remaining browser limit](docs/reviews/2026-11-10-sho-2-default-mapping.md), and [selection verification](docs/reviews/2026-11-10-sho-3-independent-fixes.md).
+See the [editor-switch verification](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/reviews/2026-11-10-sho-2-editor-switch.md), [mapping-default verification and remaining browser limit](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/reviews/2026-11-10-sho-2-default-mapping.md), and [selection verification](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/reviews/2026-11-10-sho-3-independent-fixes.md).
 
 ## Configuration
 
@@ -99,7 +98,7 @@ Choose **Create New Feed** and a preset, or open an existing feed. Every setting
 | Store View | Default store view | Store context for the whole feed. Save and reopen after changing it to refresh store-dependent options. |
 | Feed Currency | Store default currency | Currency used for prices and microdata. |
 | Feed Path | `pub/media/mageos-shopping-feed` | Output directory; must stay inside that directory. |
-| Output Format (unreleased SHO-1) | Delimited | XML uses automatic structure for six channel presets, or manual configuration for Generic. See [XML Output](docs/wiki/XML-Output.md). |
+| Output Format (1.3.0) | Delimited | XML uses automatic structure for six channel presets, or manual configuration for Generic. See [XML Output](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/wiki/XML-Output.md). |
 | Delimiter | Tab (TikTok: comma) | Delimited output separator: tab, comma or **Other**. |
 | Other Delimiter | Empty | Custom separator when Delimiter is Other. |
 | Apply Catalog Price Rules | Yes | Uses catalog price rules when calculating sale prices. |
@@ -108,11 +107,11 @@ Choose **Create New Feed** and a preset, or open an existing feed. Every setting
 | Use Qty Increments | No | Multiplies the unit price by the minimum sale quantity or quantity increment. |
 | Use Stock Reservations | No (Local Inventory: Yes) | Subtracts pending reservations from aggregate quantities. |
 | Complex Product Context Prioritization | No (catalog presets: Yes) | Skips a standalone simple product that belongs to an enabled configurable, bundle or grouped parent, so it is exported in the parent's context. |
-| File Name | Per preset, such as `mageos_shopping_feed_%s.txt` | Output file name; `%s` becomes the feed ID. With unreleased SHO-1, set an `.xml` name when selecting XML; changing format does not rename the file. |
+| File Name | Per preset, such as `mageos_shopping_feed_%s.txt` | Output file name; `%s` becomes the feed ID. With 1.3.0, set an `.xml` name when selecting XML; changing format does not rename the file. |
 | Cell Enclosure, Enclosure Escape, Empty Cell Value (Generic only) | Empty | CSV quoting and the value written for empty cells. A comma feed without an enclosure is quoted with `"` automatically. |
 | Use for microdata (Google Shopping only) | Yes for a new Google Shopping feed | Makes this feed the source of storefront microdata. Only one feed per store view can have it. |
 
-**Columns Map**: rows of Order, Column, Attribute or Directive, and Parameters. Unreleased SHO-2 adds [Conditional Value](docs/wiki/Conditional-Values.md) for if/else output; new rows default to Static Value. Each preset starts with its required columns. Directives compute values such as prices, availability, URLs, images, categories and identifiers; the Parameters control changes with the directive. See [Columns and directives](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Columns-and-Directives.md).
+**Columns Map**: rows of Order, Column, Attribute or Directive, and Parameters. Version 1.3.0 adds [Conditional Value](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/wiki/Conditional-Values.md) for if/else output; new rows default to Static Value. Each preset starts with its required columns. Directives compute values such as prices, availability, URLs, images, categories and identifiers; the Parameters control changes with the directive. See [Columns and directives](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Columns-and-Directives.md).
 
 **Categories Map**
 
@@ -130,7 +129,7 @@ See [Categories and taxonomy](https://github.com/mage-os-lab/module-shopping-fee
 
 | Setting | Default | What it does |
 | --- | --- | --- |
-| Product selection conditions (unreleased SHO-3) | None | Include products matching one All/Any group of attribute conditions. See [Product selection](docs/wiki/Product-Selection.md). |
+| Product selection conditions (1.3.0) | None | Include products matching one All/Any group of attribute conditions. See [Product selection](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/wiki/Product-Selection.md). |
 | Allow Out of Stock | Yes | When No, out-of-stock products are left out. |
 | Submit only products of these types | All standard types | Product types included. |
 | Submit only products that have these attribute sets | All | Attribute sets included. |
@@ -240,7 +239,7 @@ Installing this module does not read or change Rocket Web feeds, tables or confi
 On staging, keep the legacy modules installed and enabled during schema upgrades, then install both packages:
 
 ```sh
-composer require 'mage-os/module-shopping-feed:^1.2.5' \
+composer require 'mage-os/module-shopping-feed:^1.3.0' \
   'rocketweb/module-shopping-feed-migration-rocketweb:^1.0' --no-update
 composer update mage-os/module-shopping-feed \
   rocketweb/module-shopping-feed-migration-rocketweb --with-dependencies

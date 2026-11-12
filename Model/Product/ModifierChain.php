@@ -79,7 +79,7 @@ class ModifierChain
     public function compileForFeed(Feed $feed): array
     {
         $chains = $this->compile($feed->getData('config', self::CONFIG_KEY), $feed);
-        if (!$chains) {
+        if (!$chains || $feed->getConfig('output_params_format', 'delimited') === 'xml') {
             return $chains;
         }
         $delimiter = (string)$feed->getConfig('output_params_delimiter', "\t");
@@ -115,6 +115,9 @@ class ModifierChain
      */
     public function apply(mixed $value, array $chain, string $currency, string $encoding = 'UTF-8'): mixed
     {
+        if ($value instanceof \MageOS\ShoppingFeed\Model\Output\MappedValue) {
+            return $value->map(fn (string $item): string => (string)$this->apply($item, $chain, $currency, $encoding));
+        }
         if (is_array($value)) {
             return array_map(fn ($item) => $this->apply($item, $chain, $currency, $encoding), $value);
         }

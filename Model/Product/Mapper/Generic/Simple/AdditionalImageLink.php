@@ -96,7 +96,7 @@ class AdditionalImageLink extends MapperAbstract
                 $this->getAdapter()->getFilter()->findAndReplace($url, $params['column'] ?? '');
             }
             unset($url);
-            return new \MageOS\ShoppingFeed\Model\Output\MappedValue($urls, implode($glue, $urls));
+            return new \MageOS\ShoppingFeed\Model\Output\MappedValue($urls, implode($glue, $urls), $glue);
         }
         $cell = implode($glue, $urls);
         $this->getAdapter()->getFilter()->findAndReplace($cell, $params['column'] ?? '');

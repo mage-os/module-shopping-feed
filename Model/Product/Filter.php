@@ -148,7 +148,8 @@ class Filter
             return $rows;
         }
         $modifier = new ModifierChain();
-        $encoding = (string)$this->feed->getConfig('output_params_encoding', 'UTF-8');
+        $encoding = $this->feed->getConfig('output_params_format', 'delimited') === 'xml'
+            ? 'UTF-8' : (string)$this->feed->getConfig('output_params_encoding', 'UTF-8');
         if (!in_array(strtolower($encoding), array_map('strtolower', mb_list_encodings()), true)) {
             $encoding = 'UTF-8';
         }
@@ -178,6 +179,11 @@ class Filter
      */
     private function finishModifiedValue($value, string $column, string $encoding)
     {
+        if ($value instanceof \MageOS\ShoppingFeed\Model\Output\MappedValue) {
+            return $value->map(
+                fn (string $item): string => (string)$this->finishModifiedValue($item, $column, $encoding)
+            );
+        }
         if (is_array($value)) {
             return array_map(fn ($item) => $this->finishModifiedValue($item, $column, $encoding), $value);
         }
@@ -186,7 +192,8 @@ class Filter
             ? (string)$this->feed->getConfig('output_params_delimiter_other', "\t")
             : ($delimiter === '\t' ? "\t" : $delimiter);
         $replacements = ["\r" => ' ', "\n" => ' '];
-        $enclosed = ($this->feed->getData('type') === 'generic' && $delimiter === ',')
+        $enclosed = $this->feed->getConfig('output_params_format', 'delimited') === 'xml'
+            || ($this->feed->getData('type') === 'generic' && $delimiter === ',')
             || (string)$this->feed->getConfig('output_params_enclose_cell', '') !== '';
         if ($delimiter !== '' && !$enclosed) {
             $replacements[$delimiter] = ' ';

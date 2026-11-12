@@ -161,7 +161,9 @@ class ModifierValidationTest extends TestCase
             ['column' => 'item_group_id', 'attribute' => 'directive_item_group_id', 'order' => 1]
         ])->setData(ModifierChain::CONFIG_KEY, [['column' => 'color', 'operation' => 'uppercase']]);
         $defaults = [];
-        $variants = ['item_group_title', 'variant_option', 'color', 'size', 'material', 'pattern', 'gender', 'age_group'];
+        $variants = [
+            'item_group_title', 'variant_option', 'color', 'size', 'material', 'pattern', 'gender', 'age_group'
+        ];
         foreach ($variants as $i => $column) {
             $defaults[$column] = [
                 'column' => $column, 'attribute' => 'directive_variant_attributes', 'order' => $i + 2

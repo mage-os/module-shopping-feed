@@ -2515,21 +2515,9 @@ parameters:
 			path: Model/Product/CollectionProvider.php
 
 		-
-			message: '#^Method MageOS\\ShoppingFeed\\Model\\Product\\Filter\:\:removeMarkup\(\) should return string but returns string\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: Model/Product/Filter.php
-
-		-
 			message: '#^Parameter \#1 \$field of method MageOS\\ShoppingFeed\\Model\\Product\\Filter\:\:removeMarkup\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 2
-			path: Model/Product/Filter.php
-
-		-
-			message: '#^Parameter \#3 \$subject of function preg_replace expects array\<float\|int\|string\>\|string, string\|null given\.$#'
-			identifier: argument.type
-			count: 3
 			path: Model/Product/Filter.php
 
 		-

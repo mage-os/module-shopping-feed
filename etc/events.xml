@@ -22,6 +22,7 @@
     <observer name="mageos_shopping_feed_google_promotions_observer_uploader" instance="MageOS\ShoppingFeed\Observer\Promotions\Uploader"/>
   </event>
   <event name="mageos_shopping_feed_feed_save_before">
+    <observer name="mageos_shopping_feed_validate_column_modifiers" instance="MageOS\ShoppingFeed\Observer\ValidateColumnModifiers"/>
     <observer name="mageos_shopping_feed_validate_product_selection" instance="MageOS\ShoppingFeed\Observer\ValidateProductSelection"/>
     <observer name="mageos_shopping_feed_validate_conditional_values" instance="MageOS\ShoppingFeed\Observer\ValidateConditionalValues"/>
   </event>

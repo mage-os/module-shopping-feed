@@ -176,6 +176,37 @@ class Metadata
             'find' => ['label' => __('Find'), 'required' => true], 'replace' => ['label' => __('Replace')],
             'column' => $columns
         ]);
+        $meta['columns']['children']['filters_column_modifiers'] = $this->rows(
+            __('Column modifiers (top to bottom)'),
+            'config',
+            [
+                'column' => ['label' => __('Column'), 'required' => true,
+                    'notice' => __('Use the exact output column name from Columns Map.')],
+                'operation' => ['label' => __('Modifier'), 'formElement' => 'select', 'required' => true,
+                    'options' => [
+                        ['value' => 'prepend', 'label' => __('Prepend')],
+                        ['value' => 'append', 'label' => __('Append')],
+                        ['value' => 'lowercase', 'label' => __('Lowercase')],
+                        ['value' => 'uppercase', 'label' => __('Uppercase')],
+                        ['value' => 'titlecase', 'label' => __('Title case')],
+                        ['value' => 'round', 'label' => __('Round')],
+                        ['value' => 'integer', 'label' => __('Integer (truncate)')],
+                        ['value' => 'decimal', 'label' => __('Decimal places')],
+                        ['value' => 'date', 'label' => __('Date format')],
+                        ['value' => 'price', 'label' => __('Price format')],
+                        ['value' => 'strip_tags', 'label' => __('Strip tags')],
+                        ['value' => 'escape', 'label' => __('Escape HTML')],
+                        ['value' => 'secure_url', 'label' => __('Secure URL')]
+                    ]],
+                'value' => ['label' => __('Value'), 'notice' => __(
+                    'Text for prepend/append; 0 to 12 for round/decimals; PHP date format (Y-m-d); '
+                    . 'currency code for price (blank uses the existing or feed currency). Otherwise leave blank.'
+                )],
+                'position' => ['label' => __('Order'), 'required' => true,
+                    'validation' => ['validate-digits' => true, 'validate-greater-than-zero' => true],
+                    'notice' => __('Lower numbers run first. Drag rows or edit Order, then save.')]
+            ]
+        );
         $meta['filters']['children']['filters_output_limit'] = $this->rows(__('Limit column output'), 'config', [
             'column' => $this->select(__('Column'), 'LimitColumns'),
             'limit' => ['label' => __('Max characters'), 'required' => true,

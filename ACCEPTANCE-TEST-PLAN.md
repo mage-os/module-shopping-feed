@@ -445,3 +445,17 @@ Use synthetic products and feeds without schedules or uploads. Existing filters 
 - Confirm read-only roles cannot edit conditions and unavailable saved attribute choices remain visible for correction.
 
 The [initial SHO-3 verification](docs/reviews/2026-11-10-sho-3-product-selection.md) is supplemented by the [independent-finding fixes and retest](docs/reviews/2026-11-10-sho-3-independent-fixes.md), covering persistence, malformed inputs, Unicode wildcards, date boundaries, parent contexts, skip counts, store isolation, and batching. These records distinguish completed local checks from untested platforms, recipient ingestion, and production workloads.
+
+## SHO-5 per-column modifiers (unreleased)
+
+Local checks and remaining limits: [SHO-5 verification](docs/reviews/2026-11-11-sho-5-modifiers.md).
+
+- [ ] In Columns Map, add, reorder, delete, save, and reopen modifier rows. Preserve literal spaces, `0`, and `${...}` text; clear the complete list and reopen.
+- [ ] Generate attribute, Static Value, Conditional Value, fallback, inherited child, and custom-option cells with multiple operations. Verify one application per final cell and each repeated value.
+- [ ] Verify Unicode case changes, negative rounding/truncation, fixed decimal padding, dates with and without offsets, invalid and blank inputs, and feed/explicit price currency without currency conversion.
+- [ ] Compare Strip tags and Escape HTML on the same markup, including script/style bodies. Reject unsafe unenclosed entity delimiters, including semicolon-space, `;|`, and `|&`, and verify enclosed semicolon output. Check paragraph, line-break, list, and comment word boundaries without entity decoding. Check TSV/CSV values, separators added by modifiers, and final output limits.
+- [ ] Verify HTTP and protocol-relative links become HTTPS while paths/query strings remain unchanged. Confirm destination HTTPS independently.
+- [ ] Reject malformed submitted rows, unknown operations/column names, invalid precision, and invalid currency arguments before persistence. Distinguish invalid-list messages from row-count messages. Confirm the read-only role cannot change modifier rows.
+
+- [ ] Retest SHO-5 Google mappings: interleave modifiers on `promotions_id` and `promotion_id`, verify their combined sequence on `promotion_id`, and apply a modifier to runtime-added `color`.
+- [ ] Reorder modifier rows using only the keyboard and the visible Order field. Save, reopen, and generate to prove the changed sequence. Check drag ordering and read-only permissions still work.

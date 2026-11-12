@@ -6,10 +6,14 @@ All notable changes to this project will be documented here.
 
 ### Added
 
+- SHO-5: Add ordered per-column modifiers in Columns Map for prepend/append, case changes, round/integer/decimal places, date/price formatting, strip tags/escape HTML, and HTTPS rewriting. Apply each chain once to final cells, then enforce output limits; validate Admin, imported, and stored configuration.
+
 - SHO-3: Product selection by All/Any attribute conditions, with product or parent scope, SKU wildcards, base-image presence, visibility, and parent status. Shares the validated condition engine and editor with Conditional Value; existing eligibility filters remain in effect.
 - Add **Conditional Value** to every feed type, with All/Any product conditions using Magento rule comparisons, separate matching and fallback outputs, store-view attribute labels, and raw numeric percentage adjustments (SHO-2). Provide structured controls in the active Admin editor and validate configuration during save and generation.
 
 ### Fixed
+
+- SHO-5: Reject Escape HTML with entity-conflicting unenclosed delimiters, remove script/style bodies during Strip tags, and format Round as plain decimal text independent of PHP precision settings. Reject unknown modifier columns on save and distinguish malformed lists from excessive row counts. Cover mixed delimiters crossing entity boundaries, resolve Google legacy and runtime-added column names consistently, preserve word boundaries in Strip tags, and support keyboard ordering through a visible Order field.
 
 - Restore Static Value as the default for new Columns Map and Replace Empty Values rows across all feed types, so an empty parameter does not create an invalid conditional rule (SHO-2).
 - Preserve exact condition values and null clearing; reject unsupported or malformed imported rules. Handle Unicode SKU wildcards and calendar-day comparisons for Date and Time attributes. Keep validation failures in the correct feed log, count repeated candidate checks once, and cache parent lookups within each generation (SHO-3).

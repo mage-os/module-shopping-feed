@@ -41,10 +41,11 @@ In production mode, also run `bin/magento setup:di:compile` and `bin/magento set
 
 ## Unreleased development
 
-This branch adds two features, neither included in 1.2.5:
+This branch adds the following features, none included in 1.2.5:
 
 * **SHO-2: [Conditional Value](docs/wiki/Conditional-Values.md)** chooses a column's fixed text, product attribute, or percentage-adjusted value using one All/Any condition group. It also works in Replace Empty Values.
 * **SHO-3: [Product Selection](docs/wiki/Product-Selection.md)** includes only products matching attribute conditions, with product/parent scope, SKU wildcards, and image checks. Existing eligibility filters still apply.
+* **SHO-5: [Per-column modifiers](docs/wiki/Columns-and-Directives.md#per-column-modifiers-unreleased-sho-5)** apply ordered text, numeric, date, price, HTML, and URL transformations before the final column limit.
 
 See the [editor-switch verification](docs/reviews/2026-11-10-sho-2-editor-switch.md), [mapping-default verification and remaining browser limit](docs/reviews/2026-11-10-sho-2-default-mapping.md), and [selection verification](docs/reviews/2026-11-10-sho-3-independent-fixes.md).
 

@@ -234,10 +234,7 @@ class Feed extends AbstractModel
             return $this->columnsMap;
         }
 
-        $columns = $this->getConfig()->getData('columns_product_columns');
-        if ($this->getData('type') === 'google_shopping') {
-            $columns = $this->upgradeGoogleColumns($columns);
-        }
+        $columns = $this->normalizeColumnsMap($this->getConfig()->getData('columns_product_columns'));
 
         $this->columnsMap = [];
         $order = [];
@@ -254,6 +251,29 @@ class Feed extends AbstractModel
     }
 
     /**
+     * Resolve submitted mappings using the same rules as generation, without reading the map cache.
+     *
+     * @param array<mixed> $columns
+     * @return array<mixed>
+     */
+    public function normalizeColumnsMap(array $columns): array
+    {
+        return $this->getData('type') === 'google_shopping' ? $this->upgradeGoogleColumns($columns) : $columns;
+    }
+
+    /**
+     * Resolve legacy names before grouping modifier rows so their original sequence is retained.
+     *
+     * @param string $column
+     * @return string
+     */
+    public function resolveColumnName(string $column): string
+    {
+        return $this->getData('type') === 'google_shopping' && $column === 'promotions_id'
+            ? 'promotion_id' : $column;
+    }
+
+    /**
      * Rename legacy promotions_id and add missing Google variant columns when item_group_id is mapped.
      *
      * @param array $columns
@@ -263,9 +283,7 @@ class Feed extends AbstractModel
     {
         $columnNames = [];
         foreach ($columns as &$column) {
-            if ($column['column'] === 'promotions_id') {
-                $column['column'] = 'promotion_id';
-            }
+            $column['column'] = $this->resolveColumnName($column['column']);
             $columnNames[$column['column']] = true;
         }
         unset($column);

@@ -1158,6 +1158,7 @@ class AdapterAbstract extends \Magento\Framework\DataObject
         if (count($rows)) {
             // Format rows (add currency to prices, ...)
             $rows = $this->filterAndFormatRows($rows);
+            $rows = $this->getFilter()->modifyRows($rows, (string)$this->getData('store_currency_code'));
 
             foreach ($rows as $k => $row) {
                 if (!$this->checkEmptyColumns($row)) {

@@ -1,0 +1,9 @@
+
+ ! [NOTE] The Xdebug PHP extension is active, but "--xdebug" is not used.
+ !        The process was restarted and it will not halt at breakpoints.
+ !        Use "--xdebug" if you want to halt at breakpoints.
+
+/Users/matt/code/module-shopping-feed/Model/Product/Adapter/Type/Composite.php
+/Users/matt/code/module-shopping-feed/Test/Unit/Model/Product/Adapter/Type/CompositeDiagnosticsTest.php
+
+ [OK] No errors

@@ -234,10 +234,7 @@ class Feed extends AbstractModel
             return $this->columnsMap;
         }
 
-        $columns = $this->getConfig()->getData('columns_product_columns');
-        if ($this->getData('type') === 'google_shopping') {
-            $columns = $this->upgradeGoogleColumns($columns);
-        }
+        $columns = $this->normalizeColumnsMap($this->getConfig()->getData('columns_product_columns'));
 
         $this->columnsMap = [];
         $order = [];
@@ -254,6 +251,29 @@ class Feed extends AbstractModel
     }
 
     /**
+     * Resolve submitted mappings using the same rules as generation, without reading the map cache.
+     *
+     * @param array<mixed> $columns
+     * @return array<mixed>
+     */
+    public function normalizeColumnsMap(array $columns): array
+    {
+        return $this->getData('type') === 'google_shopping' ? $this->upgradeGoogleColumns($columns) : $columns;
+    }
+
+    /**
+     * Resolve legacy names before grouping modifier rows so their original sequence is retained.
+     *
+     * @param string $column
+     * @return string
+     */
+    public function resolveColumnName(string $column): string
+    {
+        return $this->getData('type') === 'google_shopping' && $column === 'promotions_id'
+            ? 'promotion_id' : $column;
+    }
+
+    /**
      * Rename legacy promotions_id and add missing Google variant columns when item_group_id is mapped.
      *
      * @param array $columns
@@ -263,9 +283,7 @@ class Feed extends AbstractModel
     {
         $columnNames = [];
         foreach ($columns as &$column) {
-            if ($column['column'] === 'promotions_id') {
-                $column['column'] = 'promotion_id';
-            }
+            $column['column'] = $this->resolveColumnName($column['column']);
             $columnNames[$column['column']] = true;
         }
         unset($column);
@@ -421,7 +439,7 @@ class Feed extends AbstractModel
                 $path = $configObject->getData('path');
                 $value = $configObject->getData('value');
                 if (array_key_exists($path, $config)) {
-                    if ($config[$path] != $value) {
+                    if ($config[$path] !== $value) {
                         $configObject->setData('value', $config[$path]);
                         $configObject->save();
                     }
@@ -616,6 +634,12 @@ class Feed extends AbstractModel
                 );
             }
         }
+        if ($this->getConfig('output_params_format', 'delimited') === 'xml') {
+            $this->createXmlWriter()->validateColumns(array_column(
+                (array)$this->getConfig('columns_product_columns', []),
+                'column'
+            ));
+        }
         return $this;
     }
 
@@ -676,6 +700,50 @@ class Feed extends AbstractModel
             }
         }
         return $this;
+    }
+
+    /**
+     * Build the same XML contract for save-time validation and generation.
+     *
+     * @return Output\Xml
+     */
+    public function createXmlWriter(): Output\Xml
+    {
+        if ($this->getType() === 'openai_google_compatible') {
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('This destination has no supported XML preset.')
+            );
+        }
+        $preset = $this->getXmlPreset();
+        if ($preset !== []) {
+            return new Output\Rss($preset, (string)$this->getName(), (string)$this->getStore()->getBaseUrl());
+        }
+        $columns = fn (string $key): array => array_values(array_filter(array_map(
+            'trim',
+            explode(',', (string)$this->getConfig('output_params_' . $key, ''))
+        ), static fn (string $value): bool => $value !== ''));
+        return new Output\Xml(
+            (string)$this->getConfig('output_params_xml_header', '<?xml version="1.0" encoding="UTF-8"?><products>'),
+            (string)$this->getConfig('output_params_xml_item', 'product'),
+            (string)$this->getConfig('output_params_xml_footer', '</products>'),
+            $columns('xml_optional_columns'),
+            $columns('xml_cdata_columns')
+        );
+    }
+
+    /**
+     * Get the destination XML contract independently of saved, generic wrapper settings.
+     *
+     * @return array<string,mixed>
+     */
+    public function getXmlPreset(): array
+    {
+        if ($this->getType() === 'generic') {
+            return [];
+        }
+        $type = $this->feedTypesConfig->getFeed($this->getType());
+        $params = $type['default_feed_config']['output_params'] ?? [];
+        return ($params['xml_preset'] ?? '') === 'rss' ? $params : [];
     }
 
     /**

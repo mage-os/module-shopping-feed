@@ -2,7 +2,7 @@
 
 Test mode renders feed values for a chosen product without replacing the normal feed file, changing normal feed status, uploading files, or generating a Promotions companion file.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 The [UI Component Test Feed form](Admin-UI-Component-Forms) uses the same saved-feed route and output renderer. The original deployed candidate failed previews using new category mappings. Local repairs now pass that workflow and reject malformed lookup inputs before product loading. Numeric SKUs remain strings; Product ID mode requires a positive integer.
 
@@ -50,3 +50,7 @@ Check values at the configured store view and currency scope:
 8. Shipping and promotion identifiers where enabled
 
 A Google row skipped for a missing or invalid availability date is explained in the test log. The preview shows cell values; CSV quotation is applied when writing the complete file. After test output is correct, generate a complete file and confirm product counts and row shape with the recipient's parser. See [Manual and CLI generation](Manual-and-CLI-Generation).
+
+## XML preview (1.3.0)
+
+For XML feeds, Test Feed displays mapped column values and validates their XML serialization. It does not show the complete XML document. Check the preview log for invalid product characters or malformed compound fields; these can skip an affected row. Generate a complete test file to inspect namespaces, repeated or nested elements, empty-tag omission, CDATA, and the single document header/footer. See [XML Output](XML-Output).

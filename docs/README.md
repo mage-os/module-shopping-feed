@@ -1,15 +1,20 @@
 # Documentation
 
-The current stable release is [1.2.4](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.2.4), published at `75dd335f930aef78ae693f62c3039e469c2d26f6`. Current operating guides were reviewed against that tag on October 20, 2026. Documentation changes and public wiki publication have their own commits.
+These guides describe the 1.3.0 release candidate and retain versioned history for earlier releases. Version 1.3.0 is not yet tagged or published. Check each page's documentation baseline and review date before applying it to an installed version. Dated verification reports describe their tested revision; documentation commits do not publish a package release or synchronize the separate public wiki.
 
 ## Current guides
 
 | Task | Guide |
 | --- | --- |
 | Install or upgrade | [Installation and upgrade](wiki/Installation-and-Upgrade.md) |
-| Review 1.2.4 changes | [Release notes](releases/1.2.4.md) and [changelog](../CHANGELOG.md) |
+| Review 1.3.0 changes | [Release notes](releases/1.3.0.md) and [changelog](../CHANGELOG.md) |
 | Confirm platform and theme support | [Status and compatibility](wiki/Status-and-Compatibility.md) |
 | Create and operate feeds | [Wiki home](wiki/Home.md), [Quick start](wiki/Quick-Start.md), and the wiki sidebar |
+| Configure conditional output (1.3.0) | [Conditional values](wiki/Conditional-Values.md) |
+| Select products by attribute rules (1.3.0) | [Product selection](wiki/Product-Selection.md) |
+
+| Configure XML and channel presets (1.3.0) | [XML output](wiki/XML-Output.md) |
+| Transform column values (1.3.0) | [Per-column modifiers](wiki/Columns-and-Directives.md#per-column-modifiers-130) |
 | Configure SFTP, FTP, or gzip | [Uploads](wiki/Uploads.md) |
 | Move from Rocket Shopping Feeds | [Migration and coexistence](../MIGRATION.md) and [optional companion](wiki/Rocket-Web-Migration.md) |
 | Customize the Admin editor | [Developer contract](ui-component-editor.md) |
@@ -18,6 +23,7 @@ The current stable release is [1.2.4](https://github.com/mage-os-lab/module-shop
 | Evaluate Magento 2.4.7-p10 | [Dependency guidance and optional backport](compatibility/magento-2.4.7-p10.md) |
 | Maintain or publish the wiki | [Maintenance workflow](WIKI-MAINTENANCE.md) and [content map](WIKI-CONTENT-MAP.md) |
 | Review this documentation refresh | [October 20 review](reviews/2026-10-20-documentation-review.md) |
+| Compare with paid feed extensions | [Competitive gap analysis](plans/2026-11-09-competitive-gap-analysis.md) |
 
 ## Upgrade requirements and limits
 

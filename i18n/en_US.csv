@@ -194,10 +194,6 @@
 "General Configuration","General Configuration"
 "General Info","General Info"
 "Generate Feed","Generate Feed"
-"Generate and review the CSV file, then add its public URL through Data Feed Schedule in TikTok Ads Manager > Assets > Catalog. Match the catalog currency and targeting location. Schedule generation before the fetch and keep sale prices current; TikTok does not use sale_price_effective_date to expire discounts. Match sku_id values to your TikTok Pixel content IDs. Review brand, identifiers, images, and variant mappings. This template does not configure tracking or synchronize TikTok Shop orders.","Generate and review the CSV file, then add its public URL through Data Feed Schedule in TikTok Ads Manager > Assets > Catalog. Match the catalog currency and targeting location. Schedule generation before the fetch and keep sale prices current; TikTok does not use sale_price_effective_date to expire discounts. Match sku_id values to your TikTok Pixel content IDs. Review brand, identifiers, images, and variant mappings. This template does not configure tracking or synchronize TikTok Shop orders."
-"Generate and review the TSV file, then add its public URL as a scheduled data feed in Meta Commerce Manager. Schedule generation before Meta fetches it. Review condition, brand, GTIN/MPN, and variant mappings in Columns Map. Match feed IDs to your Meta Pixel or Conversions API content IDs. This template does not configure tracking or synchronize orders.","Generate and review the TSV file, then add its public URL as a scheduled data feed in Meta Commerce Manager. Schedule generation before Meta fetches it. Review condition, brand, GTIN/MPN, and variant mappings in Columns Map. Match feed IDs to your Meta Pixel or Conversions API content IDs. This template does not configure tracking or synchronize orders."
-"Generate and review the TSV file. In Pinterest Catalogs and product groups, add a data source with its public URL and choose TSV. Review country, language, currency, and claimed website before creating Pins. Schedule generation before the daily fetch; hosted URLs must use port 80 or 443. Use clear primary images at least 1000 by 1500 pixels and change image URLs when replacing images. Keep variant group IDs and tracking IDs consistent. This template does not configure the Pinterest tag or synchronize orders.","Generate and review the TSV file. In Pinterest Catalogs and product groups, add a data source with its public URL and choose TSV. Review country, language, currency, and claimed website before creating Pins. Schedule generation before the daily fetch; hosted URLs must use port 80 or 443. Use clear primary images at least 1000 by 1500 pixels and change image URLs when replacing images. Keep variant group IDs and tracking IDs consistent. This template does not configure the Pinterest tag or synchronize orders."
-"Generate and review the tab-delimited TXT file. In Microsoft Merchant Center, create an online product feed and choose Automatically download file from URL. Use a public URL and schedule generation before the fetch. Match the store domain and target currency. Review identifiers, tax treatment, apparel fields, and shipping requirements for your target country; shipping is required for Austria and Germany. This template does not configure UET tracking or synchronize orders.","Generate and review the tab-delimited TXT file. In Microsoft Merchant Center, create an online product feed and choose Automatically download file from URL. Use a public URL and schedule generation before the fetch. Match the store domain and target currency. Review identifiers, tax treatment, apparel fields, and shipping requirements for your target country; shipping is required for Austria and Germany. This template does not configure UET tracking or synchronize orders."
 "Generating feed takes time. Make sure you allow enough between the schedules. <br />First schedule Batch Mode setting will be used when using the <strong>Run now</strong> button.","Generating feed takes time. Make sure you allow enough between the schedules. <br />First schedule Batch Mode setting will be used when using the <strong>Run now</strong> button."
 "Generator must be created using existing feed - no Feed Id found!","Generator must be created using existing feed - no Feed Id found!"
 "Generic","Generic"
@@ -283,7 +279,7 @@
 "Max characters","Max characters"
 "Meta Catalog (Facebook and Instagram)","Meta Catalog (Facebook and Instagram)"
 "Methods","Methods"
-"Microsoft Merchant Center (TSV)","Microsoft Merchant Center (TSV)"
+"Microsoft Merchant Center","Microsoft Merchant Center"
 "Minimal price","Minimal price"
 "Mode","Mode"
 "Modified","Modified"
@@ -535,3 +531,121 @@
 "parent only","parent only"
 "pound","pound"
 "some Directives accept parameters that can be specified here.","some Directives accept parameters that can be specified here."
+"Add condition","Add condition"
+"All conditions","All conditions"
+"Any condition","Any condition"
+"Choose a value","Choose a value"
+"Choose an attribute","Choose an attribute"
+"Condition attribute","Condition attribute"
+"Condition value","Condition value"
+"Conditional Value","Conditional Value"
+"Conditional Value dates must use YYYY-MM-DD.","Conditional Value dates must use YYYY-MM-DD."
+"Conditional Value fixed text must be a scalar value.","Conditional Value fixed text must be a scalar value."
+"Conditional Value percentage must be between -100 and 100000.","Conditional Value percentage must be between -100 and 100000."
+"Conditional Value percentage result must be finite.","Conditional Value percentage result must be finite."
+"Conditional Value percentage source %1 must be numeric.","Conditional Value percentage source %1 must be numeric."
+"Conditional Value requires a product.","Conditional Value requires a product."
+"Conditional Value requires a valid product attribute.","Conditional Value requires a valid product attribute."
+"Conditional Value requires between 1 and 50 conditions and All or Any.","Conditional Value requires between 1 and 50 conditions and All or Any."
+"Conditions use raw product values. Attribute outputs use store-view labels. Percentage outputs use raw numbers, rounded to two decimals, without tax or currency conversion.","Conditions use raw product values. Attribute outputs use store-view labels. Percentage outputs use raw numbers, rounded to two decimals, without tax or currency conversion."
+"Fixed text","Fixed text"
+"For lists, enter comma-separated option IDs or values. For dates, use YYYY-MM-DD. Enable Use for Promo Rule Conditions on custom attributes to list them here.","For lists, enter comma-separated option IDs or values. For dates, use YYYY-MM-DD. Enable Use for Promo Rule Conditions on custom attributes to list them here."
+"If matching","If matching"
+"Invalid Conditional Value attribute.","Invalid Conditional Value attribute."
+"Invalid Conditional Value condition.","Invalid Conditional Value condition."
+"Invalid Conditional Value operator for %1.","Invalid Conditional Value operator for %1."
+"Invalid Conditional Value output type.","Invalid Conditional Value output type."
+"Match","Match"
+"Operator","Operator"
+"Otherwise","Otherwise"
+"Output type","Output type"
+"Percentage adjustment","Percentage adjustment"
+"Percentage change","Percentage change"
+"Product attribute","Product attribute"
+"Remove condition","Remove condition"
+"Source attribute","Source attribute"
+"Unknown Conditional Value attribute: %1.","Unknown Conditional Value attribute: %1."
+"Use 10 to increase by 10%, or -10 to decrease by 10%. An empty source stays empty.","Use 10 to increase by 10%, or -10 to decrease by 10%. An empty source stays empty."
+"When conditions match","When conditions match"
+Has base image,Has base image
+matches wildcard,matches wildcard
+does not match wildcard,does not match wildcard
+Invalid condition scope.,Invalid condition scope.
+Has base image requires Yes or No.,Has base image requires Yes or No.
+Condition values must not exceed 4096 bytes.,Condition values must not exceed 4096 bytes.
+Product selection requires a loaded product.,Product selection requires a loaded product.
+Product selection cannot read parent relationships.,Product selection cannot read parent relationships.
+Product selection conditions,Product selection conditions
+Only matching output products are included. Leave conditions empty to disable.,Only matching output products are included. Leave conditions empty to disable.
+Read attribute from,Read attribute from
+Parent product,Parent product
+"For lists, enter comma-separated option IDs or values. For dates, use YYYY-MM-DD. SKU wildcards: * matches any number of characters; ? matches one character. Matching is case-sensitive.","For lists, enter comma-separated option IDs or values. For dates, use YYYY-MM-DD. SKU wildcards: * matches any number of characters; ? matches one character. Matching is case-sensitive."
+"A rule requires a list of between 1 and 50 conditions and All or Any.","A rule requires a list of between 1 and 50 conditions and All or Any."
+"Invalid rule condition.","Invalid rule condition."
+"Invalid condition operator for %1.","Invalid condition operator for %1."
+"Condition dates must use YYYY-MM-DD.","Condition dates must use YYYY-MM-DD."
+"Invalid product attribute.","Invalid product attribute."
+"Unknown product attribute: %1.","Unknown product attribute: %1."
+"Unsupported condition attribute: %1.","Unsupported condition attribute: %1."
+"Use option values for condition attribute: %1.","Use option values for condition attribute: %1."
+"For lists, enter comma-separated option IDs or values. Date fields, including Date and Time, compare the stored day using YYYY-MM-DD. SKU wildcards: * matches any number of characters; ? matches one Unicode character. Matching is case-sensitive.","For lists, enter comma-separated option IDs or values. Date fields, including Date and Time, compare the stored day using YYYY-MM-DD. SKU wildcards: * matches any number of characters; ? matches one Unicode character. Matching is case-sensitive."
+"Column modifiers must be a list of at most 200 rows.","Column modifiers must be a list of at most 200 rows."
+"Each column modifier requires a column, operation and text value.","Each column modifier requires a column, operation and text value."
+"Column modifier text is too long.","Column modifier text is too long."
+"Round and Decimal places require a value from 0 to 12.","Round and Decimal places require a value from 0 to 12."
+"Date format requires a PHP date format of at most 128 characters.","Date format requires a PHP date format of at most 128 characters."
+"Price format accepts a three-letter uppercase currency code or blank.","Price format accepts a three-letter uppercase currency code or blank."
+"Column modifier encoding conversion failed.","Column modifier encoding conversion failed."
+"Column modifiers (top to bottom)","Column modifiers (top to bottom)"
+"Use the exact output column name from Columns Map.","Use the exact output column name from Columns Map."
+"Modifier","Modifier"
+"Prepend","Prepend"
+"Append","Append"
+"Lowercase","Lowercase"
+"Uppercase","Uppercase"
+"Title case","Title case"
+"Round","Round"
+"Integer (truncate)","Integer (truncate)"
+"Decimal places","Decimal places"
+"Date format","Date format"
+"Price format","Price format"
+"Strip tags","Strip tags"
+"Escape HTML","Escape HTML"
+"Secure URL","Secure URL"
+"Text for prepend/append; 0 to 12 for round/decimals; PHP date format (Y-m-d); currency code for price (blank uses the existing or feed currency). Otherwise leave blank.","Text for prepend/append; 0 to 12 for round/decimals; PHP date format (Y-m-d); currency code for price (blank uses the existing or feed currency). Otherwise leave blank."
+"Column modifiers must be a list of rows.","Column modifiers must be a list of rows."
+"Column modifiers cannot exceed 200 rows.","Column modifiers cannot exceed 200 rows."
+"Escape HTML requires a cell enclosure when the delimiter contains letters, digits, &, # or ;. Set a cell enclosure or choose another delimiter.","Escape HTML requires a cell enclosure when the delimiter contains letters, digits, &, # or ;. Set a cell enclosure or choose another delimiter."
+"Column modifier refers to unknown output column ""%1"". Use an exact name from Columns Map.","Column modifier refers to unknown output column ""%1"". Use an exact name from Columns Map."
+"Lower numbers run first. Drag rows or edit Order, then save.","Lower numbers run first. Drag rows or edit Order, then save."
+
+XML values must be scalar: %1.,XML values must be scalar: %1.
+Invalid UTF-8 or XML character in column %1.,Invalid UTF-8 or XML character in column %1.
+Invalid XML element name: %1.,Invalid XML element name: %1.
+XML output does not allow DTD or entity declarations.,XML output does not allow DTD or entity declarations.
+XML output must be well-formed XML 1.0 with UTF-8 encoding.,XML output must be well-formed XML 1.0 with UTF-8 encoding.
+This lists only allowed currencies on the store view. WARNING: Changing to a currency which is not displayed on frontend can lead to feed being rejected with provider! Don\,This lists only allowed currencies on the store view. WARNING: Changing to a currency which is not displayed on frontend can lead to feed being rejected with provider! Don\
+It\,It\
+To fill \,To fill \
+Changing the language of your feed affects how Apparels are matched using Google taxonomies. Your products should also be in the same language. Refer to \,Changing the language of your feed affects how Apparels are matched using Google taxonomies. Your products should also be in the same language. Refer to \
+Allowed shipping methods. Realtime carriers aren\,Allowed shipping methods. Realtime carriers aren\
+For US feeds column \,For US feeds column \
+Output Format,Output Format
+Delimited,Delimited
+XML,XML
+"For XML output, use a .xml file name. XML output always uses UTF-8.","For XML output, use a .xml file name. XML output always uses UTF-8."
+XML Header,XML Header
+XML Item Element,XML Item Element
+XML Footer,XML Footer
+XML Optional Columns,XML Optional Columns
+XML CDATA Columns,XML CDATA Columns
+XML column lists are comma-separated names; * selects all columns.,XML column lists are comma-separated names; * selects all columns.
+"XML wrappers must contain item elements as markup.","XML wrappers must contain item elements as markup."
+Invalid XML compound value for %1.,Invalid XML compound value for %1.
+XML preset values must be scalar.,XML preset values must be scalar.
+XML uses the destination preset automatically. Use a .xml file name.,XML uses the destination preset automatically. Use a .xml file name.
+This destination has no supported XML preset.,This destination has no supported XML preset.
+"Generate and review the TSV or XML file, then add its public URL as a scheduled data feed in Meta Commerce Manager. Schedule generation before Meta fetches it. Review condition, brand, GTIN/MPN, and variant mappings in Columns Map. Match feed IDs to your Meta Pixel or Conversions API content IDs. This template does not configure tracking or synchronize orders.","Generate and review the TSV or XML file, then add its public URL as a scheduled data feed in Meta Commerce Manager. Schedule generation before Meta fetches it. Review condition, brand, GTIN/MPN, and variant mappings in Columns Map. Match feed IDs to your Meta Pixel or Conversions API content IDs. This template does not configure tracking or synchronize orders."
+"Generate and review the tab-delimited TXT or XML file. In Microsoft Merchant Center, create an online product feed and choose Automatically download file from URL. Use a public URL and schedule generation before the fetch. Match the store domain and target currency. Review identifiers, tax treatment, apparel fields, and shipping requirements for your target country; shipping is required for Austria and Germany. This template does not configure UET tracking or synchronize orders.","Generate and review the tab-delimited TXT or XML file. In Microsoft Merchant Center, create an online product feed and choose Automatically download file from URL. Use a public URL and schedule generation before the fetch. Match the store domain and target currency. Review identifiers, tax treatment, apparel fields, and shipping requirements for your target country; shipping is required for Austria and Germany. This template does not configure UET tracking or synchronize orders."
+"Generate and review the CSV or XML file, then add its public URL through Data Feed Schedule in TikTok Ads Manager > Assets > Catalog. Match the catalog currency and targeting location. Schedule generation before the fetch and keep sale prices current; TikTok does not use sale_price_effective_date to expire discounts. Match sku_id values to your TikTok Pixel content IDs. Review brand, identifiers, images, and variant mappings. This template does not configure tracking or synchronize TikTok Shop orders.","Generate and review the CSV or XML file, then add its public URL through Data Feed Schedule in TikTok Ads Manager > Assets > Catalog. Match the catalog currency and targeting location. Schedule generation before the fetch and keep sale prices current; TikTok does not use sale_price_effective_date to expire discounts. Match sku_id values to your TikTok Pixel content IDs. Review brand, identifiers, images, and variant mappings. This template does not configure tracking or synchronize TikTok Shop orders."
+"Generate and review the TSV or XML file. In Pinterest Catalogs and product groups, add a data source with its public URL and choose the matching file format. Review country, language, currency, and claimed website before creating Pins. Schedule generation before the daily fetch; hosted URLs must use port 80 or 443. Use clear primary images at least 1000 by 1500 pixels and change image URLs when replacing images. Keep variant group IDs and tracking IDs consistent. This template does not configure the Pinterest tag or synchronize orders.","Generate and review the TSV or XML file. In Pinterest Catalogs and product groups, add a data source with its public URL and choose the matching file format. Review country, language, currency, and claimed website before creating Pins. Schedule generation before the daily fetch; hosted URLs must use port 80 or 443. Use clear primary images at least 1000 by 1500 pixels and change image URLs when replacing images. Keep variant group IDs and tracking IDs consistent. This template does not configure the Pinterest tag or synchronize orders."

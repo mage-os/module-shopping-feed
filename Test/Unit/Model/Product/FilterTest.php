@@ -86,6 +86,18 @@ class FilterTest extends CompatibilityTestCase
         $this->assertSame('"Quoted", café, 東京', $this->model->cleanField('&quot;Quoted&quot;, café&#44; 東京'));
     }
 
+    public function testXmlPreservesDelimiterAndUsesUtf8(): void
+    {
+        $feed = $this->createMock(\MageOS\ShoppingFeed\Model\Feed::class);
+        $settings = ['output_params_format' => 'xml', 'output_params_delimiter' => '|',
+            'output_params_encoding' => 'ASCII'];
+        $feed->method('getConfig')->willReturnCallback(
+            static fn ($key, $default = null) => $settings[$key] ?? $default
+        );
+        $this->model->setFeed($feed);
+        self::assertSame('café|東京', $this->model->cleanField('café|東京'));
+    }
+
     /** @dataProvider unclosedMarkup */
     #[DataProvider('unclosedMarkup')]
     public function testUnclosedMarkupFragmentsAreRemoved(string $input, string $expected): void

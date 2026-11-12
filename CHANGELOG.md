@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented here.
 
+## 1.3.0 - Unreleased
+
+[Release notes and upgrade requirements](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/releases/1.3.0.md).
+
+### Added
+
+- **XML output (SHO-1):** Automatic RSS presets for Google Shopping, Local Inventory, Microsoft, Pinterest, TikTok, and Meta. Generic feeds support configurable wrappers, item elements, optional columns and CDATA. Delimited output remains the default; OpenAI remains delimited only.
+- **Conditional Value (SHO-2):** All/Any product conditions choose between fixed text, product attributes, or percentage adjustments. Available in Columns Map and Replace Empty Values across all eight feed types.
+- **Product Selection (SHO-3):** All/Any attribute conditions filter output products, with product/parent scope, SKU wildcards, image presence, visibility and status. Existing exclusions and eligibility checks remain in effect.
+- **Per-column modifiers (SHO-5):** Ordered prepend/append, Unicode case changes, rounding, truncation, decimal padding, date and price formatting, Strip tags, Escape HTML and HTTPS rewriting. Chains run once per final value before output limits, with drag and keyboard ordering.
+
+### Fixed
+
+- Preserve literal condition values, explicit clearing, structured parameters, Unicode wildcards, calendar-day comparisons, and shared parent context. Validate both conditional outputs and reject malformed imported rules.
+- Initialize conditional editors after their data arrives, including switches from existing mappings. New mapping rows default to Static Value.
+- Preserve composite row identifiers and preview diagnostics. Clear preview SKU filters before full generation and keep selection failures in the correct feed log.
+- Skip XML-invalid product rows with SKU/column diagnostics; preserve the prior file on configuration or write failure. Preserve multiline wrappers and structured shipping/image boundaries; omit optional empty fields, and keep zero values.
+- Reject Escape HTML with unsafe unenclosed delimiters, including mixed separators crossing entity boundaries. Strip tags retains word boundaries and removes script/style bodies. Round produces plain decimal text independent of PHP precision settings.
+- Resolve Google legacy and runtime-added column names consistently for modifiers. XML modifier processing uses UTF-8, ignores inactive delimiter settings and preserves repeated images and compound shipping values.
+
+### Documentation
+
+- Add guides and examples for XML, Conditional Value, Product Selection and modifiers, plus parent-value inheritance instructions, troubleshooting and cumulative upgrade/rollback guidance.
+- Preserve dated independent verification reports and the November 9 competitor comparison as historical evidence.
+
 ## 1.2.5 - 2026-10-22
 
 [Release 1.2.5 notes and upgrade requirements](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/releases/1.2.5.md).

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Conditional Value remote-template regression</title>
+    <style>body {font:16px sans-serif;margin:2rem} fieldset {margin:1rem 0} label {margin:0.5rem;display:inline-block} pre {white-space:pre-wrap}</style>
+</head>
+<body>
+    <h1>Conditional Value remote-template regression</h1>
+    <p>Uses the installed Magento UI component, Knockout bindings, remote template engine, and module templates.</p>
+    <pre id="result" role="status">Loading Magento…</pre>
+    <div id="fixture"></div>
+    <script>
+        // Copy this page and its JS alongside each other under a disposable store's pub/static directory.
+        // Pass that store's deployed Admin static base as ?static=/static/adminhtml/Vendor/theme/en_US/.
+        (function () {
+            'use strict';
+            var base = new URL(new URLSearchParams(location.search).get('static'), location.origin),
+                result = document.getElementById('result');
+            if (base.origin !== location.origin || !base.pathname.startsWith('/static/adminhtml/')) {
+                result.textContent = 'FAIL: Supply a same-origin Admin static directory using ?static=…';
+                return;
+            }
+            function script(url) {
+                return new Promise(function (resolve, reject) {
+                    var node = document.createElement('script');
+                    node.src = url;
+                    node.onload = resolve;
+                    node.onerror = reject;
+                    document.head.appendChild(node);
+                });
+            }
+            script(new URL('requirejs/require.js', base)).then(function () {
+                require.config({baseUrl: base.href});
+                return script(new URL('requirejs-config.js', base));
+            }).then(function () {
+                return script(new URL('conditional-value-switch.js', location.href));
+            }).catch(function () { result.textContent = 'FAIL: Magento test assets could not load.'; });
+        }());
+    </script>
+</body>
+</html>

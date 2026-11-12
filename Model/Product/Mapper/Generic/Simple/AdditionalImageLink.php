@@ -43,7 +43,10 @@ class AdditionalImageLink extends MapperAbstract
     }
 
     /**
-     * @inheritdoc
+     * Map additional images without flattening XML list boundaries.
+     *
+     * @param array $params
+     * @return string|\MageOS\ShoppingFeed\Model\Output\MappedValue
      */
     public function map(array $params = [])
     {
@@ -83,8 +86,17 @@ class AdditionalImageLink extends MapperAbstract
         $feed = $this->getAdapter()->getFeed();
         $delimiter = $feed->getConfig('output_params_delimiter', "\t");
         $delimiter_other = $feed->getConfig('output_params_delimiter_other', "\t");
-        if (!$this->hasConfiguration('separator') && (trim($delimiter) == $glue || trim($delimiter_other) == $glue)) {
+        if ($feed->getConfig('output_params_format', 'delimited') !== 'xml'
+            && !$this->hasConfiguration('separator') && (trim($delimiter) == $glue || trim($delimiter_other) == $glue)
+        ) {
             $glue = "|";
+        }
+        if ($feed->getConfig('output_params_format', 'delimited') === 'xml' && $urls !== []) {
+            foreach ($urls as &$url) {
+                $this->getAdapter()->getFilter()->findAndReplace($url, $params['column'] ?? '');
+            }
+            unset($url);
+            return new \MageOS\ShoppingFeed\Model\Output\MappedValue($urls, implode($glue, $urls), $glue);
         }
         $cell = implode($glue, $urls);
         $this->getAdapter()->getFilter()->findAndReplace($cell, $params['column'] ?? '');

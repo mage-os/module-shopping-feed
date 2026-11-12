@@ -4,7 +4,7 @@
 
 Use this plan to decide whether a `MageOS_ShoppingFeed` release candidate is ready for production. Run it against the exact candidate commit on representative store copies before enabling live schedules or uploads.
 
-The [1.2.5 release notes](docs/releases/1.2.5.md) and [product-attribute verification record](docs/reviews/2026-10-22-pr-24-verification.md) identify the current patch scope. The [1.2.4 release notes](docs/releases/1.2.4.md) and [Mage-OS 3.6 security verification](docs/reviews/2026-10-20-standards-security-mageos36.md) cover the previous release. The earlier [Mage-OS 3.5 hardening record](docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) and [native theme follow-up](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) retain their recorded scope. The [October 3 local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) retains its `133af71` browser/operational scope. External recipient, target-store, and release approval remain separate gates. The checkboxes below are a reusable plan, not a completed acceptance record.
+The [1.3.0 candidate notes](docs/releases/1.3.0.md) and [preparation record](docs/reviews/2026-11-12-release-1.3.0-preparation.md) describe the current release candidate. The [1.2.5 release notes](docs/releases/1.2.5.md) and [product-attribute verification record](docs/reviews/2026-10-22-pr-24-verification.md) identify the current patch scope. The [1.2.4 release notes](docs/releases/1.2.4.md) and [Mage-OS 3.6 security verification](docs/reviews/2026-10-20-standards-security-mageos36.md) cover the previous release. The earlier [Mage-OS 3.5 hardening record](docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) and [native theme follow-up](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) retain their recorded scope. The [October 3 local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) retains its `133af71` browser/operational scope. External recipient, target-store, and release approval remain separate gates. The checkboxes below are a reusable plan, not a completed acceptance record.
 
 The current platform acceptance target is Mage-OS 3.6.0; Mage-OS 3.5.0 remains in CI coverage. Add another currently supported Magento Open Source store when available. A store with Multi-Source Inventory is required for Local Inventory acceptance.
 
@@ -415,3 +415,86 @@ No open High or Medium defect may be accepted for the first production release w
 | Release owner | | Approve / Reject | | |
 
 Approval applies only to the recorded commit and tested configuration. Any code change after sign-off requires affected checks to be rerun and a new release decision.
+
+
+## SHO-2 conditional values (1.3.0 candidate)
+
+Use synthetic products and a disabled feed with no schedule or uploads. Follow the [Conditional values guide](docs/wiki/Conditional-Values.md).
+
+- In every feed type, add Columns Map and Replace Empty Values rows. Verify Static Value is the default, then explicitly select Conditional Value. Test both new rows and switching an existing saved mapping. Save and reopen; all controls and values must remain visible.
+- Configure All and Any groups with a matching and a nonmatching product. Verify Fixed text, Product attribute, and Percentage adjustment outputs, including zero, empty strings, store-view option labels, and positive/negative adjustments.
+- Test empty and nonnumeric percentage sources and the permitted percentage bounds. Verify invalid configuration is rejected rather than silently taking Otherwise; both branches must validate.
+- Exercise condition option IDs, dates, missing values, and output transformations. Verify Replace Empty Values does not overwrite a populated column and respects replacement order.
+- Test inheritance with parent/child fixtures. The Conditional Value editor creates product-scoped conditions; imported parent scopes use only the active mapping parent, without standalone parent lookup.
+- Reject empty/oversized condition groups, unknown attributes, invalid operators, malformed imports, and incomplete outputs. Verify preserved structured values through export/import.
+- Compare Test Feed results with complete generated output, including interaction with Product Selection and existing required-column filters.
+
+The [editor-switch report](docs/reviews/2026-11-10-sho-2-editor-switch.md) records successful Admin switching, save/reopen, and generated outputs. The later [default-row report](docs/reviews/2026-11-10-sho-2-default-mapping.md) records unit and persistence coverage but leaves its browser save/reopen follow-up incomplete. Repeat that check before claiming complete browser acceptance of the default-row change.
+
+## SHO-3 product selection (1.3.0 candidate)
+
+Use synthetic products and feeds without schedules or uploads. Existing filters must remain in effect.
+
+- Confirm an existing feed without selection conditions exports the same rows.
+- In Product Filters, add All/Any conditions on arbitrary product attributes, SKU wildcards, image presence, visibility, and parent status. Save, reopen, and check the exact condition scopes, operators, and values.
+- Generate matching and nonmatching products. Check raw store-view values, missing attributes, option IDs, dates, multiselect values, wildcard case sensitivity, and blank/`no_selection` images.
+- Check configurable, grouped, and bundle children independently of the parent row. A parent failing selection must not suppress a matching child. A rejected child must not be marked processed by duplicate tracking.
+- For standalone rows, check enabled and disabled direct parents, multiple parents, and absent parents. All parent conditions must match the same parent; an active generation parent takes precedence over other links.
+- Verify malformed saved/imported rules fail before persistence and malformed stored rules fail before generation, including an empty catalog. Remove all conditions and verify the filter is disabled.
+- Combine SHO-3 selection and SHO-2 Conditional Value in one feed. Verify actual exported rows and values, preview, and a resumed batch.
+- Confirm read-only roles cannot edit conditions and unavailable saved attribute choices remain visible for correction.
+
+The [initial SHO-3 verification](docs/reviews/2026-11-10-sho-3-product-selection.md) is supplemented by the [independent-finding fixes and retest](docs/reviews/2026-11-10-sho-3-independent-fixes.md), covering persistence, malformed inputs, Unicode wildcards, date boundaries, parent contexts, skip counts, store isolation, and batching. These records distinguish completed local checks from untested platforms, recipient ingestion, and production workloads.
+
+## SHO-5 per-column modifiers (1.3.0 candidate)
+
+Local checks and remaining limits: [SHO-5 verification](docs/reviews/2026-11-11-sho-5-modifiers.md).
+
+- [ ] In Columns Map, add, reorder, delete, save, and reopen modifier rows. Preserve literal spaces, `0`, and `${...}` text; clear the complete list and reopen.
+- [ ] Generate attribute, Static Value, Conditional Value, fallback, inherited child, and custom-option cells with multiple operations. Verify one application per final cell and each repeated value.
+- [ ] Verify Unicode case changes, negative rounding/truncation, fixed decimal padding, dates with and without offsets, invalid and blank inputs, and feed/explicit price currency without currency conversion.
+- [ ] Compare Strip tags and Escape HTML on the same markup, including script/style bodies. Reject unsafe unenclosed entity delimiters, including semicolon-space, `;|`, and `|&`, and verify enclosed semicolon output. Check paragraph, line-break, list, and comment word boundaries without entity decoding. Check TSV/CSV values, separators added by modifiers, and final output limits.
+- [ ] Verify HTTP and protocol-relative links become HTTPS while paths/query strings remain unchanged. Confirm destination HTTPS independently.
+- [ ] Reject malformed submitted rows, unknown operations/column names, invalid precision, and invalid currency arguments before persistence. Distinguish invalid-list messages from row-count messages. Confirm the read-only role cannot change modifier rows.
+
+- [ ] Retest SHO-5 Google mappings: interleave modifiers on `promotions_id` and `promotion_id`, verify their combined sequence on `promotion_id`, and apply a modifier to runtime-added `color`.
+- [ ] Reorder modifier rows using only the keyboard and the visible Order field. Save, reopen, and generate to prove the changed sequence. Check drag ordering and read-only permissions still work.
+
+## SHO-1 XML output acceptance (1.3.0 candidate)
+
+Automated coverage includes XML parsing and escaping, repeated elements, CDATA terminators, namespaces, optional empty values, zero preservation, invalid characters, DTD rejection, generator row dispatch, batch boundaries, and UTF-8 filtering.
+
+Local Admin, persistence, generation, and batch checks are recorded in the [November 10 retest](docs/reviews/2026-11-10-sho-1-independent-findings-fixed.md). Repeat these acceptance scenarios for the target installation:
+
+1. Create a custom feed, select XML, set an `.xml` filename, and save a header, item element, footer, optional columns, and CDATA columns. Reload and verify every value.
+2. Map a product containing ampersands, Unicode, and `]]>`; map a zero value, an empty optional value, and repeated image values. Generate and parse the downloaded file. Check values and tag counts.
+3. Generate with one product per batch, then with no matching products. Verify exactly one header/footer and publication only after the final batch.
+4. Publish a valid feed, then try saving malformed wrappers or an undeclared namespace. Save must fail. Separately inject invalid stored configuration in a disposable fixture; generation must fail and preserve the published file.
+5. Run Test SKU; verify mapped values still render. Switch to delimited output, save/reload, and compare the generated CSV/TSV with the prior output.
+6. Configure the same XML options in an extension preset and create a feed from it. Verify defaults survive save/reload and generation.
+
+### SHO-1 destination XML presets
+
+For each of Google Shopping, Google Local Inventory, Microsoft, Pinterest, TikTok, and Meta, select XML and an `.xml` filename, save/reload, and generate without entering wrappers or renaming columns. Verify RSS/channel/item structure, namespace-qualified fields, channel metadata from the selected store, and empty-value omission. Repeat on a feed with saved generic wrappers and confirm the canonical preset wins.
+
+Verify shipping and tax nested groups for Google, Microsoft, Pinterest, and Meta, repeated additional images, TikTok's sku_id to g:id mapping, Local Inventory store codes and quantities, and unchanged delimited output when switching back. Confirm that only generic feeds show manual XML structure settings. OpenAI must not offer XML or generate it through a saved XML setting.
+
+Local automated, installed-store, and Admin results are recorded in the [November 10 retest](docs/reviews/2026-11-10-sho-1-independent-findings-fixed.md). Meta and Pinterest namespace corrections were checked against provider samples. No preset has been submitted to a destination as part of local testing; TikTok XML field compatibility remains unverified. Recipient ingestion and production-volume acceptance are separate checks.
+
+### SHO-1 independent-review regressions
+
+- Put a single XML-invalid control character in one synthetic product description. Generate and preview: other products publish, skipped count increases, and Log Output identifies the SKU and column. Repeat with a bad product in the last cron batch.
+- Use a shipping service title containing both a comma and colon. Verify one intact nested service value, including persistent-cache reuse and switching formats.
+- Verify that an additional-image URL containing a comma remains one URL in XML.
+- Edit and save multiline XML header/footer fields in Admin. Verify exact stored newlines and successful generation.
+- Reject invalid element names, undeclared prefixes, malformed wrappers, DTDs, and whitespace before the declaration on save; accept valid Unicode names.
+- Toggle XML/Delimited and Other Delimiter; show only applicable settings. OpenAI must not offer XML, including with a historical invalid stored selection.
+- Compare Meta/Pinterest namespaces to the provider samples; verify configured Local Inventory pickup-cost nesting without inventing merchant values.
+
+See [the 2026-11-10 fixes and retest report](docs/reviews/2026-11-10-sho-1-independent-findings-fixed.md) for executed results and boundaries.
+
+### Combined 1.3.0 feature checks
+
+- [ ] Combine Product Selection, Conditional Value, modifiers and XML in one generated feed. Check parsed Unicode values with inactive non-UTF-8 and semicolon delimited settings.
+- [ ] Confirm repeated additional-image URLs retain commas within each URL after Secure URL, and compound shipping values retain service punctuation after modifiers.
+- [ ] Confirm Google legacy/canonical column aliases and runtime-added variants work in both delimited and XML output.

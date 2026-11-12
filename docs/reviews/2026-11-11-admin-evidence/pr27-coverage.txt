@@ -1,0 +1,13 @@
+{'num': '305', 'type': 'method', 'name': 'run', 'visibility': 'public', 'complexity': '16', 'crap': '137.71', 'count': '1'}
+{'num': '314', 'type': 'stmt', 'count': '1'}
+{'num': '315', 'type': 'stmt', 'count': '1'}
+{'num': '316', 'type': 'stmt', 'count': '1'}
+{'num': '317', 'type': 'stmt', 'count': '1'}
+{'num': '318', 'type': 'stmt', 'count': '1'}
+{'num': '319', 'type': 'stmt', 'count': '1'}
+{'num': '320', 'type': 'stmt', 'count': '1'}
+{'num': '321', 'type': 'stmt', 'count': '1'}
+{'num': '323', 'type': 'stmt', 'count': '1'}
+{'num': '325', 'type': 'stmt', 'count': '1'}
+{'num': '326', 'type': 'stmt', 'count': '1'}
+{'num': '327', 'type': 'stmt', 'count': '1'}

@@ -1,0 +1,44 @@
+{
+  "warnings_total": 66,
+  "duplicate_suppression_notices": 62,
+  "other_warnings": [
+    "Skipped Google Shopping row 109845: backorder requires a valid future availability_date within one year. Map the expected shipping date in Columns Map.",
+    "Skipped Google Shopping row 109846: backorder requires a valid future availability_date within one year. Map the expected shipping date in Columns Map.",
+    "Skipped product(s) [109741, 109742, 109743, 109744, 109745, 109746, 109747, 109748, 109749, 109750, 109751, 109753, 109754, 109755, 109756, 109757, 109758, 109759, 109760, 109761, 109762, 109763, 109764] - by product skip rule, has image_link empty.",
+    "Skipped product(s) [109836] - by product skip rule, has price empty."
+  ],
+  "errors": [],
+  "conditional_fallback_rows": [
+    {
+      "id": "109830",
+      "title": "QA Associated Collection 01",
+      "price": "100.00 USD",
+      "custom_label_0": "review price"
+    },
+    {
+      "id": "109831",
+      "title": "QA Associated Collection 02",
+      "price": "600.00 USD",
+      "custom_label_0": "review price"
+    },
+    {
+      "id": "109833",
+      "title": "QA Associated Collection 04",
+      "price": "600.00 USD",
+      "custom_label_0": "review price"
+    },
+    {
+      "id": "109834",
+      "title": "QA Associated Collection 05",
+      "price": "100.00 USD",
+      "custom_label_0": "review price"
+    },
+    {
+      "id": "109835",
+      "title": "QA Associated Collection 06",
+      "price": "360.00 USD",
+      "custom_label_0": "review price"
+    }
+  ],
+  "grouped_diagnostic_retest_passed": true
+}

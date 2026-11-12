@@ -1,0 +1,95 @@
+[
+  {
+    "store": "alpha",
+    "feed_id": "21",
+    "type": "generic",
+    "eligible_top_level": 79734,
+    "rows": 103389,
+    "distinct_ids": 103389,
+    "duplicate_id_count": 0,
+    "duplicate_examples": [],
+    "missing_ids": 0,
+    "conditional_values": {
+      "full catalog verified": 103389
+    },
+    "missing_conditional_values": 0,
+    "elapsed_seconds": 706.44,
+    "bytes": 20726013,
+    "sha256": "c11661859e4646201c7f62af3f472ce68566b425a36583879780f330591388ab",
+    "url": "https://latest.rocketcode.com/media/mageos-shopping-feed/full_20261111_21.xml",
+    "status": {
+      "id": 21,
+      "status": 0,
+      "queued": false,
+      "offset": null,
+      "batch_limit": null,
+      "eligible": 79734,
+      "file_exists": true,
+      "bytes": 20726013,
+      "temporary_bytes": 0,
+      "messages": {
+        "date": "11/11/26, 6:38 PM",
+        "progress": "100",
+        "added": 79734,
+        "exported": 103389,
+        "skipped": 6,
+        "file": "pub/media/mageos-shopping-feed/full_20261111_21.xml",
+        "store_id": "2"
+      }
+    },
+    "temporary_file_remaining": false
+  },
+  {
+    "store": "alpha",
+    "feed_id": "22",
+    "type": "google_shopping",
+    "eligible_top_level": 79734,
+    "rows": 103366,
+    "distinct_ids": 103366,
+    "duplicate_id_count": 0,
+    "duplicate_examples": [],
+    "missing_ids": 0,
+    "conditional_values": {
+      "full catalog verified": 103361,
+      "review price": 5
+    },
+    "missing_conditional_values": 0,
+    "elapsed_seconds": 2479.58,
+    "bytes": 146886783,
+    "sha256": "3f6c3bbfb2076e937550e846e903803b1a4e57a7523615a6a7129de6e3b6f604",
+    "url": "https://latest.rocketcode.com/media/mageos-shopping-feed/full_20261111_22.xml",
+    "status": {
+      "id": 22,
+      "status": 0,
+      "queued": false,
+      "offset": null,
+      "batch_limit": null,
+      "eligible": 79734,
+      "file_exists": true,
+      "bytes": 146886783,
+      "temporary_bytes": 0,
+      "messages": {
+        "date": "11/11/26, 7:19 PM",
+        "progress": "100",
+        "added": 79734,
+        "exported": 103366,
+        "skipped": 5,
+        "file": "pub/media/mageos-shopping-feed/full_20261111_22.xml",
+        "store_id": "2"
+      }
+    },
+    "temporary_file_remaining": false,
+    "google_field_checks": {
+      "empty_fields": {},
+      "availability": {
+        "in_stock": 97021,
+        "out_of_stock": 6345
+      },
+      "price_currencies": {
+        "USD": 103366
+      },
+      "invalid_price_syntax": 0,
+      "invalid_url_syntax": {}
+    }
+  }
+]

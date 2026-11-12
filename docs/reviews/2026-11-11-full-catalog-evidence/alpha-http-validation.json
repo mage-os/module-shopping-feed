@@ -1,0 +1,20 @@
+[
+  {
+    "feed_id": "21",
+    "url": "https://latest.rocketcode.com/media/mageos-shopping-feed/full_20261111_21.xml",
+    "http_status": 200,
+    "content_type": "text/xml; charset=UTF-8",
+    "bytes": 20726013,
+    "sha256": "c11661859e4646201c7f62af3f472ce68566b425a36583879780f330591388ab",
+    "matches_generated_file": true
+  },
+  {
+    "feed_id": "22",
+    "url": "https://latest.rocketcode.com/media/mageos-shopping-feed/full_20261111_22.xml",
+    "http_status": 200,
+    "content_type": "text/xml; charset=UTF-8",
+    "bytes": 146886783,
+    "sha256": "3f6c3bbfb2076e937550e846e903803b1a4e57a7523615a6a7129de6e3b6f604",
+    "matches_generated_file": true
+  }
+]

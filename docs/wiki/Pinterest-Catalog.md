@@ -1,8 +1,8 @@
 # Pinterest Catalog
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
-The **Pinterest Catalog** preset produces quoted UTF-8 TSV for a primary retail catalog. It uses the module's generation, Test Feed, scheduling, and upload tools. Pinterest import acceptance has not been verified.
+The **Pinterest Catalog** preset defaults to quoted UTF-8 TSV for a primary retail catalog. It uses the module's generation, Test Feed, scheduling, and upload tools. Pinterest import acceptance has not been verified.
 
 ## Create and map the feed
 
@@ -40,7 +40,7 @@ Generation checks URL syntax without fetching images. It does not verify dimensi
 
 1. Generate with uploads disabled and use **Test Feed** for representative products.
 2. Confirm the Pinterest business account, claimed website, tracking setup, and merchant requirements.
-3. Under **Catalogs and product groups > Add data source**, choose **Provide URL link**, enter the public feed URL, and select TSV. Hosted URLs must use port 80 or 443.
+3. Under **Catalogs and product groups > Add data source**, choose **Provide URL link**, enter the public feed URL, and select the format matching the generated file: TSV by default, or XML with 1.3.0. Hosted URLs must use port 80 or 443.
 4. Review country, language, and currency before creating Pins. Pinterest does not allow changing the source's country and language afterward.
 5. Schedule generation before Pinterest's daily ingestion. Use **Test your data source** with a header and sample rows, then review catalog diagnostics.
 
@@ -55,3 +55,7 @@ Use Generic for a narrow supplemental file because the Pinterest preset validate
 ## References
 
 Checked on 2026-09-29 against the [retail catalog specification](https://help.pinterest.com/en/business/article/before-you-get-started-with-catalogs), [data source setup](https://help.pinterest.com/en/business/article/data-source-ingestion), [supplemental source instructions](https://help.pinterest.com/en/business/article/add-a-supplemental-data-source), and official [TSV example](https://s.pinimg.com/sub/helpcenter/assets/pinterest_product_sample_tsv_feed.tsv). Current primary sources take precedence over third-party recommendations. Local checks do not establish Pinterest acceptance.
+
+## Automatic XML preset (1.3.0)
+
+In **General**, select **Output Format: XML** and set **File Name** to a name ending in `.xml`. This channel supplies its RSS header, item wrapper, footer, and namespace rules automatically; no manual XML structure is required. Existing default mappings remain usable. Review custom compound fields when switching formats, and inspect a generated sample before changing the destination's data-source URL and format. Empty optional tags are omitted. See [XML Output](XML-Output) for setup, field conversions, and validation limits. Delimited output remains the default.

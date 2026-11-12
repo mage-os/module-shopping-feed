@@ -15,10 +15,15 @@ class Parameters
      *
      * @param Config $types
      * @param Options $options
+     * @param ConditionalValue $conditionalValue
      * @param array $renderers
      */
-    public function __construct(private Config $types, private Options $options, private array $renderers = [])
-    {
+    public function __construct(
+        private Config $types,
+        private Options $options,
+        private ConditionalValue $conditionalValue,
+        private array $renderers = []
+    ) {
     }
 
     /**
@@ -44,6 +49,10 @@ class Parameters
             if (isset($definition['source'])) {
                 $definition['options'] = $this->options->get($definition['source']);
                 unset($definition['source']);
+            }
+            if ($definition['kind'] === 'conditional') {
+                $definition['conditions'] = $this->conditionalValue->get();
+                $definition['attributes'] = $this->options->get('Attributes');
             }
             $definition['default'] = $directive['param'] ?? '';
             if ($definition['kind'] === 'none') {

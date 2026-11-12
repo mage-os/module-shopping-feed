@@ -1,0 +1,18 @@
+PHPUnit 12.5.43 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.27
+Configuration: /private/tmp/shopping-feed-deploy-20261111/candidate/phpunit.xml.dist
+
+F                                                                   1 / 1 (100%)
+
+Time: 00:00.097, Memory: 38.00 MB
+
+There was 1 failure:
+
+1) MageOS\ShoppingFeed\Test\Unit\Model\GeneratorTest::testPreviewKeepsMemoryDiagnosticsAndDropsPreviousFeedHandlers
+Failed asserting that '' [ASCII](length: 0) contains "Invalid preview rule" [ASCII](length: 20).
+
+/private/tmp/shopping-feed-deploy-20261111/candidate/Test/Unit/Model/GeneratorTest.php:145
+
+FAILURES!
+Tests: 1, Assertions: 2, Failures: 1.

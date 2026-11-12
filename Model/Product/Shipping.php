@@ -270,10 +270,11 @@ class Shipping
     /**
      * Collected rates as the feed's "country:region:title:price" shipping value.
      *
-     * @return array|string
+     * @param bool $structured Preserve field boundaries for XML output
+     * @return string|\MageOS\ShoppingFeed\Model\Output\MappedValue
      */
     // phpcs:ignore Generic.Metrics.NestingLevel.TooHigh -- legacy feed logic; refactor deferred to keep output identical
-    public function getFormatedValue()
+    public function getFormatedValue(bool $structured = false)
     {
         if (!is_array($this->rates) || count($this->rates) == 0) {
             return '';
@@ -298,12 +299,8 @@ class Shipping
                                             $this->getPriceTax($method['price'], $countryId),
                                             $this->adapter->getData('store_currency_code')
                                         );
-                                        $values[] = sprintf(
-                                            "%s::%s:%s",
-                                            $countryId,
-                                            $this->getShippingTitle($carrier, $method),
-                                            $price
-                                        );
+                                        $values[] = ['country' => $countryId, 'region' => '',
+                                            'service' => $this->getShippingTitle($carrier, $method), 'price' => $price];
                                     }
                                 }
                             }
@@ -319,13 +316,8 @@ class Shipping
                                             $this->getPriceTax($method['price'], $countryId),
                                             $this->adapter->getData('store_currency_code')
                                         );
-                                        $values[] = sprintf(
-                                            "%s:%s:%s:%s",
-                                            $countryId,
-                                            $regionId,
-                                            $this->getShippingTitle($carrier, $method),
-                                            $price
-                                        );
+                                        $values[] = ['country' => $countryId, 'region' => (string)$regionId,
+                                            'service' => $this->getShippingTitle($carrier, $method), 'price' => $price];
                                     }
                                 }
                             }
@@ -334,8 +326,9 @@ class Shipping
                 }
             }
         }
-        $values = implode(",", $values);
-        return $values;
+        $text = implode(',', array_map(static fn (array $group): string => implode(':', $group), $values));
+        return $structured && $values !== []
+            ? new \MageOS\ShoppingFeed\Model\Output\MappedValue($values, $text) : $text;
     }
 
     /**

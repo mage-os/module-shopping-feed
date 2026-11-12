@@ -1,0 +1,12 @@
+PHPUnit 12.5.43 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.27 with Xdebug 3.5.3
+Configuration: /Users/matt/code/module-shopping-feed/phpunit.xml.dist
+
+.                                                                   1 / 1 (100%)
+
+Time: 00:00.102, Memory: 40.00 MB
+
+OK (1 test, 6 assertions)
+
+Generating code coverage report in Clover XML format ... done [00:00.002]

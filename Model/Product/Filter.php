@@ -20,6 +20,9 @@ namespace MageOS\ShoppingFeed\Model\Product;
 
 class Filter
 {
+    /** @var array<string, list<array{column: string, operation: string, value: string}>>|null */
+    private ?array $modifierChains = null;
+
     /**
      * Feed object
      *
@@ -53,6 +56,7 @@ class Filter
     public function setFeed(\MageOS\ShoppingFeed\Model\Feed $feed)
     {
         $this->feed = $feed;
+        $this->modifierChains = null;
         return $this;
     }
 
@@ -69,7 +73,8 @@ class Filter
             $this->findAndReplace($field, $params['column']);
         }
 
-        $charset = $this->feed->getConfig('output_params_encoding', "UTF-8");
+        $isXml = $this->feed->getConfig('output_params_format', 'delimited') === 'xml';
+        $charset = $isXml ? 'UTF-8' : $this->feed->getConfig('output_params_encoding', "UTF-8");
         if (extension_loaded('mbstring')) {
             $supportedEncodings = array_map('strtolower', mb_list_encodings());
             if (!is_string($charset) || !in_array(strtolower($charset), $supportedEncodings, true)) {
@@ -89,24 +94,29 @@ class Filter
         ];
         $activeDelimiter = $delimiter == 'other' ? $delimiter_other : ($delimiter == '\t' ? "\t" : $delimiter);
         $isCustomCsv = $this->feed->getData('type') === 'generic' && $activeDelimiter === ',';
-        $hasEnclosure = $isCustomCsv || (string)$this->feed->getConfig('output_params_enclose_cell', '') !== '';
+        $hasEnclosure = $isXml || $isCustomCsv
+            || (string)$this->feed->getConfig('output_params_enclose_cell', '') !== '';
         if ($activeDelimiter !== '' && !$hasEnclosure) {
             $replacements[$activeDelimiter] = ' ';
         }
         $field = strtr($field, $replacements);
 
-        // Page Builder HTML Code content can contain escaped tags and double-encoded entities.
-        for ($pass = 0; $pass < 2; $pass++) {
-            $field = $this->removeMarkup($field);
-            if (extension_loaded('mbstring')) {
-                $field = preg_replace_callback(
-                    "/(&#?[a-z0-9]{1,8};)/i",
-                    [$this, 'htmlEntitiesToUtf8Callback'],
-                    $field
-                );
+        $chain = $this->getModifierChains()[$params['column'] ?? ''] ?? [];
+        $explicitMarkup = array_intersect(['strip_tags', 'escape'], array_column($chain, 'operation'));
+        if (!$explicitMarkup) {
+            // Page Builder HTML Code content can contain escaped tags and double-encoded entities.
+            for ($pass = 0; $pass < 2; $pass++) {
+                $field = $this->removeMarkup($field);
+                if (extension_loaded('mbstring')) {
+                    $field = preg_replace_callback(
+                        "/(&#?[a-z0-9]{1,8};)/i",
+                        [$this, 'htmlEntitiesToUtf8Callback'],
+                        $field
+                    );
+                }
             }
+            $field = $this->removeMarkup($field);
         }
-        $field = $this->removeMarkup($field);
         /** Decoding can reintroduce separators that were absent from the source text. */
         $separators = ["\n" => ' ', "\r" => ' '];
         if ($activeDelimiter !== '' && !$hasEnclosure) {
@@ -116,11 +126,91 @@ class Filter
         $field = preg_replace('/\s\s+/', ' ', $field);
         $field = str_replace(PHP_EOL, "", $field);
         $field = trim($field);
-        if ($params !== null && array_key_exists('column', $params)) {
+        if (!$chain && $params !== null && array_key_exists('column', $params)) {
             $this->limitOutput($field, $params['column']);
         }
 
         return $field;
+    }
+
+    /**
+     * Apply modifiers once to assembled rows, after directive formatting and before empty checks.
+     *
+     * @param array $rows
+     * @phpstan-param array<array<string, mixed>> $rows
+     * @param string $currency Effective store currency supplied by the adapter
+     * @return array<array<string, mixed>>
+     */
+    public function modifyRows(array $rows, string $currency = ''): array
+    {
+        $chains = $this->getModifierChains();
+        if (!$chains) {
+            return $rows;
+        }
+        $modifier = new ModifierChain();
+        $encoding = $this->feed->getConfig('output_params_format', 'delimited') === 'xml'
+            ? 'UTF-8' : (string)$this->feed->getConfig('output_params_encoding', 'UTF-8');
+        if (!in_array(strtolower($encoding), array_map('strtolower', mb_list_encodings()), true)) {
+            $encoding = 'UTF-8';
+        }
+        foreach ($rows as &$row) {
+            foreach ($chains as $column => $chain) {
+                if (array_key_exists($column, $row)) {
+                    $row[$column] = $modifier->apply(
+                        $row[$column],
+                        $chain,
+                        $currency !== '' ? $currency : (string)$this->feed->getConfig('general_currency', ''),
+                        $encoding
+                    );
+                    $row[$column] = $this->finishModifiedValue($row[$column], (string)$column, $encoding);
+                }
+            }
+        }
+        return $rows;
+    }
+
+    /**
+     * Recheck output separators added by modifiers and apply the column limit last.
+     *
+     * @param mixed $value
+     * @param string $column
+     * @param string $encoding
+     * @return mixed
+     */
+    private function finishModifiedValue($value, string $column, string $encoding)
+    {
+        if ($value instanceof \MageOS\ShoppingFeed\Model\Output\MappedValue) {
+            return $value->map(
+                fn (string $item): string => (string)$this->finishModifiedValue($item, $column, $encoding)
+            );
+        }
+        if (is_array($value)) {
+            return array_map(fn ($item) => $this->finishModifiedValue($item, $column, $encoding), $value);
+        }
+        $delimiter = (string)$this->feed->getConfig('output_params_delimiter', "\t");
+        $delimiter = $delimiter === 'other'
+            ? (string)$this->feed->getConfig('output_params_delimiter_other', "\t")
+            : ($delimiter === '\t' ? "\t" : $delimiter);
+        $replacements = ["\r" => ' ', "\n" => ' '];
+        $enclosed = $this->feed->getConfig('output_params_format', 'delimited') === 'xml'
+            || ($this->feed->getData('type') === 'generic' && $delimiter === ',')
+            || (string)$this->feed->getConfig('output_params_enclose_cell', '') !== '';
+        if ($delimiter !== '' && !$enclosed) {
+            $replacements[$delimiter] = ' ';
+        }
+        $value = strtr($value, $replacements);
+        $this->limitOutput($value, $column, $encoding);
+        return $value;
+    }
+
+    /**
+     * Compile once per feed binding, also rejecting invalid stored/imported configuration at runtime.
+     *
+     * @return array<string, list<array{column: string, operation: string, value: string}>>
+     */
+    private function getModifierChains(): array
+    {
+        return $this->modifierChains ??= (new ModifierChain())->compileForFeed($this->feed);
     }
 
     /**
@@ -131,27 +221,7 @@ class Filter
      */
     private function removeMarkup(string $field): string
     {
-        // Discard unfinished tags before stripping later complete tags, preserving their text.
-        $field = preg_replace(
-            '~</?[a-z][a-z0-9:-]*(?=[\s/>]|$)[^<>]*(?=</?[a-z][a-z0-9:-]*(?=[\s/>]|$)|$)~i',
-            ' ',
-            $field
-        );
-        $field = preg_replace('~<(script|style)\b[^>]*>.*?(?:</\1\s*>|$)~is', ' ', $field);
-        $tags = <<<'REGEX'
-~
-    <!--.*?(?:-->|$)
-    | <![a-z][^>]*>
-    | </?[a-z][a-z0-9:-]*(?=[\s/>])
-      (?:
-          [^>"']
-          | "(?:[^"<]|<(?!/?[a-z][a-z0-9:-]*(?=[\s/>])|[!?]))*"
-          | '(?:[^'<]|<(?!/?[a-z][a-z0-9:-]*(?=[\s/>])|[!?]))*'
-      )*>
-~isx
-REGEX;
-        $field = preg_replace($tags, ' ', $field);
-        return preg_replace('~</?[a-z][a-z0-9:-]*(?=[\s/>])[^<>]*>~i', ' ', $field);
+        return (new Markup())->remove($field);
     }
 
     /**
@@ -188,7 +258,8 @@ REGEX;
         }
         $findAndReplace = $this->cache->getCache($cacheKey, []);
 
-        if (array_key_exists((string)$column, $findAndReplace)) {
+        $column = (string)$column;
+        if (array_key_exists($column, $findAndReplace)) {
             $string = str_replace($findAndReplace[$column]['find'], $findAndReplace[$column]['replace'], $string);
         }
         if (!empty($findAndReplace['-all-']['find'])) {
@@ -201,17 +272,18 @@ REGEX;
      *
      * @param mixed $string Cell value, truncated in place
      * @param string|null $column Column name whose output limit applies
+     * @param string $encoding Character encoding for the output length
      * @return void
      */
-    public function limitOutput(&$string, $column)
+    public function limitOutput(&$string, $column, string $encoding = 'UTF-8')
     {
         $limitData = $this->feed->getConfig('filters_output_limit');
         if ($limitData !== null) {
             foreach ($limitData as $data) {
                 $limit = (int) $data['limit'];
                 if ($data['column'] == $column) {
-                    if (mb_strlen($string, 'UTF-8') > $limit) {
-                        $string = mb_substr($string, 0, $limit, 'UTF-8');
+                    if (mb_strlen($string, $encoding) > $limit) {
+                        $string = mb_substr($string, 0, $limit, $encoding);
                     }
                     continue;
                 }

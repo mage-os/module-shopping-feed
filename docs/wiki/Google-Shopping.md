@@ -2,7 +2,7 @@
 
 The Google Shopping template supplies a product-data column map, Google taxonomy mapping, price filters, variant handling, shipping output, and optional promotion IDs. The merchant remains responsible for mapping those fields to the real catalog and meeting Google's current requirements.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 ## Before configuration
 
@@ -93,3 +93,7 @@ When a Google Promotions companion feed is enabled, add a `promotion_id` column 
 6. Classify each result as a module defect, catalog-data issue, account configuration issue, or accepted warning.
 
 Do not enable a production schedule until Merchant Center has processed the exact file successfully.
+
+## Automatic XML preset (1.3.0)
+
+In **General**, select **Output Format: XML** and set **File Name** to a name ending in `.xml`. This channel supplies its RSS header, item wrapper, footer, and namespace rules automatically; no manual XML structure is required. Existing default mappings remain usable. Review custom compound fields when switching formats, and inspect a generated sample before changing the destination's data-source URL and format. Empty optional tags are omitted. See [XML Output](XML-Output) for setup, field conversions, and validation limits. Delimited output remains the default.

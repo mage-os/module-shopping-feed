@@ -14,12 +14,23 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class GoogleAndCustomOutputTest extends TestCase
 {
-    private function writer(string $type, array $columns, string $delimiter, array &$writes): Generator
-    {
-        $feed = $this->createMock(Feed::class);
+    /**
+     * Prepare a generator with captured file writes.
+     *
+     * @phpstan-param array<string, string> $settings
+     */
+    private function writer(
+        string $type,
+        array $columns,
+        string $delimiter,
+        array &$writes,
+        array $settings = []
+    ): Generator {
+        $feed = $this->getMockBuilder(Feed::class)->disableOriginalConstructor()
+            ->onlyMethods(['getData', 'getConfig', 'getColumnsMap', 'getXmlPreset'])->getMock();
         $feed->method('getData')->willReturn($type);
         $feed->method('getConfig')->willReturnCallback(fn($key, $default = '') =>
-            $key === 'output_params_delimiter' ? $delimiter : $default);
+            $settings[$key] ?? ($key === 'output_params_delimiter' ? $delimiter : $default));
         $feed->method('getColumnsMap')->willReturn(array_map(fn($name) => ['column' => $name], $columns));
         $driver = $this->createMock(File::class);
         $driver->method('fileWrite')->willReturnCallback(function ($handle, $line) use (&$writes) {
@@ -51,6 +62,67 @@ class GoogleAndCustomOutputTest extends TestCase
             $this->assertSame([$value, 'sku-1', ''], str_getcsv(ltrim(end($writes), "\n"), ',', '"', ''));
         }
         $this->assertSame($columns, str_getcsv($writes[0], ',', '"', ''));
+    }
+
+    public function testXmlRowsUseMappedNamesAndDoNotWriteColumnHeaders(): void
+    {
+        $writes = [];
+        $generator = $this->writer('generic', ['id', 'image', 'empty'], ',', $writes, [
+            'output_params_format' => 'xml', 'output_params_xml_header' => '<products>',
+            'output_params_xml_optional_columns' => 'empty',
+        ]);
+        $this->write($generator, ['id' => 'id', 'image' => 'image', 'empty' => 'empty'], false);
+        $this->write($generator, ['id' => 0, 'image' => ['a&b', 'c<d'], 'empty' => '']);
+        self::assertSame("<products>\n", $writes[0]);
+        self::assertSame("<product><id>0</id><image>a&amp;b</image><image>c&lt;d</image></product>\n", $writes[1]);
+        self::assertSame(1, $generator->getCountProductsExported());
+    }
+
+    public function testBadXmlRowsAreSkippedWithSkuAndColumnAndLaterRowsSurvive(): void
+    {
+        $writes = [];
+        $generator = $this->writer(
+            'generic',
+            ['id', 'description'],
+            ',',
+            $writes,
+            ['output_params_format' => 'xml']
+        );
+        $product = $this->createMock(\Magento\Catalog\Model\Product::class);
+        $product->method('getSku')->willReturn('source-sku');
+        $adapter = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class);
+        $adapter->method('getProduct')->willReturn($product);
+        $adapter->method('map')->willReturn([
+            ['id' => 'bad-child', 'description' => "bad\x0Btext"],
+            ['id' => 'good-child', 'description' => 'good & text'],
+        ]);
+        $logger = $generator->getLogger();
+        self::assertInstanceOf(\PHPUnit\Framework\MockObject\MockObject::class, $logger);
+        $logger->expects(self::once())->method('warning')->with(self::callback(
+            static fn ($message) => str_contains($message, 'source-sku')
+                && str_contains($message, 'bad-child') && str_contains($message, 'description')
+        ));
+        (new \ReflectionMethod($generator, 'addProductToFeed'))->invoke($generator, $adapter);
+        self::assertCount(1, $writes);
+        self::assertStringContainsString('<id>good-child</id>', $writes[0]);
+        self::assertSame(1, $generator->getCountProductsExported());
+        self::assertSame(1, $generator->getCountProductsSkipped());
+    }
+
+    public function testInvalidXmlConfigurationStillStopsGeneration(): void
+    {
+        $writes = [];
+        $generator = $this->writer(
+            'generic',
+            ['undeclared:id'],
+            ',',
+            $writes,
+            ['output_params_format' => 'xml']
+        );
+        $adapter = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class);
+        $adapter->method('map')->willReturn([['undeclared:id' => 'value']]);
+        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
+        (new \ReflectionMethod($generator, 'addProductToFeed'))->invoke($generator, $adapter);
     }
 
     /** @dataProvider dateCases */

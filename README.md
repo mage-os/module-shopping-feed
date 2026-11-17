@@ -48,7 +48,7 @@ The 1.3.0 candidate brings these features together:
 * **SHO-3: [Product Selection](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/wiki/Product-Selection.md)** includes only products matching attribute conditions, with product/parent scope, SKU wildcards, and image checks. Existing eligibility filters still apply.
 * **SHO-5: [Per-column modifiers](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/wiki/Columns-and-Directives.md#per-column-modifiers-130)** apply ordered text, numeric, date, price, HTML, and URL transformations before the final column limit.
 
-See the [editor-switch verification](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/reviews/2026-11-10-sho-2-editor-switch.md), [mapping-default verification and remaining browser limit](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/reviews/2026-11-10-sho-2-default-mapping.md), and [selection verification](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/reviews/2026-11-10-sho-3-independent-fixes.md).
+Use the [acceptance plan](ACCEPTANCE-TEST-PLAN.md) and [browser-testing guide](dev/tests/browser/README.md) to check editor switching, default mappings, save/reopen, selection, and generated output on the target store.
 
 ## Configuration
 

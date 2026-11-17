@@ -44,7 +44,7 @@ Existing find/replace rules still run at their current mapping/formatting stage.
 
 Example: add Prepend with `Brand: ` for `title`, followed by Uppercase for `title`. A mapped value of `Red shoe` becomes `BRAND: RED SHOE`. Reversing those rows produces `Brand: RED SHOE`.
 
-Save, reopen, check row order and values, then use **Test Feed** and inspect the generated file. Validate configuration again on import; unsupported operations, malformed row lists, and invalid precision/date/currency arguments are rejected. See the [SHO-5 verification record](https://github.com/mage-os-lab/module-shopping-feed/blob/release/1.3.0/docs/reviews/2026-11-11-sho-5-modifiers.md) for the checks performed and remaining acceptance work.
+Save, reopen, check row order and values, then use **Test Feed** and inspect the generated file. Validate configuration again on import; unsupported operations, malformed row lists, and invalid precision/date/currency arguments are rejected. Follow [Release acceptance](Release-Acceptance) for combined-feature and target-store checks.
 
 With 1.3.0 XML, mapped names must also be valid XML element names and any prefixes must be declared. Channel presets supply their namespace rules automatically; Generic feeds require manual wrappers. See [XML Output](XML-Output).
 

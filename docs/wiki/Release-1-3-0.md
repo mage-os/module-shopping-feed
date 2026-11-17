@@ -8,4 +8,4 @@ Full [release notes](https://github.com/mage-os/module-shopping-feed/blob/releas
 
 The candidate also documents parent-value inheritance, fixes conditional editor initialization, preserves XML shipping/image boundaries and invalid-row diagnostics, and supports keyboard modifier ordering. XML modifier processing uses UTF-8 and preserves repeated/nested values.
 
-The [preparation record](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/reviews/2026-11-12-release-1.3.0-preparation.md) separates local verification from CI, publication, external recipient ingestion and target-store acceptance. No stable Composer package is available from this branch until the release is tagged and indexed. Public wiki synchronization is separate.
+The [release PR](https://github.com/mage-os/module-shopping-feed/pull/28) records candidate validation and remaining acceptance work. Follow [Development and CI](Development-and-CI) and [Release acceptance](Release-Acceptance) to repeat checks. No stable Composer package is available from this branch until the release is tagged and indexed. Public wiki synchronization is separate.

@@ -4,7 +4,7 @@
 
 Use this plan to decide whether a `MageOS_ShoppingFeed` release candidate is ready for production. Run it against the exact candidate commit on representative store copies before enabling live schedules or uploads.
 
-The [1.3.0 candidate notes](docs/releases/1.3.0.md) and [preparation record](docs/reviews/2026-11-12-release-1.3.0-preparation.md) describe the current release candidate. The [1.2.5 release notes](docs/releases/1.2.5.md) and [product-attribute verification record](docs/reviews/2026-10-22-pr-24-verification.md) identify the current patch scope. The [1.2.4 release notes](docs/releases/1.2.4.md) and [Mage-OS 3.6 security verification](docs/reviews/2026-10-20-standards-security-mageos36.md) cover the previous release. The earlier [Mage-OS 3.5 hardening record](docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) and [native theme follow-up](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) retain their recorded scope. The [October 3 local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) retains its `133af71` browser/operational scope. External recipient, target-store, and release approval remain separate gates. The checkboxes below are a reusable plan, not a completed acceptance record.
+The [1.3.0 candidate notes](docs/releases/1.3.0.md) describe the current release candidate. Record the tested commit, environment, results, and remaining limits in the release PR, with supporting logs attached as artifacts. External recipient, target-store, and release approval remain separate gates. The checkboxes below are a reusable plan, not a completed acceptance record.
 
 The current platform acceptance target is Mage-OS 3.6.0; Mage-OS 3.5.0 remains in CI coverage. Add another currently supported Magento Open Source store when available. A store with Multi-Source Inventory is required for Local Inventory acceptance.
 
@@ -429,7 +429,7 @@ Use synthetic products and a disabled feed with no schedule or uploads. Follow t
 - Reject empty/oversized condition groups, unknown attributes, invalid operators, malformed imports, and incomplete outputs. Verify preserved structured values through export/import.
 - Compare Test Feed results with complete generated output, including interaction with Product Selection and existing required-column filters.
 
-The [editor-switch report](docs/reviews/2026-11-10-sho-2-editor-switch.md) records successful Admin switching, save/reopen, and generated outputs. The later [default-row report](docs/reviews/2026-11-10-sho-2-default-mapping.md) records unit and persistence coverage but leaves its browser save/reopen follow-up incomplete. Repeat that check before claiming complete browser acceptance of the default-row change.
+Run the [browser regression and installed Admin checks](dev/tests/browser/README.md), including new default rows and switching existing rows. Verify save/reopen and generated output for the exact candidate; unit and persistence checks alone do not establish browser acceptance.
 
 ## SHO-3 product selection (1.3.0 candidate)
 
@@ -444,11 +444,11 @@ Use synthetic products and feeds without schedules or uploads. Existing filters 
 - Combine SHO-3 selection and SHO-2 Conditional Value in one feed. Verify actual exported rows and values, preview, and a resumed batch.
 - Confirm read-only roles cannot edit conditions and unavailable saved attribute choices remain visible for correction.
 
-The [initial SHO-3 verification](docs/reviews/2026-11-10-sho-3-product-selection.md) is supplemented by the [independent-finding fixes and retest](docs/reviews/2026-11-10-sho-3-independent-fixes.md), covering persistence, malformed inputs, Unicode wildcards, date boundaries, parent contexts, skip counts, store isolation, and batching. These records distinguish completed local checks from untested platforms, recipient ingestion, and production workloads.
+Include malformed inputs, Unicode wildcards, date boundaries, parent contexts, skip counts, store isolation, and batching. Record platform coverage, recipient ingestion, and production workloads separately.
 
 ## SHO-5 per-column modifiers (1.3.0 candidate)
 
-Local checks and remaining limits: [SHO-5 verification](docs/reviews/2026-11-11-sho-5-modifiers.md).
+Use the [per-column modifiers guide](docs/wiki/Columns-and-Directives.md#per-column-modifiers-130) and record results against the exact candidate.
 
 - [ ] In Columns Map, add, reorder, delete, save, and reopen modifier rows. Preserve literal spaces, `0`, and `${...}` text; clear the complete list and reopen.
 - [ ] Generate attribute, Static Value, Conditional Value, fallback, inherited child, and custom-option cells with multiple operations. Verify one application per final cell and each repeated value.
@@ -464,7 +464,7 @@ Local checks and remaining limits: [SHO-5 verification](docs/reviews/2026-11-11-
 
 Automated coverage includes XML parsing and escaping, repeated elements, CDATA terminators, namespaces, optional empty values, zero preservation, invalid characters, DTD rejection, generator row dispatch, batch boundaries, and UTF-8 filtering.
 
-Local Admin, persistence, generation, and batch checks are recorded in the [November 10 retest](docs/reviews/2026-11-10-sho-1-independent-findings-fixed.md). Repeat these acceptance scenarios for the target installation:
+Run these Admin, persistence, generation, and batch scenarios on the target installation:
 
 1. Create a custom feed, select XML, set an `.xml` filename, and save a header, item element, footer, optional columns, and CDATA columns. Reload and verify every value.
 2. Map a product containing ampersands, Unicode, and `]]>`; map a zero value, an empty optional value, and repeated image values. Generate and parse the downloaded file. Check values and tag counts.
@@ -479,9 +479,9 @@ For each of Google Shopping, Google Local Inventory, Microsoft, Pinterest, TikTo
 
 Verify shipping and tax nested groups for Google, Microsoft, Pinterest, and Meta, repeated additional images, TikTok's sku_id to g:id mapping, Local Inventory store codes and quantities, and unchanged delimited output when switching back. Confirm that only generic feeds show manual XML structure settings. OpenAI must not offer XML or generate it through a saved XML setting.
 
-Local automated, installed-store, and Admin results are recorded in the [November 10 retest](docs/reviews/2026-11-10-sho-1-independent-findings-fixed.md). Meta and Pinterest namespace corrections were checked against provider samples. No preset has been submitted to a destination as part of local testing; TikTok XML field compatibility remains unverified. Recipient ingestion and production-volume acceptance are separate checks.
+Compare Meta and Pinterest namespaces against provider samples. Submit representative output to each intended destination and record its response. Local XML parsing does not establish provider acceptance; TikTok XML field compatibility remains unverified. Recipient ingestion and production-volume acceptance are separate checks.
 
-### SHO-1 independent-review regressions
+### SHO-1 XML regression scenarios
 
 - Put a single XML-invalid control character in one synthetic product description. Generate and preview: other products publish, skipped count increases, and Log Output identifies the SKU and column. Repeat with a bad product in the last cron batch.
 - Use a shipping service title containing both a comma and colon. Verify one intact nested service value, including persistent-cache reuse and switching formats.
@@ -491,7 +491,7 @@ Local automated, installed-store, and Admin results are recorded in the [Novembe
 - Toggle XML/Delimited and Other Delimiter; show only applicable settings. OpenAI must not offer XML, including with a historical invalid stored selection.
 - Compare Meta/Pinterest namespaces to the provider samples; verify configured Local Inventory pickup-cost nesting without inventing merchant values.
 
-See [the 2026-11-10 fixes and retest report](docs/reviews/2026-11-10-sho-1-independent-findings-fixed.md) for executed results and boundaries.
+Record the tested revision, inputs, generated artifacts, observed failures, and remaining limits in the PR.
 
 ### Combined 1.3.0 feature checks
 

@@ -8,7 +8,7 @@ Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream 
 
 ## 1.3.0 candidate
 
-The [release preparation record](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/reviews/2026-11-12-release-1.3.0-preparation.md) records the combined candidate checks. XML/modifier integration is tested separately from the earlier feature reports. Remote CI, merge, tagging, Packagist indexing, wiki publication and external recipient acceptance remain distinct states.
+Use the repository acceptance plan and [Development and CI](Development-and-CI) to check the combined candidate, including XML with conditional values, product selection, and modifiers. Record the exact commit, environments, commands, results, and remaining limits in the [release PR](https://github.com/mage-os/module-shopping-feed/pull/28), with supporting logs as artifacts. Earlier feature checks do not establish acceptance of the final combined candidate. Remote CI, merge, tagging, Packagist indexing, wiki publication and external recipient acceptance remain distinct states.
 
 ## 1.2.5 verification
 

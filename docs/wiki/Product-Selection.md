@@ -56,4 +56,4 @@ Invalid saved or imported conditions fail validation before generation processes
 
 The editor retains legacy keyed condition rows for repair and saves them as a list after editing. Programmatic `null` clears selection and persists as an empty list. Developers should follow the structured parameter contract in repository `docs/ui-component-editor.md`.
 
-Local functional, persistence, Admin, boundary, and batching evidence is recorded in `docs/reviews/2026-11-10-sho-3-independent-fixes.md`. Test both accepted and rejected products in the target store; those results do not establish production capacity or destination acceptance.
+Test both accepted and rejected products in the target store, including persistence, Admin save/reopen, boundary values, and batching. Follow [Release acceptance](Release-Acceptance) and record production capacity and destination acceptance separately.

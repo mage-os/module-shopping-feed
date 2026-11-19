@@ -153,6 +153,10 @@
                         <item name="aclResource" xsi:type="string">MageOS_ShoppingFeed::delete</item>
                         <item name="label" xsi:type="string" translate="true">Delete</item>
                         <item name="url" xsi:type="url" path="*/*/massDelete"/>
+                        <item name="confirm" xsi:type="array">
+                            <item name="title" xsi:type="string" translate="true">Delete feeds</item>
+                            <item name="message" xsi:type="string" translate="true">Delete the selected feeds? This cannot be undone.</item>
+                        </item>
                     </item>
                 </argument>
             </action>

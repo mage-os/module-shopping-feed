@@ -14,7 +14,8 @@ class FeedFormData
     public const PERSISTOR_KEY = 'mageos_shopping_feed_form';
     public const ROW_CONFIG = [
         'columns_product_columns', 'filters_map_replace_empty_columns', 'filters_find_and_replace',
-        'filters_output_limit', 'filters_adwords_price_buckets', 'configurable_map_inherit', 'grouped_map_inherit'
+        'filters_output_limit', 'filters_column_modifiers', 'filters_adwords_price_buckets',
+        'configurable_map_inherit', 'grouped_map_inherit'
     ];
     private const SCHEDULE_FIELDS = ['id', 'start_at', 'batch_mode', 'batch_limit', 'delete'];
     private const UPLOAD_FIELDS = [

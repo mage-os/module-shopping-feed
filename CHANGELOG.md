@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented here.
 
+## 1.3.0 - Unreleased
+
+[Release notes and upgrade requirements](https://github.com/mage-os/module-shopping-feed/blob/release/1.3.0/docs/releases/1.3.0.md).
+
+### Added
+
+- **XML output (SHO-1):** Automatic RSS presets for Google Shopping, Local Inventory, Microsoft, Pinterest, TikTok, and Meta. Generic feeds support configurable wrappers, item elements, optional columns and CDATA. Delimited output remains the default; OpenAI remains delimited only.
+- **Conditional Value (SHO-2):** All/Any product conditions choose between fixed text, product attributes, or percentage adjustments. Available in Columns Map and Replace Empty Values across all eight feed types.
+- **Product Selection (SHO-3):** All/Any attribute conditions filter output products, with product/parent scope, SKU wildcards, image presence, visibility and status. Existing exclusions and eligibility checks remain in effect.
+- **Per-column modifiers (SHO-5):** Ordered prepend/append, Unicode case changes, rounding, truncation, decimal padding, date and price formatting, Strip tags, Escape HTML and HTTPS rewriting. Chains run once per final value before output limits, with drag and keyboard ordering.
+
+### Fixed
+
+- Preserve literal condition values, explicit clearing, structured parameters, Unicode wildcards, calendar-day comparisons, and shared parent context. Validate both conditional outputs and reject malformed imported rules.
+- Initialize conditional editors after their data arrives, including switches from existing mappings. New mapping rows default to Static Value.
+- Preserve composite row identifiers and preview diagnostics. Clear preview SKU filters before full generation and keep selection failures in the correct feed log.
+- Skip XML-invalid product rows with SKU/column diagnostics; preserve the prior file on configuration or write failure. Preserve multiline wrappers and structured shipping/image boundaries; omit optional empty fields, and keep zero values.
+- Reject Escape HTML with unsafe unenclosed delimiters, including mixed separators crossing entity boundaries. Strip tags retains word boundaries and removes script/style bodies. Round produces plain decimal text independent of PHP precision settings.
+- **Security:** Escape Admin save, test and grid messages. A column name containing markup could run script in another administrator's session when it appeared in a save error.
+- Evaluate every Conditional Value row in Replace Empty Values. Rows for the same column previously reused the first row's cached result. A mapping without parameters can no longer read the cached results of mappings with parameters, and `0` from an earlier replacement row is kept instead of falling through to the next row.
+- Accept boolean attributes without a source model (bundle Dynamic Price, SKU and Weight) in conditions, and attribute codes with uppercase letters. A code typed in the wrong case (`SKU`) is evaluated as the attribute's real code (`sku`); the saved rule keeps the spelling that was entered.
+- Rebuild compiled modifiers and validated Conditional Value and Product Selection rules at the start of every generation, so a long-running process picks up changed feeds and attributes.
+- Mass Enable and Disable write only the status column, so one feed with a drifted rule no longer stops the batch or skips queue cleanup, and a running generation's progress is not overwritten.
+- Secure URL upgrades every URL in a delimited list, including lists with spaces after the separator and URLs whose query contains a comma. Strip tags joins Escape HTML in requiring a cell enclosure with entity-conflicting delimiters.
+- Store XML shipping cache values in a text column and cache empty results. `setup:upgrade` widens `mageos_shopping_feed_shipping.value`. Reading a cached shipping value no longer renews it, so cached rates expire after the configured lifetime even when the feed runs more often.
+- Reject XML columns from different sources that resolve to the same element name, on save and at generation, instead of silently overwriting one. Repeating one column for a repeatable element is still allowed.
+- Offer the Shipping directive in the Meta, Pinterest and Microsoft presets. The Shipping guide now names the carriers feed generation skips.
+- Send the Conditional Value condition definition once per edit form instead of once per mapping row, and share it between rows in the browser instead of copying it into each.
+- Admin: the Mage-OS configuration tab shows the Mage-OS logo and sits between Catalog and Customers on Magento Open Source too, matching Mage-OS, where this module and the AI modules share the tab.
+- Admin: every repeating table's header now ends flush with its rows and Add bar; tables with three fields or fewer (Schedules, Limit column output, Find and Replace, Value inheritance, price buckets) are narrower, and Upload Destinations uses the full width. One-line parameters show their label beside the control so fields in a mapping row line up.
+- Admin: the mass Delete action in the feed grid asks for confirmation before deleting.
+- Admin: keep each row's directive notes visible in mapping tables; only notes that repeat on every row are shown once. Show Test Feed progress messages as plain text.
+- Admin: contain Test Feed progress and results in panels, show Completed in green and the feed file by name, align modifier rows, give every mapping table one width, shorten parameter lists, space the Categories Map buttons, and explain `%s` in File Name.
+- New feeds no longer put the platform name in the public file name: defaults are now `shopping_feed_%s.txt`, `meta_catalog_%s.tsv` and so on, without the `mageos_` prefix. Saved feeds keep their stored File Name. The default folder and log names are unchanged.
+- Resolve Google legacy and runtime-added column names consistently for modifiers. XML modifier processing uses UTF-8, ignores inactive delimiter settings and preserves repeated images and compound shipping values.
+
+### Documentation
+
+- Add guides and examples for XML, Conditional Value, Product Selection and modifiers, plus parent-value inheritance instructions, troubleshooting and cumulative upgrade/rollback guidance.
+- Preserve dated independent verification reports and the November 9 competitor comparison as historical evidence.
+
 ## 1.2.5 - 2026-10-22
 
 [Release 1.2.5 notes and upgrade requirements](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/releases/1.2.5.md).

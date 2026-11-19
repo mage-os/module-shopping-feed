@@ -76,7 +76,7 @@ class Save extends \Magento\Backend\App\Action implements \Magento\Framework\App
                     ['feed' => $feed, 'request' => $this->getRequest()]
                 );
                 $feed->save();
-                $this->messageManager->addSuccess(__('You saved this feed.'));
+                $this->messageManager->addSuccessMessage(__('You saved this feed.'));
                 $this->_getSession()->setMageosShoppingFeedData(false);
                 $this->dataPersistor->clear(\MageOS\ShoppingFeed\Model\Adminhtml\FeedFormData::PERSISTOR_KEY);
                 if ($this->getRequest()->getParam('back')) {
@@ -84,11 +84,11 @@ class Save extends \Magento\Backend\App\Action implements \Magento\Framework\App
                 }
                 return $resultRedirect->setPath('*/*/');
             } catch (\Magento\Framework\Exception\LocalizedException $e) {
-                $this->messageManager->addError($e->getMessage());
+                $this->messageManager->addErrorMessage($e->getMessage());
             } catch (\RuntimeException $e) {
-                $this->messageManager->addError($e->getMessage());
+                $this->messageManager->addErrorMessage($e->getMessage());
             } catch (\Exception $e) {
-                $this->messageManager->addException($e, __('Something went wrong while saving the feed.'));
+                $this->messageManager->addExceptionMessage($e, __('Something went wrong while saving the feed.'));
             }
 
             // Do not persist the raw envelope, decrypted model data, or newly typed passwords.

@@ -68,7 +68,7 @@ class MassDelete extends \Magento\Backend\App\Action implements \Magento\Framewo
             $feed->delete();
             $feedDeleted++;
         }
-        $this->messageManager->addSuccess(
+        $this->messageManager->addSuccessMessage(
             __('A total of %1 record(s) have been deleted.', $feedDeleted)
         );
 

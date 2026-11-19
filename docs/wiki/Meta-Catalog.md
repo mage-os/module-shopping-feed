@@ -1,10 +1,10 @@
 # Meta Catalog
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The guide separates historical 1.2.0 browser checks from 1.2.4 Mage-OS 3.6 verification and records the remaining limits. Template generation checks do not establish provider ingestion acceptance.
 
-The **Meta Catalog (Facebook and Instagram)** template produces a quoted UTF-8 TSV file for a product catalog in Meta Commerce Manager. It uses the existing generation queue, Test Feed, scheduling, and upload tools. A local Mage-OS 3.5.0 demo passed generated-file, Admin preview, inventory, and storefront variant checks on 2026-09-29. Commerce Manager acceptance has not been verified for this template yet.
+The **Meta Catalog (Facebook and Instagram)** template defaults to a quoted UTF-8 TSV file for a product catalog in Meta Commerce Manager. It uses the existing generation queue, Test Feed, scheduling, and upload tools. A local Mage-OS 3.5.0 demo passed generated-file, Admin preview, inventory, and storefront variant checks on 2026-09-29. Commerce Manager acceptance has not been verified for this template yet.
 
 ## Create and map the feed
 
@@ -67,3 +67,7 @@ The template does not install Meta Pixel, configure Conversions API, create a Me
 Meta's [product data specification](https://www.facebook.com/business/help/120325381656392), [image requirements](https://www.facebook.com/business/help/686259348512056), and [variant rules](https://www.facebook.com/business/help/2256580051262113) were verified in a browser on 2026-09-29. The product-feed specification requires brand and limits availability to `in stock` and `out of stock`.
 
 The initial implementation also consulted Meta's public [Magento feed builder](https://github.com/facebookincubator/facebook-for-magento2/blob/main/Model/Product/Feed/Builder.php) and [Business SDK](https://github.com/facebook/facebook-php-business-sdk/blob/main/src/FacebookAds/Object/Values/ProductItemAvailabilityValues.php). The current product-feed specification takes precedence where the SDK's API values differ. Local validation does not replace an actual Commerce Manager import.
+
+## Automatic XML preset (1.3.0)
+
+In **General**, select **Output Format: XML** and set **File Name** to a name ending in `.xml`. This channel supplies its RSS header, item wrapper, footer, and namespace rules automatically; no manual XML structure is required. Existing default mappings remain usable. Review custom compound fields when switching formats, and inspect a generated sample before changing the destination's data-source URL and format. Empty optional tags are omitted. See [XML Output](XML-Output) for setup, field conversions, and validation limits. Delimited output remains the default.

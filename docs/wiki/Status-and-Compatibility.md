@@ -1,6 +1,6 @@
 # Status and compatibility
 
-Mage-OS Shopping Feed 1.2.5 is the current stable release. See [Release 1.2.5](Release-1-2-5) for changes and recorded verification. Users migrating from Rocket Shopping Feeds can install the separate [Rocket Web migration companion](Rocket-Web-Migration); installation alone does not import data.
+This branch prepares Mage-OS Shopping Feed 1.3.0; it is not yet published. The preceding stable release is 1.2.5. See [Release 1.3.0](Release-1-3-0) for the candidate scope. See [Release 1.2.5](Release-1-2-5) for changes and recorded verification. Users migrating from Rocket Shopping Feeds can install the separate [Rocket Web migration companion](Rocket-Web-Migration); installation alone does not import data.
 
 > Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
 

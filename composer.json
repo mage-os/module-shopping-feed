@@ -32,6 +32,7 @@
         "magento/module-msrp": ">=100.0 <200.0",
         "magento/module-quote": ">=100.0 <200.0",
         "magento/module-review": ">=100.0 <200.0",
+        "magento/module-rule": ">=100.0 <200.0",
         "magento/module-sales-rule": ">=100.0 <200.0",
         "magento/module-shipping": ">=100.0 <200.0",
         "magento/module-store": ">=100.0 <200.0",

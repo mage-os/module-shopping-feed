@@ -1,0 +1,13 @@
+/*
+ * Mage-OS logo on the shared "Mage-OS" configuration tab (system.xml class "mageos-tab").
+ * mage-os/module-ai-base ships the same rule; this copy gives Magento Open Source stores the logo too.
+ * The second selector outranks the open tab's background shorthand, which would otherwise remove the image.
+ */
+.admin__page-nav._collapsed.mageos-tab .title,
+.admin__page-nav._collapsed._show.mageos-tab .title {
+    background-image: url('../images/mage-os-icon.svg');
+    background-position: 15px center;
+    background-repeat: no-repeat;
+    background-size: 20px auto;
+    padding-left: 5.2rem;
+}

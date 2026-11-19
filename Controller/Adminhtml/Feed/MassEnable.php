@@ -36,20 +36,30 @@ class MassEnable extends \Magento\Backend\App\Action implements \Magento\Framewo
     protected $filter;
 
     /**
+     * Writes the status column only
+     *
+     * @var \MageOS\ShoppingFeed\Model\ResourceModel\Feed
+     */
+    protected $feedResource;
+
+    /**
      * @var CollectionFactory
      */
     protected $collectionFactory;
 
     /**
-     * @param Context           $context
-     * @param Filter            $filter
-     * @param CollectionFactory $collectionFactory
+     * @param Context                                       $context
+     * @param Filter                                        $filter
+     * @param CollectionFactory                             $collectionFactory
+     * @param \MageOS\ShoppingFeed\Model\ResourceModel\Feed $feedResource
      */
     public function __construct(
         Context $context,
         Filter $filter,
-        CollectionFactory $collectionFactory
+        CollectionFactory $collectionFactory,
+        \MageOS\ShoppingFeed\Model\ResourceModel\Feed $feedResource
     ) {
+        $this->feedResource = $feedResource;
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         parent::__construct($context);
@@ -65,10 +75,19 @@ class MassEnable extends \Magento\Backend\App\Action implements \Magento\Framewo
         $collection = $this->filter->getCollection($this->collectionFactory->create());
         /** @var \MageOS\ShoppingFeed\Model\Feed $feed */
         foreach ($collection->getItems() as $feed) {
-            $feed->setStatus(Status::STATUS_SCHEDULED);
-            $feed->save();
+            // Writes only the status column: stored rules are not revalidated and generator progress is kept.
+            $previous = $feed->getData('status');
+            $this->feedResource->updateStatus((int)$feed->getId(), Status::STATUS_SCHEDULED);
+            $feed->setData('status', Status::STATUS_SCHEDULED);
+            $this->_eventManager->dispatch('mageos_shopping_feed_feed_status_change', [
+                'feed' => $feed,
+                'status' => Status::STATUS_SCHEDULED,
+                'previous_status' => $previous,
+            ]);
         }
-        $this->messageManager->addSuccess(__('A total of %1 record(s) have been enabled.', $collection->getSize()));
+        $this->messageManager->addSuccessMessage(
+            __('A total of %1 record(s) have been enabled.', $collection->getSize())
+        );
 
         return $this->resultFactory->create(ResultFactory::TYPE_REDIRECT)->setPath('mageos_shopping_feed/feed/index');
     }

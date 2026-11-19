@@ -2,7 +2,7 @@
 
 Start with the feed-specific log and the feed grid status. They distinguish queue problems, product skips, generation failures, and upload failures.
 
-> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 The original `9f07e46` category and promotion-date defects are repaired in 1.2.0, with runtime acceptance at `133af71`. Consult [Admin UI Component forms](Admin-UI-Component-Forms) for the exact deployed revision and acceptance evidence. Code updates do not reconstruct dates already erased by an earlier save.
 
@@ -30,11 +30,13 @@ Use **View Log** from the Feeds Management grid, or inspect the file as the Mage
 | An unchanged editor save changes a legacy blank currency | Candidate `133af71` preserves the effective generation currency. Review earlier explicit selections against a backup; the fix does not silently reverse them. |
 | Feed stock inclusion conflicts with storefront out-of-stock hiding | The stock correction in 1.2.0 makes feed-specific inclusion settings take precedence. Recompile after upgrading, then check simple and associated-product settings. |
 | Frontend feature overrides appear ignored | The scope correction in 1.2.0 honors website/store overrides. Check the effective store value and clear the applicable caches. |
+| Conditional Value shows its label but no condition controls after an update | Compare the published `js/form/parameter.js`, `template/form/parameter.html`, and conditional editor assets with the installed package. Back up/clear stale module Admin assets and rebuild each active theme/locale as described in [Installation and upgrade](Installation-and-Upgrade). Reload before testing again. |
 | Feed stays Pending | Confirm Magento cron, the `mageos_shopping_feed` cron group, and the process command are running. |
 | Direct command says generation failed | Check whether another process holds the per-feed lock, then open the feed log. |
 | Feed reaches Error | Read the first exception or error for that run, not only the final status line. |
 | No final file appears | Confirm the configured directory and filename, filesystem permissions, disk space, and whether a `.tmp` generation is still active. |
 | Product is absent | Test the SKU, then check enablement, catalog visibility, stock settings, filters, category rules, complex-product configuration, and, since 1.2.5, the product's **Shopping Feed > Skip from Being Submitted** value for that store view. The feed log names products skipped by that field. |
+| A child row is empty where the parent has the value | Add a **Value inheritance by column** row for that column under **Configurable Products** or **Grouped Products** and choose **associated if exists, otherwise from parent**. Save Columns Map first; the rule editor lists only saved columns. Bundle children have no inheritance rules. See [Complex products](Complex-Products#inherit-values-from-the-parent). |
 | Row columns do not align | Review delimiter choice, mapped directives, source values containing delimiters or line breaks, and row counts across representative products. |
 | Upload fails | Confirm mode, hostname, port, credentials, remote path, permissions, DNS, and firewall access from the Magento host. In 1.2.4, SFTP requires `setup:upgrade` and the trusted SHA256 server-key fingerprint. Confirm any changed key with the recipient before replacing it. |
 | Test Feed is denied for a read-only role | Version 1.2.4 requires **Generate Feed** permission. The grid can still show its link; editor preview buttons are hidden without the permission. |
@@ -73,3 +75,15 @@ Capture the minimum useful evidence before reporting a defect:
 * Whether the problem reproduces without upload destinations
 
 For slow or incomplete large feeds, continue with [Performance and large catalogs](Performance-and-Large-Catalogs).
+
+## Conditional rules (1.3.0)
+
+For rejected saves or generation errors, review the selected attributes, valid option IDs, operator types, date format, and both Conditional Value outputs. A nonnumeric percentage source is an error; it does not select Otherwise. See [Conditional values](Conditional-Values#troubleshooting-and-verification).
+
+Product Selection skip counts describe product/parent candidates, not distinct SKUs or expanded inventory rows. Rules do not override existing exclusions. Review [Product selection](Product-Selection#logs-performance-and-recovery) for counts, invalid-rule recovery, and the distinction between active-parent and standalone-parent evaluation.
+
+## XML output (1.3.0)
+
+If a Generic XML feed will not save, check element names, declared prefixes, matching header/footer elements, and whitespace before the XML declaration. DTDs and entity declarations are not supported.
+
+Invalid product text or malformed manually mapped compound values skip the affected row; inspect the source SKU, mapped row ID, and column in Test Feed or View Log. A parent SKU can be the source for a composite row. Fix the data or mapping and regenerate. Configuration or file-write errors stop generation and preserve the prior published file. Inspect its timestamp rather than assuming an existing download is the new run. See [XML Output](XML-Output#validation-and-failed-rows).

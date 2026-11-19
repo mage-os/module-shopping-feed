@@ -54,11 +54,54 @@ Use a Magento UI data-provider modifier implementing `Magento\Ui\DataProvider\Mo
 
 `modifyMeta()` receives fieldsets named `general`, `columns`, `categories`, `filters`, `options`, `configurable`, `grouped`, `bundle`, `shipping`, `schedule`, `uploads`, and, for Google Shopping, `promotions`. Google Local Inventory feeds have no `options` or `shipping` fieldset. Metadata uses `arguments/data/config`. `modifyData()` receives `[$feedId => $fields]`, or `['' => $fields]` for a new feed. Configurable settings use a `config.<existing_key>` data scope. A modifier adding a stored setting must supply its current value in `modifyData()` as well as its field metadata. The current feed is registered as `feed` in Magento's registry.
 
-For a custom directive's parameter editor, add its existing PHP renderer class identifier to the `renderers` array argument of `MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\Parameters`. Supported definitions are `input`, `textarea`, `select`, `multiselect`, and `none`; use `label`, `notice`, and `options`, or an option `source` registered with `Form\Options`. The directive's configured `param` supplies the default when the administrator changes directives. More complex controls can replace the mapping parameter component through metadata. Arbitrary PHP/PHTML renderer output is not executed by the new form.
+For a custom directive's parameter editor, add its existing PHP renderer class identifier to the `renderers` array argument of `MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\Parameters`. Supported definitions are `input`, `textarea`, `select`, `multiselect`, and `none`; use `label`, `notice`, and `options`, or an option `source` registered with `Form\Options`. The directive's configured `param` supplies the default when the administrator changes directives. More complex controls can replace the mapping parameter component through metadata. The 1.3.0 Conditional Value directive adds a built-in `conditional` kind with Magento rule choices and structured if/else outputs. Arbitrary PHP/PHTML renderer output is not executed by the new form.
 
 The `mageos_shopping_feed_feed_prepare_save` event remains available and receives decoded form parameters. Existing non-UI save requests remain supported. Do not rely on browser validation for authorization or data ownership.
 
 Modifier authors must mask secrets before returning data. Upload model data retain ciphertext in 1.2.4. The built-in projection is redacted before `modifyData()` runs, so a modifier must not add decrypted upload passwords or other private model fields back into the response. Preserve unknown configuration and child ownership when adding fields; cover failed-save recovery as well as successful saves. Custom `config` keys are an intentional extension contract and may be consumed by downstream directives or modules. Validate known fields without replacing that contract with a built-in-only key allowlist. Custom controls must enforce their own permission and escaping requirements.
+
+## 1.3.0 structured rules
+
+Conditional Value uses the mapping source `directive_conditional_value`. Its decoded mapping `param` is an object with `aggregator`, a list of `conditions`, and both `if_true` and `if_false` outputs. For example:
+
+```json
+{
+  "aggregator": "all",
+  "conditions": [{"attribute": "price", "operator": ">", "value": "100"}],
+  "if_true": {"type": "static", "value": "premium"},
+  "if_false": {"type": "static", "value": "standard"}
+}
+```
+
+Other output shapes are `{"type":"attribute","attribute":"manufacturer"}` and `{"type":"percent","attribute":"price","percent":"-10"}`. Preserve literal values such as `0`, empty strings, and leading-zero strings. Both output branches are required and validated. The `conditional` renderer supports Columns Map and Replace Empty Values; newly added mapping rows use Static Value until the user selects Conditional Value. Initialize conditional template bindings only after the structured editor exists, including when switching from an input renderer.
+
+Product Selection stores an expression under `config.filters_product_conditions`, with `aggregator` and `conditions` but no output branches:
+
+```json
+{
+  "aggregator": "all",
+  "conditions": [
+    {"scope": "product", "attribute": "sku", "operator": "glob", "value": "SALE-*"},
+    {"scope": "product", "attribute": "has_image", "operator": "==", "value": "1"}
+  ]
+}
+```
+
+Use `all` or `any`, with a JSON list of at most 50 conditions. Conditional Value requires at least one condition; an empty selection disables selection. Programmatic `null` clears selection and persists as an empty list. Keyed condition objects are invalid on save/import; the editor can load legacy keyed rows for repair and writes a list after editing. Strict persistence comparisons retain edits such as `00123` to `123`.
+
+The shared validator checks existing attributes, attribute-specific operators, stored option IDs, scalar values of at most 4096 bytes, and calendar-day dates in `YYYY-MM-DD`. Use the server-supplied condition metadata rather than inventing a fixed operator list. `glob` and `!glob` apply to SKU; `has_image` uses `1`/`0`. Percentage outputs accept finite numeric adjustments from -100 through 100000. Do not instantiate classes from rule input or rely on client validation alone.
+
+The scope selector is rendered only for Product Selection. Conditional Value defaults to product scope; imported `parent` scopes are retained but not shown as a selector. Its mapper passes only the active parent, whereas Product Selection can look up direct website parents for standalone candidates. Keep this distinction when extending the UI. See [Conditional values](wiki/Conditional-Values.md) and [Product selection](wiki/Product-Selection.md) for user-facing semantics.
+
+Export/import and extension code must preserve structured parameters through the existing form encoder/decoder. Removing rules or switching a mapping back to another directive is the application-level rollback; do not assume older module versions can interpret these configuration keys and directive parameters.
+
+## Version 1.3.0 XML controls
+
+The General fieldset exposes `config.output_params_format` with `delimited` as the default and `xml` for Generic and the six supported channel feeds. OpenAI remains delimited only. Generic XML controls use `config.output_params_xml_header`, `config.output_params_xml_item`, `config.output_params_xml_footer`, `config.output_params_xml_optional_columns`, and `config.output_params_xml_cdata_columns`. Header and footer use multiline textareas. Show these fields only for Generic XML; delimiter/enclosure/escape/empty-cell controls apply only to delimited output. A filename extension does not select the serializer.
+
+Channel RSS presets resolve their canonical structure from `mageos_shopping_feed.xml`, including aliases, compound fields, lists, and unprefixed fields. Saved generic wrappers do not override a destination's preset. Preserve this behavior in modifiers rather than exposing misleading editable structure fields on channel feeds. The [XML output guide](wiki/XML-Output.md#preset-configuration) documents preset configuration and user-facing behavior.
+
+Save/import validation checks XML names, wrappers, and declared namespaces. Generation validates product values; row data failures are logged and skipped, while configuration and I/O failures stop generation. Custom mappers should preserve structured shipping and image values through the supported XML path instead of flattening separators prematurely. Delimited consumers retain their existing representation.
 
 ## Grid permissions and extensions
 

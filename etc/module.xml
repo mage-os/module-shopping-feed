@@ -18,6 +18,7 @@
             <module name="Magento_Msrp"/>
             <module name="Magento_Quote"/>
             <module name="Magento_Review"/>
+            <module name="Magento_Rule"/>
             <module name="Magento_SalesRule"/>
             <module name="Magento_Shipping"/>
             <module name="Magento_Store"/>

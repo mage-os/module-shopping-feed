@@ -6,6 +6,10 @@ Release acceptance proves the extension on representative Magento runtimes and p
 
 Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
 
+## 1.3.0 candidate
+
+Use the repository acceptance plan and [Development and CI](Development-and-CI) to check the combined candidate, including XML with conditional values, product selection, and modifiers. Record the exact commit, environments, commands, results, and remaining limits in the [release PR](https://github.com/mage-os/module-shopping-feed/pull/28), with supporting logs as artifacts. Earlier feature checks do not establish acceptance of the final combined candidate. Remote CI, merge, tagging, Packagist indexing, wiki publication and external recipient acceptance remain distinct states.
+
 ## 1.2.5 verification
 
 The [product-attribute verification record](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.5/docs/reviews/2026-10-22-pr-24-verification.md) covers 951 unit tests on PHP 8.4 and 8.5, 38 integration tests on a fresh Mage-OS 3.6.0 install, four database persistence tests, 84 JavaScript checks, PHPStan level 8, the Magento coding standard, and the Composer, wiki, and consolidation validators. Integration scenarios cover store-view exclusion on configurable children and the parent, core non-table option sources, attribute sets created after the upgrade, and patch re-application. The [functional record](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.5/docs/reviews/2026-10-21-product-attributes-issues-22-23.md) covers real `setup:upgrade` and its repeat, the Admin product form with store-view overrides, Admin and CLI previews, and queued generation on an upgraded store copy.

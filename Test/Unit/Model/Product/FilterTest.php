@@ -71,7 +71,10 @@ class FilterTest extends CompatibilityTestCase
         $this->model = $this->objectManagerHelper->getObject(
             'MageOS\ShoppingFeed\Model\Product\Filter',
             [
-                'cache' => $this->cacheMock
+                'cache' => $this->cacheMock,
+                // The helper would otherwise auto-mock these; cleaning must run through the real collaborators.
+                'modifierChain' => new \MageOS\ShoppingFeed\Model\Product\ModifierChain(),
+                'markup' => new \MageOS\ShoppingFeed\Model\Product\Markup()
             ]
         );
     }
@@ -84,6 +87,18 @@ class FilterTest extends CompatibilityTestCase
         );
         $this->model->setFeed($this->feedMock);
         $this->assertSame('"Quoted", café, 東京', $this->model->cleanField('&quot;Quoted&quot;, café&#44; 東京'));
+    }
+
+    public function testXmlPreservesDelimiterAndUsesUtf8(): void
+    {
+        $feed = $this->createMock(\MageOS\ShoppingFeed\Model\Feed::class);
+        $settings = ['output_params_format' => 'xml', 'output_params_delimiter' => '|',
+            'output_params_encoding' => 'ASCII'];
+        $feed->method('getConfig')->willReturnCallback(
+            static fn ($key, $default = null) => $settings[$key] ?? $default
+        );
+        $this->model->setFeed($feed);
+        self::assertSame('café|東京', $this->model->cleanField('café|東京'));
     }
 
     /** @dataProvider unclosedMarkup */

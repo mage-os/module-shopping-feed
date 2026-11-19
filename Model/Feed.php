@@ -635,8 +635,9 @@ class Feed extends AbstractModel
             }
         }
         if ($this->getConfig('output_params_format', 'delimited') === 'xml') {
+            // Validate the map generation will use, after legacy Google names are resolved.
             $this->createXmlWriter()->validateColumns(array_column(
-                (array)$this->getConfig('columns_product_columns', []),
+                $this->normalizeColumnsMap((array)$this->getConfig('columns_product_columns', [])),
                 'column'
             ));
         }

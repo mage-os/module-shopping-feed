@@ -85,7 +85,7 @@ class Generate extends \Magento\Backend\App\Action implements HttpPostActionInte
         }
 
         if (!$feed->getId()) {
-            $this->messageManager->addError(__('Feed wasn\'t found'));
+            $this->messageManager->addErrorMessage(__('Feed wasn\'t found'));
             $resultRedirect = $this->resultRedirectFactory->create();
             return $resultRedirect->setPath('*/*/index');
         }
@@ -106,7 +106,7 @@ class Generate extends \Magento\Backend\App\Action implements HttpPostActionInte
         $queue->add($feed);
 
         $feed->saveStatus(\MageOS\ShoppingFeed\Model\Feed\Source\Status::STATUS_PENDING);
-        $this->messageManager->addSuccess(__('Feed added in processing queue.'));
+        $this->messageManager->addSuccessMessage(__('Feed added in processing queue.'));
 
         $resultRedirect = $this->resultRedirectFactory->create();
         return $resultRedirect->setPath('*/*/index');

@@ -25,9 +25,9 @@ class Selection
      * @param Parents $parents
      */
     public function __construct(
-        private Configuration $configuration,
-        private Matcher $matcher,
-        private Parents $parents
+        private \MageOS\ShoppingFeed\Model\ConditionalValue\Configuration $configuration,
+        private \MageOS\ShoppingFeed\Model\ConditionalValue\Matcher $matcher,
+        private \MageOS\ShoppingFeed\Model\ProductSelection\Parents $parents
     ) {
     }
 
@@ -41,6 +41,7 @@ class Selection
     {
         // Attribute existence/options may have changed since a preceding feed ran.
         $this->validated = [];
+        $this->matcher->reset();
         $expression = $this->validate($value);
         $attributes = [];
         foreach ($expression['conditions'] ?? [] as $row) {

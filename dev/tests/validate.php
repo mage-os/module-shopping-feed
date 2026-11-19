@@ -109,11 +109,11 @@ $expectedFeeds = [
     'generic' => ['directives' => 25, 'columns' => 17],
     'google_shopping' => ['directives' => 33, 'columns' => 31],
     'google_local_inventory' => ['directives' => 12, 'columns' => 7],
-    'meta_catalog' => ['directives' => 26, 'columns' => 23],
+    'meta_catalog' => ['directives' => 27, 'columns' => 23],
     'openai_google_compatible' => ['directives' => 26, 'columns' => 29],
-    'pinterest_catalog' => ['directives' => 26, 'columns' => 23],
+    'pinterest_catalog' => ['directives' => 27, 'columns' => 23],
     'tiktok_catalog' => ['directives' => 26, 'columns' => 24],
-    'microsoft_merchant_center' => ['directives' => 27, 'columns' => 24],
+    'microsoft_merchant_center' => ['directives' => 28, 'columns' => 24],
 ];
 foreach ($expectedFeeds as $feedName => $expected) {
     $feed = $feedXpath->query(sprintf('/config/feed[@name="%s"]', $feedName))->item(0);

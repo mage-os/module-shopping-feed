@@ -17,7 +17,7 @@ class ValidateProductSelection implements ObserverInterface
      *
      * @param Selection $selection
      */
-    public function __construct(private Selection $selection)
+    public function __construct(private \MageOS\ShoppingFeed\Model\ProductSelection\Selection $selection)
     {
     }
 

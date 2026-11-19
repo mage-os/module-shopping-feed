@@ -17,7 +17,7 @@ class ValidateConditionalValues implements ObserverInterface
      *
      * @param Configuration $configuration
      */
-    public function __construct(private Configuration $configuration)
+    public function __construct(private \MageOS\ShoppingFeed\Model\ConditionalValue\Configuration $configuration)
     {
     }
 

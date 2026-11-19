@@ -71,7 +71,10 @@ class FilterTest extends CompatibilityTestCase
         $this->model = $this->objectManagerHelper->getObject(
             'MageOS\ShoppingFeed\Model\Product\Filter',
             [
-                'cache' => $this->cacheMock
+                'cache' => $this->cacheMock,
+                // The helper would otherwise auto-mock these; cleaning must run through the real collaborators.
+                'modifierChain' => new \MageOS\ShoppingFeed\Model\Product\ModifierChain(),
+                'markup' => new \MageOS\ShoppingFeed\Model\Product\Markup()
             ]
         );
     }

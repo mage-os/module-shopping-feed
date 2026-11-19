@@ -142,6 +142,19 @@ class ShippingTest extends ModelFramework
         $this->assertEquals('cache value', $this->model->map());
     }
 
+    public function testPersistentCacheHitIsNotWrittenBack(): void
+    {
+        // Writing a hit back renewed its age, so a frequently generated feed never let it expire.
+        $cache = $this->cacheMock;
+        $provider = $this->shippingProviderMock;
+        self::assertInstanceOf(\PHPUnit\Framework\MockObject\MockObject::class, $cache);
+        self::assertInstanceOf(\PHPUnit\Framework\MockObject\MockObject::class, $provider);
+        $cache->method('getCache')->willReturn(false);
+        $provider->method('getCache')->willReturn('cache value');
+        $provider->expects($this->never())->method('setCache');
+        $this->assertEquals('cache value', $this->model->map());
+    }
+
     public function testMapCache()
     {
         $this->expectReturn($this->cacheMock, 'getCache', 'cache value');

@@ -47,6 +47,7 @@ class ConditionalValueTest extends CompatibilityTestCase
         $eav = $this->createMock(Config::class);
         $eav->method('getAttribute')->willReturnCallback(static fn ($entity, $code) =>
             $attributes[$code] ?? new \Magento\Framework\DataObject());
+        $eav->method('getEntityAttributeCodes')->willReturn(array_keys($attributes));
         $this->factory = $this->createMock(ConditionFactory::class);
         $this->factory->method('create')->willReturnCallback(function () use ($attributes) {
             // Keep Magento's real operators, value parsing and comparison methods.
@@ -74,6 +75,7 @@ class ConditionalValueTest extends CompatibilityTestCase
             'manufacturer' => '12', 'color' => '2,3', 'attribute_set_id' => '4', 'store_id' => 2]);
         $adapter = $this->createMock(Simple::class);
         $adapter->method('getProduct')->willReturn($this->product);
+        $adapter->method('getFeed')->willReturn($this->createMock(\MageOS\ShoppingFeed\Model\Feed::class));
         $adapter->method('getMapAttribute')->willReturnCallback(static fn ($row) => $attributes[$row['attribute']]);
         $adapter->method('getAttributeValue')->willReturn('Store-view brand');
         $filter = $this->createMock(Filter::class);

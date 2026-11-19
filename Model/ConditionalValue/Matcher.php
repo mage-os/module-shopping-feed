@@ -18,8 +18,20 @@ class Matcher
      * @param Configuration $configuration
      * @param ConditionFactory $conditionFactory
      */
-    public function __construct(private Configuration $configuration, private ConditionFactory $conditionFactory)
+    public function __construct(
+        private \MageOS\ShoppingFeed\Model\ConditionalValue\Configuration $configuration,
+        private \MageOS\ShoppingFeed\Model\ConditionalValue\ConditionFactory $conditionFactory
+    ) {
+    }
+
+    /**
+     * Forget compiled predicates so a new generation sees current attributes and options.
+     *
+     * @return void
+     */
+    public function reset(): void
     {
+        $this->compiled = [];
     }
 
     /**

@@ -1,4 +1,4 @@
-<div>
+<div class="shopping-feed-parameter" data-bind="css: {'shopping-feed-parameter--inline': parameterLabel() && (kind() === 'input' || kind() === 'select')}">
     <label class="shopping-feed-parameter-label" data-bind="text: parameterLabel, attr: {for: uid}"></label>
     <!-- ko if: kind() === 'input' -->
     <input class="admin__control-text" type="text" data-bind="value: value, valueUpdate: 'input', disable: disabled, attr: {id: uid}">
@@ -10,7 +10,7 @@
     <select class="admin__control-select" data-bind="options: parameterOptions, optionsText: 'label', optionsValue: 'value', value: value, valueAllowUnset: true, disable: disabled, attr: {id: uid}"></select>
     <!-- /ko -->
     <!-- ko if: kind() === 'multiselect' -->
-    <select class="admin__control-multiselect" multiple="multiple" size="5" data-bind="options: parameterOptions, optionsText: 'label', optionsValue: 'value', selectedOptions: value, disable: disabled, attr: {id: uid}"></select>
+    <select class="admin__control-multiselect" multiple="multiple" size="5" data-bind="options: parameterOptions, optionsText: 'label', optionsValue: 'value', selectedOptions: value, disable: disabled, attr: {id: uid}, afterRender: revealSelection"></select>
     <!-- /ko -->
     <!-- ko if: kind() === 'conditional' && conditionalEditor() -->
     <div data-bind="template: {name: 'MageOS_ShoppingFeed/form/conditional-value', data: conditionalEditor}"></div>

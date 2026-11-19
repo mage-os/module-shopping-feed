@@ -258,6 +258,80 @@ class SimpleTest extends ModelFramework
         $this->assertEquals($expected, $rows = $this->model->map());
     }
 
+    public function testRowsWithDifferentParametersDoNotShareACachedValue(): void
+    {
+        // A real cache: a mock cannot show one key reading another key's subtree.
+        $arguments = ['cache' => new \MageOS\ShoppingFeed\Model\Generator\Cache()] + $this->modelArguments;
+        $model = $this->objectManagerHelper->getObject(
+            'MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple',
+            $arguments
+        );
+        self::assertInstanceOf(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class, $model);
+        $feedTypes = $this->feedTypesConfigMock;
+        $mappers = $this->mapperFactoryMock;
+        $feed = $this->feedMock;
+        self::assertInstanceOf(\PHPUnit\Framework\MockObject\MockObject::class, $feedTypes);
+        self::assertInstanceOf(\PHPUnit\Framework\MockObject\MockObject::class, $mappers);
+        self::assertInstanceOf(\PHPUnit\Framework\MockObject\MockObject::class, $feed);
+        $feedTypes->method('isAllowedDirective')->willReturn(true);
+        $feedTypes->method('getDirective')->willReturn([]);
+        $calls = 0;
+        $mapper = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract::class);
+        $mapper->method('map')->willReturnCallback(function (array $column) use (&$calls) {
+            $calls++;
+            return array_key_exists('param', $column) ? 'param:' . json_encode($column['param']) : 'no param';
+        });
+        $mappers->method('create')->willReturn($mapper);
+        $row = ['column' => 'tier', 'attribute' => 'directive_conditional_value'];
+
+        $this->assertSame('param:"thumbnail"', $model->getMapValue($row + ['param' => 'thumbnail']));
+        $this->assertSame('param:"image"', $model->getMapValue($row + ['param' => 'image']));
+        // Previously a shorter key and returned the cache's internal array of parameter results.
+        $this->assertSame('no param', $model->getMapValue($row));
+        $this->assertSame('param:null', $model->getMapValue($row + ['param' => null]));
+        $this->assertSame('param:"thumbnail"', $model->getMapValue($row + ['param' => 'thumbnail']));
+        $this->assertSame(4, $calls, 'a repeated mapping is served from the cache');
+        // A column name containing the cache path separator gets its own entry too.
+        $this->assertSame('no param', $model->getMapValue(['column' => 'a/b'] + $row));
+        $this->assertSame(5, $calls);
+        // Malformed UTF-8 in two different parameters must not collapse to one entry.
+        $model->getMapValue($row + ['param' => "\xB1"]);
+        $model->getMapValue($row + ['param' => "\xB2"]);
+        $this->assertSame(7, $calls);
+    }
+
+    public function testReplaceEmptyValuesKeepsAZeroFromAnEarlierRow(): void
+    {
+        $arguments = ['cache' => new \MageOS\ShoppingFeed\Model\Generator\Cache()] + $this->modelArguments;
+        $model = $this->objectManagerHelper->getObject(
+            'MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple',
+            $arguments
+        );
+        self::assertInstanceOf(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class, $model);
+        $feedTypes = $this->feedTypesConfigMock;
+        $mappers = $this->mapperFactoryMock;
+        $feed = $this->feedMock;
+        self::assertInstanceOf(\PHPUnit\Framework\MockObject\MockObject::class, $feedTypes);
+        self::assertInstanceOf(\PHPUnit\Framework\MockObject\MockObject::class, $mappers);
+        self::assertInstanceOf(\PHPUnit\Framework\MockObject\MockObject::class, $feed);
+        $feedTypes->method('isAllowedDirective')->willReturn(true);
+        $feedTypes->method('getDirective')->willReturn([]);
+        $mapper = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract::class);
+        $mapper->method('map')->willReturn('');
+        $mappers->method('create')->willReturn($mapper);
+        $feed->method('getConfig')->willReturnCallback(
+            static fn (string $path, $default = null) => $path === 'filters_map_replace_empty_columns' ? [
+                ['column' => 'shipping_fee', 'static' => '0', 'order' => 1],
+                ['column' => 'shipping_fee', 'static' => '4.99', 'order' => 2],
+            ] : $default
+        );
+
+        $this->assertSame(
+            '0',
+            $model->getMapValue(['column' => 'shipping_fee', 'attribute' => 'directive_static_value'])
+        );
+    }
+
     public function testHasSpecialPriceByCatalogRulesTrue()
     {
         $this->expectReturn($this->helperMock, 'hasMsrp', true);

@@ -293,7 +293,12 @@ class Fields
                 ],
             ],
         ];
-        $sections['general']['file_feed'] = ['label' => __('File Name'), 'required' => true];
+        $sections['general']['file_feed'] = [
+            'label' => __('File Name'),
+            'required' => true,
+            // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
+            'notice' => __('%s is replaced with the feed ID, so each feed writes its own file. Use letters, digits, dots, dashes and underscores only, with a .txt, .csv, .tsv or .xml extension. No other % tokens or folder separators are accepted.')
+        ];
         $sections['general']['output_params_format'] = [
             'label' => __('Output Format'), 'formElement' => 'select', 'default' => 'delimited',
             'options' => [
@@ -308,9 +313,12 @@ class Fields
                 'cdata_columns' => __('XML CDATA Columns')] as $key => $label) {
                 $sections['general']['output_params_xml_' . $key] = [
                     'label' => $label,
-                    'formElement' => in_array($key, ['header', 'footer'], true) ? 'textarea' : 'input',
-                    'notice' => __('XML column lists are comma-separated names; * selects all columns.')
+                    'formElement' => in_array($key, ['header', 'footer'], true) ? 'textarea' : 'input'
                 ];
+                if (in_array($key, ['optional_columns', 'cdata_columns'], true)) {
+                    $sections['general']['output_params_xml_' . $key]['notice'] =
+                        __('Comma-separated column names; * selects all columns.');
+                }
             }
         } else {
             $sections['general']['output_params_format']['notice'] =

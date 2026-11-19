@@ -313,6 +313,10 @@ class Generator extends DataObject
             );
         }
 
+        // Marks one generation (a batch counts as one) so compiled modifiers and validated rules held by
+        // shared services are rebuilt from the current configuration, even when the feed object is reused.
+        $this->feed->setData('generation_run_id', bin2hex(random_bytes(8)));
+
         // Bind the shared logger before validation or events can fail. Each run owns its handler.
         $this->unsetData('feed_log_file');
         $previewHandlers = $this->isTestMode() ? array_filter(
@@ -1011,7 +1015,10 @@ class Generator extends DataObject
     private function getXmlWriter(): Output\Xml
     {
         if ($this->xmlWriter === null) {
-            $this->xmlWriter = $this->feed->createXmlWriter();
+            $writer = $this->feed->createXmlWriter();
+            // Feeds saved before the duplicate check existed must not silently drop a mapped value.
+            $writer->validateColumns(array_column($this->getOutputColumns(false), 'column'));
+            $this->xmlWriter = $writer;
         }
         return $this->xmlWriter;
     }

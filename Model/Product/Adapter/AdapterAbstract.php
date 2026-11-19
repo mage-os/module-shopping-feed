@@ -335,19 +335,16 @@ class AdapterAbstract extends \Magento\Framework\DataObject
      */
     public function getMapValue(array $column = [])
     {
+        // One fixed-depth leaf per distinct mapping. A variable-length path let a shorter key (no param)
+        // read the subtree of a longer one, and "/" in a column name changed the depth.
         $cacheKey = [
             'row',
             'map',
             'product',
-            $this->getProduct()->getId(),
-            'column',
-            $column['column'],
-            'attribute',
-            $column['attribute'],
+            (string)$this->getProduct()->getId(),
+            'cell',
+            $this->getMapValueFingerprint($column),
         ];
-        if (array_key_exists('cache_key', $column)) {
-            array_push($cacheKey, $column['cache_key']);
-        }
         if ($this->cache->getCache($cacheKey, false) === false) {
             $feedType = $this->feed->getData('type');
 
@@ -374,6 +371,42 @@ class AdapterAbstract extends \Magento\Framework\DataObject
         }
 
         return $value;
+    }
+
+    /**
+     * Exact identity of one mapping lookup, covering every input that changes its result.
+     *
+     * Strings are hex-encoded first so the JSON is lossless and never fails on invalid UTF-8.
+     *
+     * @param array<mixed> $column
+     * @return string
+     */
+    private function getMapValueFingerprint(array $column): string
+    {
+        $parentAdapter = $this->hasData('parent_adapter') ? $this->getData('parent_adapter') : null;
+        $parentProduct = is_object($parentAdapter) && method_exists($parentAdapter, 'getProduct')
+            ? $parentAdapter->getProduct() : null;
+        $identity = [
+            'column' => $column['column'] ?? null,
+            'attribute' => $column['attribute'] ?? null,
+            'has_cache_key' => array_key_exists('cache_key', $column),
+            'cache_key' => $column['cache_key'] ?? null,
+            'has_param' => array_key_exists('param', $column),
+            'param' => $column['param'] ?? null,
+            'skip_directive' => isset($column['skip_directive']),
+            'adapter' => static::class,
+            'parent' => is_object($parentProduct) && method_exists($parentProduct, 'getId')
+                ? $parentProduct->getId() : null,
+        ];
+        array_walk_recursive($identity, static function (&$value): void {
+            if (is_string($value)) {
+                $value = 's:' . bin2hex($value);
+            } elseif (is_object($value)) {
+                $value = 'o:' . get_class($value) . ':' . spl_object_id($value);
+            }
+        });
+
+        return hash('sha256', json_encode($identity, JSON_THROW_ON_ERROR | JSON_PRESERVE_ZERO_FRACTION));
     }
 
     /**
@@ -955,13 +988,17 @@ class AdapterAbstract extends \Magento\Framework\DataObject
                     $this->setData('columns_map_replaced', $columnsMapReplaced);
 
                     $attribute = $arr['attribute'] ?? '';
-                    if (!empty($arr['static']) && (!$attribute || $attribute == 'directive_static_value')) {
-                        $value = $arr['static'];
+                    $static = $arr['static'] ?? null;
+                    if ($static !== null && $static !== ''
+                        && (!$attribute || $attribute == 'directive_static_value')
+                    ) {
+                        $value = $static;
                     } else {
                         $arr['attribute'] = $attribute;
                         $value = $this->getMapValue($arr);
                     }
-                    if (!empty($value)) {
+                    // First value wins, and "0" is a value (a zero fee or quantity), not an empty cell.
+                    if ($value !== null && $value !== '' && $value !== []) {
                         break;
                     }
                 }

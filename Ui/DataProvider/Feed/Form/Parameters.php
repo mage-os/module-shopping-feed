@@ -27,6 +27,21 @@ class Parameters
     }
 
     /**
+     * Condition attributes, operators and options plus output attributes for Conditional Value editors.
+     *
+     * Sent once per form; every parameter row imports it instead of carrying its own copy.
+     *
+     * @return array<string, array<int|string, mixed>> Keys: conditions, attributes
+     */
+    public function conditional(): array
+    {
+        return [
+            'conditions' => $this->conditionalValue->get(),
+            'attributes' => $this->options->get('Attributes'),
+        ];
+    }
+
+    /**
      * Build the UI component parameter definitions for each directive of the feed type.
      *
      * @param Feed $feed
@@ -49,10 +64,6 @@ class Parameters
             if (isset($definition['source'])) {
                 $definition['options'] = $this->options->get($definition['source']);
                 unset($definition['source']);
-            }
-            if ($definition['kind'] === 'conditional') {
-                $definition['conditions'] = $this->conditionalValue->get();
-                $definition['attributes'] = $this->options->get('Attributes');
             }
             $definition['default'] = $directive['param'] ?? '';
             if ($definition['kind'] === 'none') {

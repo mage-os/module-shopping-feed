@@ -81,11 +81,28 @@ class Rss extends Xml
      */
     public function validateColumns(array $columns): void
     {
-        parent::validateColumns(array_map(function ($column): string {
+        $seen = [];
+        $names = [];
+        foreach ($columns as $column) {
             $column = (string)$column;
-            $name = $this->aliases[$column] ?? $column;
-            return $this->qualifiedName($name);
-        }, $columns));
+            $name = $this->qualifiedName($this->aliases[$column] ?? $column);
+            if (isset($seen[$name]) && $seen[$name] === $column) {
+                // Repeating one column is how repeatable elements such as additional_image_link get several values.
+                continue;
+            }
+            if (isset($seen[$name])) {
+                // Two different sources would be written to one element and the later would replace the earlier.
+                throw new \Magento\Framework\Exception\LocalizedException(__(
+                    'XML columns "%1" and "%2" both map to the element "%3". Remove or rename one of them.',
+                    $seen[$name],
+                    $column,
+                    $name
+                ));
+            }
+            $seen[$name] = $column;
+            $names[] = $name;
+        }
+        parent::validateColumns($names);
     }
 
     /**

@@ -24,6 +24,13 @@ class Filter
     private ?array $modifierChains = null;
 
     /**
+     * Generation the compiled modifier chains belong to.
+     *
+     * @var mixed
+     */
+    private $compiledGeneration = null;
+
+    /**
      * Feed object
      *
      * @var \MageOS\ShoppingFeed\Model\Feed
@@ -36,15 +43,51 @@ class Filter
     protected $cache;
 
     /**
+     * @var \MageOS\ShoppingFeed\Model\Product\ModifierChain|null
+     */
+    private $modifierChain;
+
+    /**
+     * @var \MageOS\ShoppingFeed\Model\Product\Markup|null
+     */
+    private $markup;
+
+    /**
      * Product field filter constructor.
      *
      * @param \MageOS\ShoppingFeed\Model\Generator\Cache $cache
+     * @param \MageOS\ShoppingFeed\Model\Product\ModifierChain|null $modifierChain
+     * @param \MageOS\ShoppingFeed\Model\Product\Markup|null $markup
      */
     public function __construct(
-        \MageOS\ShoppingFeed\Model\Generator\Cache $cache
+        \MageOS\ShoppingFeed\Model\Generator\Cache $cache,
+        ?\MageOS\ShoppingFeed\Model\Product\ModifierChain $modifierChain = null,
+        ?\MageOS\ShoppingFeed\Model\Product\Markup $markup = null
     ) {
-
         $this->cache = $cache;
+        // Injected so plugins and preferences apply at generation as they do at save.
+        $this->markup = $markup;
+        $this->modifierChain = $modifierChain;
+    }
+
+    /**
+     * Injected markup remover, or a plain one for subclasses and tests that bypass the constructor.
+     *
+     * @return \MageOS\ShoppingFeed\Model\Product\Markup
+     */
+    private function markup(): \MageOS\ShoppingFeed\Model\Product\Markup
+    {
+        return $this->markup ??= new \MageOS\ShoppingFeed\Model\Product\Markup();
+    }
+
+    /**
+     * Injected modifier engine, or a plain one for subclasses and tests that bypass the constructor.
+     *
+     * @return \MageOS\ShoppingFeed\Model\Product\ModifierChain
+     */
+    private function modifierChain(): \MageOS\ShoppingFeed\Model\Product\ModifierChain
+    {
+        return $this->modifierChain ??= new \MageOS\ShoppingFeed\Model\Product\ModifierChain($this->markup());
     }
 
     /**
@@ -55,8 +98,14 @@ class Filter
      */
     public function setFeed(\MageOS\ShoppingFeed\Model\Feed $feed)
     {
+        // Every product adapter calls this with the same feed. Compile the modifier chains once per
+        // generation, and again when the feed object or the generation changes.
+        $generation = $feed->getData('generation_run_id');
+        if ($this->feed !== $feed || $this->compiledGeneration !== $generation) {
+            $this->modifierChains = null;
+            $this->compiledGeneration = $generation;
+        }
         $this->feed = $feed;
-        $this->modifierChains = null;
         return $this;
     }
 
@@ -147,7 +196,7 @@ class Filter
         if (!$chains) {
             return $rows;
         }
-        $modifier = new ModifierChain();
+        $modifier = $this->modifierChain();
         $encoding = $this->feed->getConfig('output_params_format', 'delimited') === 'xml'
             ? 'UTF-8' : (string)$this->feed->getConfig('output_params_encoding', 'UTF-8');
         if (!in_array(strtolower($encoding), array_map('strtolower', mb_list_encodings()), true)) {
@@ -210,7 +259,7 @@ class Filter
      */
     private function getModifierChains(): array
     {
-        return $this->modifierChains ??= (new ModifierChain())->compileForFeed($this->feed);
+        return $this->modifierChains ??= $this->modifierChain()->compileForFeed($this->feed);
     }
 
     /**
@@ -221,7 +270,7 @@ class Filter
      */
     private function removeMarkup(string $field): string
     {
-        return (new Markup())->remove($field);
+        return $this->markup()->remove($field);
     }
 
     /**

@@ -7,7 +7,9 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
   <system>
-    <tab id="mageos" translate="label" sortOrder="1001000">
+    <!-- Same tab as mage-os/module-ai-base, so on Mage-OS both modules share one "Mage-OS" tab.
+         The class carries the logo (css/config-tab.css); sortOrder 250 sits between Catalog and Customers. -->
+    <tab id="mageos" translate="label" sortOrder="250" class="mageos-tab">
       <label>Mage-OS</label>
     </tab>
     <section id="mageos_shopping_feed" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">

@@ -57,7 +57,19 @@ class ModifierChainTest extends TestCase
             ['secure_url', '', 'https://example.test/a', 'https://example.test/a'],
             ['secure_url', '', 'ftp://example.test/a', 'ftp://example.test/a'],
             ['secure_url', '', '/http://example.test', '/http://example.test'],
-            ['secure_url', '', 'text http://example.test', 'text http://example.test']
+            ['secure_url', '', 'text http://example.test', 'text http://example.test'],
+            // Delimited image lists: every member is upgraded, for both list glues.
+            ['secure_url', '', 'http://a.test/1.jpg,http://a.test/2.jpg',
+                'https://a.test/1.jpg,https://a.test/2.jpg'],
+            ['secure_url', '', 'http://a.test/1.jpg|//a.test/2.jpg|https://a.test/3.jpg',
+                'https://a.test/1.jpg|https://a.test/2.jpg|https://a.test/3.jpg'],
+            // A comma inside one URL is not a list separator.
+            ['secure_url', '', 'http://a.test/img?size=1,2', 'https://a.test/img?size=1,2'],
+            ['secure_url', '', 'http://a.test/img?size=1,2,http://b.test/2',
+                'https://a.test/img?size=1,2,https://b.test/2'],
+            ['secure_url', '', 'http://a.test/1.jpg, http://a.test/2.jpg | //a.test/3.jpg',
+                'https://a.test/1.jpg, https://a.test/2.jpg | https://a.test/3.jpg'],
+            ['secure_url', '', 'http://a.test/1.jpg,not a url', 'http://a.test/1.jpg,not a url']
         ];
     }
 

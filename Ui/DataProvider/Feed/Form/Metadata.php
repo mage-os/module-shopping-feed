@@ -163,8 +163,13 @@ class Metadata
         $parameter = [
             'label' => __('Parameters'), 'component' => 'MageOS_ShoppingFeed/js/form/parameter',
             'elementTmpl' => 'MageOS_ShoppingFeed/form/parameter', 'definitions' => $this->parameters->get($feed),
-            'imports' => ['attribute' => '${ $.parentName }.attribute:value', '__disableTmpl' => ['attribute' => false]]
+            // Condition attributes and options are read by reference from the product selection field.
+            'imports' => [
+                'attribute' => '${ $.parentName }.attribute:value',
+                '__disableTmpl' => ['attribute' => false]
+            ]
         ];
+        $conditional = $this->parameters->conditional();
         $meta['filters']['children']['filters_product_conditions'] = $this->field(
             'config.filters_product_conditions',
             [
@@ -173,6 +178,8 @@ class Metadata
                 'elementTmpl' => 'MageOS_ShoppingFeed/form/product-selection',
                 'definition' => ($parameter['definitions']['directive_conditional_value'] ?? [])
                     + ['selection' => true],
+                // The one copy of the condition definition; the editors here and in parameter rows share it.
+                'conditional' => $conditional,
                 'sortOrder' => 35,
                 'notice' => __('Only matching output products are included. Leave conditions empty to disable.')
             ]
@@ -204,7 +211,7 @@ class Metadata
             'config',
             [
                 'column' => ['label' => __('Column'), 'required' => true,
-                    'notice' => __('Use the exact output column name from Columns Map.')],
+                    'notice' => __('Exact output column name from Columns below.')],
                 'operation' => ['label' => __('Modifier'), 'formElement' => 'select', 'required' => true,
                     'options' => [
                         ['value' => 'prepend', 'label' => __('Prepend')],
@@ -227,7 +234,7 @@ class Metadata
                 )],
                 'position' => ['label' => __('Order'), 'required' => true,
                     'validation' => ['validate-digits' => true, 'validate-greater-than-zero' => true],
-                    'notice' => __('Lower numbers run first. Drag rows or edit Order, then save.')]
+                    'notice' => __('Lower numbers run first.')]
             ]
         );
         $meta['filters']['children']['filters_output_limit'] = $this->rows(__('Limit column output'), 'config', [
@@ -396,11 +403,17 @@ class Metadata
     private function rows(Phrase $label, string $scope, array $fields, bool $ordered = false): array
     {
         $canSave = $this->authorization->isAllowed('MageOS_ShoppingFeed::save');
+        // The stylesheet sizes columns from the number of visible fields, so header, rows and the Add bar
+        // share one width. Tables with few fields are narrower instead of stretching short inputs.
+        $visible = count(array_filter($fields, static fn (array $config): bool => ($config['visible'] ?? true)));
         $result = $this->node([
             'componentType' => 'dynamicRows', 'label' => $label, 'dataScope' => $scope,
             'addButtonLabel' => __('Add'), 'addButton' => $canSave, 'deleteProperty' => 'delete', 'deleteValue' => true,
             'renderDefaultRecord' => false, 'dndConfig' => ['enabled' => $canSave && !$ordered], 'sortOrder' => 500,
-            'additionalClasses' => ['admin__field-wide' => true, 'shopping-feed-mapping' => $ordered]
+            'additionalClasses' => ['admin__field-wide' => true, 'shopping-feed-rows' => true,
+                'shopping-feed-mapping' => $ordered,
+                'shopping-feed-rows--compact' => !$ordered && $visible <= 3,
+                'shopping-feed-cols-' . $visible => $canSave && !$ordered]
         ]);
         if ($ordered) {
             // Keep existing duplicate order values intact; the explicit Order field controls mapping priority.

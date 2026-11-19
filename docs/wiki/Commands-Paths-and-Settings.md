@@ -34,8 +34,8 @@ This is the compact operational reference for the current Mage-OS module identit
 | Purpose | Path or pattern |
 | --- | --- |
 | Default feed directory | `pub/media/mageos-shopping-feed` |
-| Default feed filename | Generic, Google Shopping and Local Inventory: `mageos_shopping_feed_%s.txt`. Meta: `mageos_meta_catalog_%s.tsv`. Pinterest: `mageos_pinterest_catalog_%s.tsv`. TikTok: `mageos_tiktok_catalog_%s.csv`. Microsoft: `mageos_microsoft_%s.txt`. OpenAI: `mageos_openai_google_compatible_%s.tsv` |
-| Default Promotions filename | `mageos_shopping_feed_promotion_%s.txt` |
+| Default feed filename | Generic, Google Shopping and Local Inventory: `shopping_feed_%s.txt`. Meta: `meta_catalog_%s.tsv`. Pinterest: `pinterest_catalog_%s.tsv`. TikTok: `tiktok_catalog_%s.csv`. Microsoft: `microsoft_%s.txt`. OpenAI: `openai_google_compatible_%s.tsv` |
+| Default Promotions filename | `shopping_feed_promotion_%s.txt` |
 | Feed log | `var/log/mageos_shopping_feed_<feed_id>.log` |
 | Per-feed lock | `var/tmp/mageos_shopping_feed_<feed_id>.lock` |
 | In-progress feed | Configured final path with `.tmp` appended |

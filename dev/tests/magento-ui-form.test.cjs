@@ -161,6 +161,30 @@ test('late provider imports refresh conditional controls without resetting a row
     assert.equal(field.value().conditions[0].value, '30');
 });
 
+test('parameter rows read condition definitions by reference from the product selection field', () => {
+    const source = {conditional: {conditions: conditionalDefinitions.conditions}};
+    let requested;
+    const registry = {get: (name, callback) => { requested = name; callback(source); }};
+    const component = amd(path.join(root, 'view/adminhtml/web/js/form/parameter.js'),
+        [base, preserveConditional, text => text, conditionalEditor, registry]);
+    const field = Object.assign({}, component, {
+        ns: 'feed_form', _super: function () { return this; },
+        definitions: {conditional: {kind: 'conditional'}},
+        value: ko.observable(null), kind: ko.observable('none'), parameterLabel: ko.observable(''),
+        parameterNotice: ko.observable(''), parameterOptions: ko.observableArray([]),
+        conditionalEditor: ko.observable(null)
+    });
+    field.observe = function () { return this; };
+    field.initObservable();
+    assert.equal(requested, 'feed_form.feed_form.filters.filters_product_conditions');
+    assert.equal(field.conditionalSource, source, 'shared, not copied');
+    field.changeAttribute('conditional');
+    field.value({aggregator: 'all', conditions: [{attribute: 'price', operator: '>', value: '5'}],
+        if_true: {type: 'static', value: 'a'}, if_false: {type: 'static', value: 'b'}});
+    field.refreshConditionalEditor();
+    assert.equal(field.conditionalEditor().conditions()[0].value(), '5');
+});
+
 const dependentInput = amd(path.join(root, 'view/adminhtml/web/js/form/dependent-input.js'), [base]);
 const nativeTextarea = amd(path.join(ui, 'view/base/web/js/form/element/textarea.js'), [base]);
 const dependentTextarea = amd(path.join(root, 'view/adminhtml/web/js/form/dependent-textarea.js'), [{

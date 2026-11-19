@@ -71,9 +71,16 @@ class Condition extends AbstractProduct
      */
     public function getValueSelectOptions()
     {
-        return $this->getAttribute() === 'has_image'
-            ? [['value' => '1', 'label' => __('Yes')], ['value' => '0', 'label' => __('No')]]
-            : parent::getValueSelectOptions();
+        $yesNo = [['value' => '1', 'label' => __('Yes')], ['value' => '0', 'label' => __('No')]];
+        if ($this->getAttribute() === 'has_image') {
+            return $yesNo;
+        }
+        $options = parent::getValueSelectOptions();
+        if (!$options) {
+            // Boolean attributes without a source model (bundle Dynamic Price/SKU/Weight) have no option list.
+            return $this->getInputType() === 'boolean' ? $yesNo : [];
+        }
+        return $options;
     }
 
     /**

@@ -16,6 +16,12 @@ class ConditionalValue extends MapperAbstract
     /** @var array<string, array<string, mixed>> */
     private array $validated = [];
 
+    /** @var object|null Feed object the cached validations belong to */
+    private ?object $validatedFeed = null;
+
+    /** @var mixed Generation the validated rules belong to */
+    private $validatedGeneration = null;
+
     /**
      * Constructor.
      *
@@ -24,9 +30,9 @@ class ConditionalValue extends MapperAbstract
      * @param Matcher $matcher
      */
     public function __construct(
-        Logger $logger,
-        private Configuration $configurationValidator,
-        private Matcher $matcher
+        \MageOS\ShoppingFeed\Model\Logger $logger,
+        private \MageOS\ShoppingFeed\Model\ConditionalValue\Configuration $configurationValidator,
+        private \MageOS\ShoppingFeed\Model\ConditionalValue\Matcher $matcher
     ) {
         parent::__construct($logger);
     }
@@ -46,6 +52,15 @@ class ConditionalValue extends MapperAbstract
         }
         $parameter = $params['param'] ?? null;
         $key = json_encode($parameter, JSON_THROW_ON_ERROR);
+        // Mapper instances outlive a run; attributes and options may change before the next generation,
+        // which can reuse the same feed object.
+        $feed = $this->getAdapter()->getFeed();
+        $generation = $feed->getData('generation_run_id');
+        if ($this->validatedFeed !== $feed || $this->validatedGeneration !== $generation) {
+            $this->validatedFeed = $feed;
+            $this->validatedGeneration = $generation;
+            $this->validated = [];
+        }
         if (!isset($this->validated[$key])) {
             // Bound long-running consumers that encounter many feed configurations.
             if (count($this->validated) >= 100) {

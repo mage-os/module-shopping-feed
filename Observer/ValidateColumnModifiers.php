@@ -18,7 +18,7 @@ class ValidateColumnModifiers implements ObserverInterface
      *
      * @param ModifierChain $modifiers
      */
-    public function __construct(private ModifierChain $modifiers)
+    public function __construct(private \MageOS\ShoppingFeed\Model\Product\ModifierChain $modifiers)
     {
     }
 

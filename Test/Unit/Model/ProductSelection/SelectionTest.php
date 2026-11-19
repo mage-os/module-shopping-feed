@@ -51,6 +51,7 @@ class SelectionTest extends CompatibilityTestCase
         $eav = $this->createMock(Config::class);
         $eav->method('getAttribute')->willReturnCallback(static fn ($entity, $code) =>
             $attributes[$code] ?? new \Magento\Framework\DataObject());
+        $eav->method('getEntityAttributeCodes')->willReturn(array_keys($attributes));
         $factory = $this->createMock(ConditionFactory::class);
         $factory->method('create')->willReturnCallback(function () use ($attributes) {
             $condition = $this->getMockBuilder(Condition::class)->disableOriginalConstructor()

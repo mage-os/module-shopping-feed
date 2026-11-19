@@ -19,8 +19,10 @@ class Configuration
      * @param Config $eavConfig
      * @param ConditionFactory $conditionFactory
      */
-    public function __construct(private Config $eavConfig, private ConditionFactory $conditionFactory)
-    {
+    public function __construct(
+        private \Magento\Eav\Model\Config $eavConfig,
+        private \MageOS\ShoppingFeed\Model\ConditionalValue\ConditionFactory $conditionFactory
+    ) {
     }
 
     /**
@@ -34,7 +36,7 @@ class Configuration
     {
         $value = $this->validateConditions($value);
         foreach (['if_true', 'if_false'] as $key) {
-            $this->validateOutput($value[$key] ?? null);
+            $value[$key] = $this->validateOutput($value[$key] ?? null);
         }
         return $value;
     }
@@ -54,7 +56,7 @@ class Configuration
         ) {
             throw new LocalizedException(__('A rule requires a list of between 1 and 50 conditions and All or Any.'));
         }
-        foreach ($value['conditions'] as $row) {
+        foreach ($value['conditions'] as $index => $row) {
             if (!is_array($row) || !is_string($row['attribute'] ?? null)
                 || !is_string($row['operator'] ?? null) || !is_scalar($row['value'] ?? null)
             ) {
@@ -65,7 +67,9 @@ class Configuration
             }
             $condition = $this->conditionFactory->create();
             if ($row['attribute'] !== 'has_image') {
-                $this->validateAttribute($row['attribute']);
+                // Evaluation reads product data by the exact stored code, so use that spelling from here on.
+                $row['attribute'] = $this->validateAttribute($row['attribute']);
+                $value['conditions'][$index]['attribute'] = $row['attribute'];
                 if (!in_array($row['attribute'], ['attribute_set_id', 'category_ids'], true)) {
                     $attribute = $this->eavConfig->getAttribute(Product::ENTITY, $row['attribute']);
                     if (!$condition->supportsAttribute($attribute)) {
@@ -135,10 +139,10 @@ class Configuration
      * Validate an output branch, including one that does not currently match any products.
      *
      * @param mixed $output
-     * @return void
+     * @return array<string, mixed> the output with its attribute code in the stored spelling
      * @throws LocalizedException
      */
-    private function validateOutput(mixed $output): void
+    private function validateOutput(mixed $output): array
     {
         if (!is_array($output) || !in_array($output['type'] ?? null, ['static', 'attribute', 'percent'], true)) {
             throw new LocalizedException(__('Invalid Conditional Value output type.'));
@@ -147,9 +151,9 @@ class Configuration
             if (!is_scalar($output['value'] ?? null)) {
                 throw new LocalizedException(__('Conditional Value fixed text must be a scalar value.'));
             }
-            return;
+            return $output;
         }
-        $this->validateAttribute($output['attribute'] ?? null);
+        $output['attribute'] = $this->validateAttribute($output['attribute'] ?? null);
         if ($output['type'] === 'percent'
             && (!is_scalar($output['percent'] ?? null) || !is_numeric($output['percent'])
                 || !is_finite((float)$output['percent']) || (float)$output['percent'] < -100
@@ -157,24 +161,40 @@ class Configuration
         ) {
             throw new LocalizedException(__('Conditional Value percentage must be between -100 and 100000.'));
         }
+        return $output;
     }
 
     /**
      * Accept existing product attributes and Magento's special condition attributes only.
      *
+     * The EAV lookup ignores case, so "SKU" finds sku. The stored spelling is returned because
+     * product data keys are case-sensitive; mixed-case custom codes keep their own spelling.
+     *
      * @param mixed $code
-     * @return void
+     * @return string the attribute code as stored
      * @throws LocalizedException
      */
-    private function validateAttribute(mixed $code): void
+    private function validateAttribute(mixed $code): string
     {
-        if (!is_string($code) || !preg_match('/^[a-z][a-z0-9_]*$/D', $code)) {
+        if (!is_string($code) || !preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/D', $code)) {
             throw new LocalizedException(__('Invalid product attribute.'));
         }
-        if (!in_array($code, ['attribute_set_id', 'category_ids'], true)
-            && !$this->eavConfig->getAttribute(Product::ENTITY, $code)->getId()
-        ) {
+        if (in_array($code, ['attribute_set_id', 'category_ids'], true)) {
+            return $code;
+        }
+        $attribute = $this->eavConfig->getAttribute(Product::ENTITY, $code);
+        if (!$attribute->getId()) {
             throw new LocalizedException(__('Unknown product attribute: %1.', $code));
         }
+        // The returned attribute repeats the requested spelling, so take the code from the entity's list.
+        foreach ($this->eavConfig->getEntityAttributeCodes(Product::ENTITY) as $stored) {
+            if ($stored === $code) {
+                return $code;
+            }
+            if (strcasecmp((string)$stored, $code) === 0) {
+                $match = (string)$stored;
+            }
+        }
+        return $match ?? $code;
     }
 }

@@ -27,11 +27,12 @@ use MageOS\ShoppingFeed\Model\Feed\Source;
 class Status extends Column
 {
     public const MAP_STATUS_CLASS = [
-        Source\Status::STATUS_COMPLETED     => 'grid-severity-notice',
+        // Core severity classes keep the badge shape in every admin theme; the module class sets the color.
+        Source\Status::STATUS_COMPLETED     => 'grid-severity-notice shopping-feed-status-completed',
         Source\Status::STATUS_DISABLED      => 'grid-severity-minor',
         Source\Status::STATUS_SCHEDULED     => 'grid-severity-minor',
         Source\Status::STATUS_PENDING       => 'grid-severity-major',
-        Source\Status::STATUS_PROCESSING    => 'grid-severity-critical',
+        Source\Status::STATUS_PROCESSING    => 'grid-severity-major shopping-feed-status-processing',
         Source\Status::STATUS_ERROR         => 'grid-severity-critical'
     ];
 

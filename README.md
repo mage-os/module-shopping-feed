@@ -107,7 +107,7 @@ Choose **Create New Feed** and a preset, or open an existing feed. Every setting
 | Use Qty Increments | No | Multiplies the unit price by the minimum sale quantity or quantity increment. |
 | Use Stock Reservations | No (Local Inventory: Yes) | Subtracts pending reservations from aggregate quantities. |
 | Complex Product Context Prioritization | No (catalog presets: Yes) | Skips a standalone simple product that belongs to an enabled configurable, bundle or grouped parent, so it is exported in the parent's context. |
-| File Name | Per preset, such as `mageos_shopping_feed_%s.txt` | Output file name; `%s` becomes the feed ID. With 1.3.0, set an `.xml` name when selecting XML; changing format does not rename the file. |
+| File Name | Per preset, such as `shopping_feed_%s.txt` | Output file name; `%s` becomes the feed ID. With 1.3.0, set an `.xml` name when selecting XML; changing format does not rename the file. |
 | Cell Enclosure, Enclosure Escape, Empty Cell Value (Generic only) | Empty | CSV quoting and the value written for empty cells. A comma feed without an enclosure is quoted with `"` automatically. |
 | Use for microdata (Google Shopping only) | Yes for a new Google Shopping feed | Makes this feed the source of storefront microdata. Only one feed per store view can have it. |
 

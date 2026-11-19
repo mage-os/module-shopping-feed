@@ -1,10 +1,75 @@
-.shopping-feed-mapping .admin__control-table {
+/* Every repeating table in the feed form shares one width, so stacked tables line up. */
+.shopping-feed-rows .admin__control-table-wrapper {
+    max-width: 1200px;
+}
+
+.shopping-feed-rows .admin__control-table {
     table-layout: fixed;
+    width: 100%;
+}
+
+.shopping-feed-mapping .admin__control-table {
     min-width: 960px;
 }
 
+/* Cells align to the top so a select sits level with inputs that carry a note. */
+.shopping-feed-rows .admin__control-table td {
+    padding-bottom: .8rem;
+    padding-top: .8rem;
+    vertical-align: top;
+}
+
+.shopping-feed-rows .admin__control-table td.col-draggable,
+.shopping-feed-rows .admin__control-table td.data-grid-actions-cell,
+.shopping-feed-rows .admin__control-table td:last-child {
+    vertical-align: middle;
+}
+
+.shopping-feed-rows .admin__control-table th:last-child {
+    width: 70px;
+}
+
+/*
+ * Each table has a hidden "position" column. In a fixed layout it still took a share of the width,
+ * so the header cells stopped short of the Add bar. Percentages that add up to 100% leave it nothing:
+ * drag handle + fields + action. The class carries the number of visible fields.
+ */
+.shopping-feed-rows[class*="shopping-feed-cols-"] .admin__control-table th:first-child {
+    width: 4%;
+}
+
+.shopping-feed-rows[class*="shopping-feed-cols-"] .admin__control-table th:last-child {
+    width: 6%;
+}
+
+.shopping-feed-cols-1 .admin__control-table th { width: 90%; }
+.shopping-feed-cols-2 .admin__control-table th { width: 45%; }
+.shopping-feed-cols-3 .admin__control-table th { width: 30%; }
+.shopping-feed-cols-4 .admin__control-table th { width: 22.5%; }
+.shopping-feed-cols-5 .admin__control-table th { width: 18%; }
+.shopping-feed-cols-6 .admin__control-table th { width: 15%; }
+.shopping-feed-cols-7 .admin__control-table th { width: 12.85%; }
+.shopping-feed-cols-8 .admin__control-table th { width: 11.25%; }
+
+/* Tables with three fields or fewer: a narrower table, so short inputs are not stretched. */
+.shopping-feed-rows--compact .admin__control-table-wrapper {
+    max-width: 800px;
+}
+
+.shopping-feed-rows--compact[class*="shopping-feed-cols-"] .admin__control-table th:first-child {
+    width: 6%;
+}
+
+.shopping-feed-rows--compact[class*="shopping-feed-cols-"] .admin__control-table th:last-child {
+    width: 9%;
+}
+
+.shopping-feed-rows--compact.shopping-feed-cols-1 .admin__control-table th { width: 85%; }
+.shopping-feed-rows--compact.shopping-feed-cols-2 .admin__control-table th { width: 42.5%; }
+.shopping-feed-rows--compact.shopping-feed-cols-3 .admin__control-table th { width: 28.33%; }
+
 .shopping-feed-mapping th:first-child {
-    width: 80px;
+    width: 7%;
 }
 
 .shopping-feed-mapping th:nth-child(2) {
@@ -15,17 +80,54 @@
     width: 28%;
 }
 
-.shopping-feed-mapping th:last-child {
-    width: 70px;
+/* Explicit, so the hidden position column that follows gets no share of the fixed layout. */
+.shopping-feed-mapping th:nth-child(4) {
+    width: 37%;
 }
 
-.shopping-feed-mapping .admin__control-select,
-.shopping-feed-mapping .admin__control-multiselect,
-.shopping-feed-mapping .admin__control-text,
-.shopping-feed-mapping .admin__control-textarea {
-    width: 100%;
-    min-width: 0;
+.shopping-feed-mapping th:last-child {
+    width: 6%;
+}
+
+.shopping-feed-rows .admin__control-select,
+.shopping-feed-rows .admin__control-multiselect,
+.shopping-feed-rows .admin__control-text,
+.shopping-feed-rows .admin__control-textarea {
     max-width: 100%;
+    min-width: 0;
+    width: 100%;
+}
+
+/* A parameter list should not make its row five lines tall; it scrolls instead. */
+.shopping-feed-rows .admin__control-multiselect {
+    height: 8.4rem;
+    min-height: 0;
+}
+
+/*
+ * A column's own field note (Magento renders it as div.admin__field-note) is the same on every row,
+ * so it shows once, under the last row. Notes that belong to a row's chosen directive or rule editor
+ * (p.admin__field-note in this module's templates) differ per row and always stay visible.
+ */
+.shopping-feed-rows tbody tr:not(:last-child) div.admin__field-note {
+    display: none;
+}
+
+/* Column modifiers: handle, column, modifier, value, order, action. Value gets the most room. */
+[data-index="filters_column_modifiers"] .admin__control-table th:nth-child(2) {
+    width: 24%;
+}
+
+[data-index="filters_column_modifiers"] .admin__control-table th:nth-child(3) {
+    width: 18%;
+}
+
+[data-index="filters_column_modifiers"] .admin__control-table th:nth-child(4) {
+    width: 38%;
+}
+
+[data-index="filters_column_modifiers"] .admin__control-table th:nth-child(5) {
+    width: 10%;
 }
 
 .shopping-feed-parameter-label {
@@ -33,7 +135,39 @@
     margin-bottom: 4px;
 }
 
+/*
+ * A one-line parameter (text or select) puts its label beside the control, so the control sits level
+ * with the other fields in the row. Lists, text areas and rule editors keep the label above.
+ */
+.shopping-feed-parameter--inline {
+    align-items: center;
+    column-gap: 1rem;
+    display: grid;
+    grid-template-columns: minmax(0, 38%) minmax(0, 1fr);
+}
+
+.shopping-feed-parameter--inline .shopping-feed-parameter-label {
+    margin-bottom: 0;
+    text-align: right;
+}
+
+.shopping-feed-parameter--inline .admin__field-note {
+    grid-column: 2;
+}
+
 .shopping-feed-mapping pre {
     white-space: pre-wrap;
     overflow-wrap: anywhere;
+}
+
+/* Categories Map toolbar: buttons were touching each other and the table below. */
+[data-index="categories_provider_taxonomy_by_category"] .admin__actions-switch-text {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .8rem;
+    margin: 0 0 1.2rem;
+}
+
+[data-index="categories_provider_taxonomy_by_category"] .admin__actions-switch-text button {
+    margin: 0;
 }

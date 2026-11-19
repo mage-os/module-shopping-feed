@@ -43,8 +43,10 @@ class Parents
      * @param Relation $relation
      * @param CollectionFactory $collectionFactory
      */
-    public function __construct(private Relation $relation, private CollectionFactory $collectionFactory)
-    {
+    public function __construct(
+        private \Magento\Catalog\Model\ResourceModel\Product\Relation $relation,
+        private \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $collectionFactory
+    ) {
     }
 
     /**

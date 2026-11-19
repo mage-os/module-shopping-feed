@@ -30,7 +30,7 @@ For a percentage adjustment, `price` of `100` with `-10` produces `90.00`; `10` 
 
 Configure both outputs even if you currently expect every product to take the same branch. Both are validated on save and generation. Normal find-and-replace, text cleanup, output limits, and empty-value replacement still apply. Returning an empty value can therefore trigger a replacement or a required-field filter.
 
-In **Replace Empty Values**, add Conditional Value as a replacement source for a column. It runs when that column needs a replacement, following the existing replacement order. It does not overwrite an already populated column.
+In **Replace Empty Values**, add Conditional Value as a replacement source for a column. It runs when that column needs a replacement, following the existing replacement order. Several Conditional Value rows for one column work as an if / else-if chain: each row evaluates its own conditions, and the first row that returns a value wins. `0` counts as a value; only an empty result moves on to the next row. It does not overwrite an already populated column.
 
 ## Conditions and parent products
 

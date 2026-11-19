@@ -823,22 +823,10 @@ parameters:
 			path: Controller/Adminhtml/Feed/MassDelete.php
 
 		-
-			message: '#^Use service contracts to persist entities in favour of MageOS\\ShoppingFeed\\Model\\Feed\:\:save\(\) method$#'
-			identifier: bitExpertMagento.abstractModelUseServiceContract
-			count: 1
-			path: Controller/Adminhtml/Feed/MassDisable.php
-
-		-
 			message: '#^Use service contracts to persist entities in favour of MageOS\\ShoppingFeed\\Model\\Generator\\Queue\:\:delete\(\) method$#'
 			identifier: bitExpertMagento.abstractModelUseServiceContract
 			count: 1
 			path: Controller/Adminhtml/Feed/MassDisable.php
-
-		-
-			message: '#^Use service contracts to persist entities in favour of MageOS\\ShoppingFeed\\Model\\Feed\:\:save\(\) method$#'
-			identifier: bitExpertMagento.abstractModelUseServiceContract
-			count: 1
-			path: Controller/Adminhtml/Feed/MassEnable.php
 
 		-
 			message: '#^Use service contracts to persist entities in favour of MageOS\\ShoppingFeed\\Model\\Feed\:\:save\(\) method$#'

@@ -113,13 +113,21 @@ class Shipping extends MapperAbstract
         $encoded = is_string($stored) && str_starts_with($stored, $marker);
         if ($encoded && $xml) {
             $data = json_decode(substr($stored, strlen($marker)), true);
-            $value = is_array($data) && isset($data['values'], $data['text'])
-                ? new \MageOS\ShoppingFeed\Model\Output\MappedValue($data['values'], $data['text']) : false;
+            if (!is_array($data) || !isset($data['values'], $data['text'])) {
+                $value = false;
+            } elseif ($data['values'] === []) {
+                // An empty result is cached too, so products without rates are not recomputed every run.
+                $value = (string)$data['text'];
+            } else {
+                $value = new \MageOS\ShoppingFeed\Model\Output\MappedValue($data['values'], $data['text']);
+            }
         } elseif ($xml || $encoded) {
             $value = false;
         }
         if ($value !== false) {
-            $this->shippingProvider->setCache($stored);
+            // A hit must not be written back: that renewed its age, so a feed generated more often than
+            // the cache lifetime kept a stale rate (or a stale empty result) forever.
+            $this->cache->setCache($cacheKey, $value);
             return $value;
         }
 
@@ -137,9 +145,13 @@ class Shipping extends MapperAbstract
             }
 
             $this->cache->setCache($secondCacheKey, $value);
-            $stored = $value instanceof \MageOS\ShoppingFeed\Model\Output\MappedValue
-                ? $marker . json_encode(['values' => $value->values, 'text' => (string)$value], JSON_THROW_ON_ERROR)
-                : $value;
+            $stored = $value;
+            if ($xml) {
+                $stored = $marker . json_encode([
+                    'values' => $value instanceof \MageOS\ShoppingFeed\Model\Output\MappedValue ? $value->values : [],
+                    'text' => (string)$value,
+                ], JSON_THROW_ON_ERROR);
+            }
             $this->shippingProvider->setCache($stored);
             $this->cache->setCache($cacheKey, $value);
             return $value;

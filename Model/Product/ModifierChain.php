@@ -17,6 +17,29 @@ class ModifierChain
     ];
 
     /**
+     * @var \MageOS\ShoppingFeed\Model\Product\Markup|null
+     */
+    private $markup;
+
+    /**
+     * @param \MageOS\ShoppingFeed\Model\Product\Markup|null $markup
+     */
+    public function __construct(?\MageOS\ShoppingFeed\Model\Product\Markup $markup = null)
+    {
+        $this->markup = $markup;
+    }
+
+    /**
+     * Injected markup remover, or a plain one when a subclass constructor skipped the parent.
+     *
+     * @return \MageOS\ShoppingFeed\Model\Product\Markup
+     */
+    private function markup(): \MageOS\ShoppingFeed\Model\Product\Markup
+    {
+        return $this->markup ??= new \MageOS\ShoppingFeed\Model\Product\Markup();
+    }
+
+    /**
      * Validate the same contract for saves, imports and generation; retain literal text exactly.
      *
      * @param mixed $rows
@@ -92,9 +115,9 @@ class ModifierChain
         // whenever any character belongs to the entity alphabet, including numeric references.
         if (!$enclosed && preg_match('/[a-z0-9&#;]/i', $delimiter)) {
             foreach ($chains as $chain) {
-                if (in_array('escape', array_column($chain, 'operation'), true)) {
+                if (array_intersect(['escape', 'strip_tags'], array_column($chain, 'operation'))) {
                     throw new LocalizedException(__(
-                        'Escape HTML requires a cell enclosure when the delimiter contains '
+                        'Escape HTML and Strip tags require a cell enclosure when the delimiter contains '
                         . 'letters, digits, &, # or ;. Set a cell enclosure or choose another delimiter.'
                     ));
                 }
@@ -189,7 +212,7 @@ class ModifierChain
      */
     private function stripTags(string $value): string
     {
-        return trim(preg_replace('/\s\s+/', ' ', (new Markup())->remove($value)) ?? '');
+        return trim(preg_replace('/\s\s+/', ' ', $this->markup()->remove($value)) ?? '');
     }
 
     /**
@@ -226,7 +249,47 @@ class ModifierChain
      */
     private function secureUrl(string $value): string
     {
-        if (!preg_match('~^(?:https?://|//)[^/\s?#]+(?:[/?#][^\s]*)?$~iD', $value)) {
+        // Delimited image lists arrive as one cell joined by "," or "|". Split only where a separator
+        // (with any surrounding spaces) is directly followed by another URL, so commas inside a URL's
+        // query stay put, and keep each separator exactly as it was.
+        $pieces = preg_split('~(\s*[,|]\s*)(?=(?:https?:)?//)~i', $value, -1, PREG_SPLIT_DELIM_CAPTURE);
+        if (is_array($pieces) && count($pieces) > 1) {
+            foreach ($pieces as $index => $piece) {
+                if ($index % 2 === 0 && !$this->isUrl($piece)) {
+                    return $this->secureSingleUrl($value);
+                }
+            }
+            foreach ($pieces as $index => &$piece) {
+                if ($index % 2 === 0) {
+                    $piece = $this->secureSingleUrl($piece);
+                }
+            }
+            unset($piece);
+            return implode('', $pieces);
+        }
+        return $this->secureSingleUrl($value);
+    }
+
+    /**
+     * Whether the value is one absolute or network-path URL without whitespace.
+     *
+     * @param string $value
+     * @return bool
+     */
+    private function isUrl(string $value): bool
+    {
+        return (bool)preg_match('~^(?:https?://|//)[^/\s?#]+(?:[/?#][^\s]*)?$~iD', $value);
+    }
+
+    /**
+     * Rewrite the scheme of one URL.
+     *
+     * @param string $value
+     * @return string
+     */
+    private function secureSingleUrl(string $value): string
+    {
+        if (!$this->isUrl($value)) {
             return $value;
         }
         return str_starts_with($value, '//')

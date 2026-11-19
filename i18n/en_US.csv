@@ -654,3 +654,5 @@ This destination has no supported XML preset.,This destination has no supported 
 "Result","Result"
 "Log output","Log output"
 "No log entries yet.","No log entries yet."
+"Delete feeds","Delete feeds"
+"Delete the selected feeds? This cannot be undone.","Delete the selected feeds? This cannot be undone."

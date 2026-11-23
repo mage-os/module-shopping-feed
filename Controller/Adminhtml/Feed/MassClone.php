@@ -74,7 +74,9 @@ class MassClone extends \Magento\Backend\App\Action implements \Magento\Framewor
         foreach ($collection->getItems() as $feed) {
             $this->copier->copy($feed);
         }
-        $this->messageManager->addSuccess(__('A total of %1 record(s) have been cloned.', $collection->getSize()));
+        $this->messageManager->addSuccessMessage(
+            __('A total of %1 record(s) have been cloned.', $collection->getSize())
+        );
 
         return $this->resultFactory->create(ResultFactory::TYPE_REDIRECT)->setPath('mageos_shopping_feed/feed/index');
     }

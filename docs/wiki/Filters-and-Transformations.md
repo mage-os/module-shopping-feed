@@ -2,7 +2,7 @@
 
 Product Filters decides which products reach the output and how selected column values are changed. Rule order matters.
 
-> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 ## Catalog selection
 
@@ -81,3 +81,9 @@ HTML entities are decoded before a final pass removes line breaks and, for outpu
 ## Verification
 
 For every filter change, keep one fixture that should be included and one that should be excluded. Use **Test Feed** first, then compare expected product and skipped counts in a complete run.
+
+## Product selection conditions (1.3.0)
+
+Use **Product Filters > Product selection conditions** to include products matching one All/Any group of up to 50 attribute conditions. Removing all conditions disables this filter. Conditions narrow existing eligibility; they do not override stock, visibility, category, product exclusion, or required-field filters.
+
+See the [Product selection guide](Product-Selection) for a worked example, SKU wildcards, option/date comparisons, parent matching, skipped-candidate counts, persistence, and recovery. Use [Conditional Value](Conditional-Values) when you want to change a column instead of excluding the product.

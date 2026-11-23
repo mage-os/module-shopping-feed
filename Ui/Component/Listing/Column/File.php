@@ -110,17 +110,22 @@ class File extends Column
                         );
                         $url = $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA)
                             . substr($path, strlen($media) + 1);
-                        $item[$name] = '<a href="' . $this->escaper->escapeUrl($url)
+                        // The file name keeps the grid narrow; the full address stays in the link and its tooltip.
+                        $item[$name] = '<a class="shopping-feed-file" href="' . $this->escaper->escapeUrl($url)
+                            . '" title="' . $this->escaper->escapeHtml($url)
                             . '" target="_blank" rel="noopener">'
-                            . $this->escaper->escapeHtml($url) . '</a>';
+                            // phpcs:ignore Magento2.Functions.DiscouragedFunction -- basename() of a validated media path
+                            . $this->escaper->escapeHtml(basename($path)) . '</a>';
                     }
-                    $item[$name] .= '<br />' . $this->escaper->escapeHtml((string) __(
+                    $summary = (string) __(
                         '%4 - processed %1 products, added %2 rows, %3 rows skipped',
                         (int) ($fileInformation['added'] ?? 0),
                         (int) ($fileInformation['exported'] ?? 0),
                         (int) $fileInformation['skipped'],
                         is_string($fileInformation['date'] ?? null) ? $fileInformation['date'] : ''
-                    ));
+                    );
+                    $item[$name] .= '<br /><span class="shopping-feed-file-summary">'
+                        . $this->escaper->escapeHtml($summary) . '</span>';
                 }
             }
         }

@@ -68,6 +68,10 @@ MAGENTO_ROOT=/path/to/magento /path/to/magento/vendor/bin/phpunit -c phpunit.xml
 
 Run `MAGENTO_ROOT=/path/to/magento node --test dev/tests/magento-ui-form.test.cjs` for promotion-date conversion and directive initialization against the installed platform's actual date, abstract-field, and value-link components. This separate suite needs a framework checkout and covers three Admin locale formats plus preservation of null directive parameters.
 
+Run `MAGENTO_ROOT=/path/to/magento node --test dev/tests/product-selection-editor.test.cjs` for the shared SHO-2/SHO-3 editor using the platform's actual Knockout observables. Separately check installed-store generation and Admin save/reopen using the acceptance plan.
+
+Conditional Value transitions also need Magento's remote template engine in a real browser. Follow `dev/tests/browser/README.md` for the self-running regression and the separate installed Admin save, reopen, and generation checks. These checks are not included in the Node suite or current CI.
+
 The consolidated validation checks package and module identity, feed configuration, Magento XML, schema whitelist alignment, isolated runtime identifiers, storefront integration markers, and selected regression-sensitive behaviors. Wiki validation checks navigation, page baselines, and known legacy instructions.
 
 ## Disposable database regressions
@@ -104,7 +108,7 @@ The earlier Google/custom-feed acceptance profile on Mage-OS 3.5.0 passed 413 un
 
 Update documentation in `docs/wiki`, not directly in the public wiki. Follow `docs/WIKI-MAINTENANCE.md` for source precedence, page conventions, drift checks, and the separate publication approval boundary.
 
-When behavior changes, update the implementation, tests, relevant wiki page, and [release acceptance](Release-Acceptance) evidence in the same reviewable change. Do not carry historical instructions forward when current code disagrees.
+When behavior changes, update the implementation, tests, relevant wiki page, and reusable acceptance scenarios in the same reviewable change. Record the tested revision, commands, results, and remaining limits in the PR, with supporting logs as artifacts. Do not carry historical instructions forward when current code disagrees.
 
 ## Review expectations
 

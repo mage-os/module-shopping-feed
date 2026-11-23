@@ -84,11 +84,13 @@ class Plugin
                             $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA),
                             substr($path, strlen($media) + 1)
                         );
-                        $item[$name] .= '<br /><a href="' . $this->escaper->escapeUrl($url)
-                            . '" target="_blank" rel="noopener">' . $this->escaper->escapeHtml($url) . '</a><br />'
-                            . $this->escaper->escapeHtml(
+                        $item[$name] .= '<br /><a class="shopping-feed-file" href="' . $this->escaper->escapeUrl($url)
+                            . '" title="' . $this->escaper->escapeHtml($url) . '" target="_blank" rel="noopener">'
+                            // phpcs:ignore Magento2.Functions.DiscouragedFunction -- basename() of a validated media path
+                            . $this->escaper->escapeHtml(basename($path)) . '</a><br />'
+                            . '<span class="shopping-feed-file-summary">' . $this->escaper->escapeHtml(
                                 (string) __('%1 promotion rows', (int) $messages['promotion_added'])
-                            );
+                            ) . '</span>';
                     }
                 }
             }

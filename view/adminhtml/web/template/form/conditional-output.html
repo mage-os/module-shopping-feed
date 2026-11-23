@@ -1,0 +1,23 @@
+<label>
+    <span data-bind="i18n: 'Output type'"></span>
+    <select class="admin__control-select" data-bind="options: $parent.outputTypes, optionsText: 'label', optionsValue: 'value', value: type, valueAllowUnset: true"></select>
+</label>
+<!-- ko if: type() === 'static' -->
+<label>
+    <span data-bind="i18n: 'Fixed text'"></span>
+    <input class="admin__control-text" type="text" data-bind="value: value, valueUpdate: 'input'">
+</label>
+<!-- /ko -->
+<!-- ko if: type() !== 'static' -->
+<label>
+    <span data-bind="i18n: 'Source attribute'"></span>
+    <select class="admin__control-select" data-bind="options: attributes, optionsText: 'label', optionsValue: 'value', value: attribute, valueAllowUnset: true"></select>
+</label>
+<!-- /ko -->
+<!-- ko if: type() === 'percent' -->
+<label>
+    <span data-bind="i18n: 'Percentage change'"></span>
+    <input class="admin__control-text" type="number" min="-100" max="100000" step="any" data-bind="value: percent, valueUpdate: 'input'">
+</label>
+<p class="admin__field-note" data-bind="i18n: 'Use 10 to increase by 10%, or -10 to decrease by 10%. An empty source stays empty.'"></p>
+<!-- /ko -->

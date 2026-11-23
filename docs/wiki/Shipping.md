@@ -2,7 +2,7 @@
 
 The Shipping section configures the output produced by a column mapped to the **Shipping** directive. It does nothing unless that directive is present in Columns Map.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 Version 1.2.4 handles configurable products without a minimum-price product list and fixes the catalog tax helper used when the including-tax flag is omitted. Regenerate representative configurable weights and taxed shipping after upgrading; see [Release 1.2.4](Release-1-2-4).
 
@@ -19,7 +19,9 @@ Version 1.2.4 handles configurable products without a minimum-price product list
 
 ## Carrier boundary
 
-The module excludes real-time carrier calls from feed generation to avoid excessive or abusive requests to carrier services. Configure carrier-calculated shipping in the recipient platform when the feed cannot safely calculate it.
+Feed generation skips the carriers on the feed type's real-time list (`carrier_realtime`): by default `ups`, `usps`, `fedex`, `dhl` and `dhlint`. This keeps a feed from sending a rate request to a carrier service for every product. Any other carrier selected in Shipping Methods is asked for rates for every product and destination, including a third-party carrier that fetches live rates.
+
+Select only table-based or flat-rate methods for a feed. If a custom carrier calls a live rate service, leave it unselected, or add its carrier code to `carrier_realtime` for that feed type in your own module's `etc/mageos_shopping_feed.xml`. The value replaces the default list, so keep the five default codes in it. Configure carrier-calculated shipping in the recipient platform when the feed cannot safely calculate it.
 
 Select only the countries needed by the data source. Every additional destination can increase processing work and output size.
 
@@ -38,3 +40,7 @@ Shipping requirements depend on target country and account configuration. Use th
 ## Performance
 
 Shipping is one of the more expensive directives because it can evaluate several methods and destinations for every product. If a large feed slows down, compare a test run with the Shipping directive removed before changing batch size or infrastructure.
+
+## XML shipping (1.3.0)
+
+Google Shopping, Microsoft, Pinterest, and Meta offer the built-in Shipping directive in Columns Map, and their XML presets turn its output into nested shipping elements. Structured mapper values preserve commas and colons in service names. Manually mapped shipping strings use `country:region:service:price`, with comma-separated groups; avoid those separators inside manual subfield values. For example, `DE::Standard:6.49 EUR` supplies country, service, and price while omitting region. Malformed groups skip the row with a log message. TikTok retains packed shipping values. See [XML Output](XML-Output#preset-configuration) and review shipping mappings when switching formats.

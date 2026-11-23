@@ -8,7 +8,11 @@ This map records how the historical Rocket Web documentation is treated in the M
 | Installation and Magento Marketplace access | `Installation-and-Upgrade` | Replaced with the current package identity and source-install option |
 | Creating and managing feeds | `Quick-Start`, `Feed-Types-and-Lifecycle`, `Admin-UI-Component-Forms` | Current and historical editor behavior is distinguished; acceptance limits and customization migration are explicit |
 | General feed settings and output files | `General-Configuration`, `Commands-Paths-and-Settings` | Updated for safe output paths, current filenames, currency, delimiter, and stock behavior |
+| XML output and six channel presets (1.3.0) | `XML-Output` | Channel setup, generic wrappers, optional tags, CDATA, examples, and validation |
 | Column mapping and directive reference | `Columns-and-Directives` | Consolidated and checked against current feed configuration |
+| Per-column modifiers (1.3.0) | `Columns-and-Directives` | Ordered transformations, HTML/URL semantics, keyboard ordering and XML interactions |
+| Conditional column values (1.3.0) | `Conditional-Values` | Setup, outputs, parent context, validation, and worked examples |
+| Attribute-based product eligibility (1.3.0) | `Product-Selection` | Setup, operators, parent matching, logging, and performance limits |
 | Categories and Google taxonomy | `Categories-and-Taxonomy` | Retained, with current terminology and verification guidance |
 | Filters, find-and-replace, and price buckets | `Filters-and-Transformations` | Consolidated and reframed as ordered data transformations |
 | Custom options | `Product-Options` | Updated for current option handling |
@@ -28,6 +32,6 @@ This map records how the historical Rocket Web documentation is treated in the M
 | Large-catalog optimization | `Performance-and-Large-Catalogs` | Rewritten around measured workload and current batch behavior |
 | QA checklists | `Release-Acceptance` and repository `ACCEPTANCE-TEST-PLAN.md` | Replaced with release-candidate evidence and safe external boundaries |
 | Pricing, licensing, private support, and marketing pages | Repository license, releases, security policy, and project governance | Excluded from operating documentation unless a current public source supports the claim |
-| Release notes and acceptance | current `Release-1-2-4`, historical `Release-1-2-3`, historical `Release-1-2-2`, `Release-1-2-1`, `Release-1-2-0`, historical `Release-1-1-0`, historical `Release-1-0-0`, `docs/releases`, and GitHub Releases | Wiki summaries link to versioned release notes and acceptance evidence; CHANGELOG remains the full change list |
+| Release notes and acceptance | current `Release-1-2-5`, historical `Release-1-2-4`, historical `Release-1-2-3`, historical `Release-1-2-2`, `Release-1-2-1`, `Release-1-2-0`, historical `Release-1-1-0`, historical `Release-1-0-0`, `docs/releases`, and GitHub Releases | Wiki summaries link to versioned release notes and acceptance evidence; CHANGELOG remains the full change list |
 
 Historical pages remain useful for discovering user questions, but they are not authoritative for commands, package names, requirements, paths, Google interfaces, or present behavior.

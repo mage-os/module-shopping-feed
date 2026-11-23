@@ -136,7 +136,7 @@
     <column xsi:type="int" name="feed_id" padding="10" unsigned="true" nullable="false" comment="Feed Id"/>
     <column xsi:type="varchar" name="currency_code" length="3" nullable="false" comment="Currency code"/>
     <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated at timestamp"/>
-    <column xsi:type="varchar" name="value" length="255" default="" comment="Value"/>
+    <column xsi:type="text" name="value" nullable="true" comment="Value"/>
     <constraint xsi:type="primary" referenceId="PRIMARY">
       <column name="id"/>
     </constraint>

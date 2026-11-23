@@ -52,10 +52,10 @@ class Delete extends \Magento\Backend\App\Action implements \Magento\Framework\A
         $feed = $this->feedBuilder->build($this->getRequest()->getParams());
 
         if (!$feed->getId()) {
-            $this->messageManager->addError(__('Feed wasn\'t found'));
+            $this->messageManager->addErrorMessage(__('Feed wasn\'t found'));
         } else {
             $feed->delete();
-            $this->messageManager->addSuccess(__('Feed has been deleted'));
+            $this->messageManager->addSuccessMessage(__('Feed has been deleted'));
         }
 
         return $this->resultFactory->create(ResultFactory::TYPE_REDIRECT)->setPath('mageos_shopping_feed/feed/index');

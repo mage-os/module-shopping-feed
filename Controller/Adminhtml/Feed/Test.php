@@ -104,7 +104,7 @@ class Test extends \Magento\Backend\App\Action
         }
 
         if (!$feed->getId()) {
-            $this->messageManager->addError(__('Feed wasn\'t found'));
+            $this->messageManager->addErrorMessage(__('Feed wasn\'t found'));
             $resultForward = $this->resultForwardFactory->create();
             return $resultForward->forward('index');
         }
@@ -130,7 +130,7 @@ class Test extends \Magento\Backend\App\Action
             }
 
             if (!$product->getId()) {
-                $this->messageManager->addError(
+                $this->messageManager->addErrorMessage(
                     $type === 'id'
                         ? __('Could not find any product with this ID.')
                         : __('Could not find any product with this SKU.')

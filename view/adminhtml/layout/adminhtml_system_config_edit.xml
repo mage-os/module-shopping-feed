@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Rocket Web Inc. (https://rocketweb.com/)
+ * Licensed under the Open Software License version 3.0. See LICENSE.txt.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="MageOS_ShoppingFeed::css/config-tab.css"/>
+    </head>
+</page>

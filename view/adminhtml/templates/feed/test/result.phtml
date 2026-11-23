@@ -1,39 +1,48 @@
-<?php /** @var $block MageOS\ShoppingFeed\Block\Adminhtml\Feed\Test\Result */?>
-<ul class="test-feed-items message-system-inner">
-    <?php foreach ($block->getMessages() as $message):?>
-        <li class="message message-info info"><?=$escaper->escapeHtml($message, ['strong'])?></li>
-    <?php endforeach; ?>
-</ul>
-<?php if ($block->getTestOutput()): ?>
-    <?php foreach ($block->getTestOutput() as $section): ?>
-        <table class="admin__table-secondary data-table">
-            <thead>
-                <tr>
-                    <th><?=$escaper->escapeHtml(__('Column'))?></th>
-                    <th><?=$escaper->escapeHtml(__('Value'))?></th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($section as $row):?>
-                <tr>
-                    <td class="label"><strong><?=$escaper->escapeHtml($row['label'])?></strong></td>
-                    <td><?=$escaper->escapeHtml($row['value'])?></td>
-                </tr>
+<?php
+/**
+ * @var \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Test\Result $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$messages = $block->getMessages();
+$output = $block->getTestOutput();
+$log = $block->getLogOutput();
+?>
+<?php if ($messages): ?>
+    <section class="shopping-feed-panel">
+        <h2 class="shopping-feed-panel__title"><?= $escaper->escapeHtml(__('Progress')) ?></h2>
+        <ul class="shopping-feed-progress">
+            <?php foreach ($messages as $message): ?>
+                <li><?= $escaper->escapeHtml($message) ?></li>
             <?php endforeach; ?>
-            </tbody>
-        </table>
-        <br />
-    <?php endforeach; ?>
+        </ul>
+    </section>
 <?php endif; ?>
-<?php if ($block->getLogOutput()): ?>
-    <div class="admin__page-section-item-title log-output">
-        <legend class="admin__legend legend">
-            <span><?=$escaper->escapeHtml(__('Log output:'))?></span>
-        </legend>
-        <div class="message-system-inner">
-            <?= $escaper->escapeHtml(nl2br($block->getLogOutput()), ['br']) ?>
-        </div>
-
-    </div>
-
+<?php if ($output): ?>
+    <section class="shopping-feed-panel">
+        <h2 class="shopping-feed-panel__title"><?= $escaper->escapeHtml(__('Result')) ?></h2>
+        <?php foreach ($output as $section): ?>
+            <table class="shopping-feed-result">
+                <thead>
+                    <tr>
+                        <th scope="col"><?= $escaper->escapeHtml(__('Column')) ?></th>
+                        <th scope="col"><?= $escaper->escapeHtml(__('Value')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($section as $row): ?>
+                    <tr>
+                        <th scope="row"><?= $escaper->escapeHtml($row['label']) ?></th>
+                        <td><?= $escaper->escapeHtml($row['value']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endforeach; ?>
+    </section>
+<?php endif; ?>
+<?php if ($log): ?>
+    <section class="shopping-feed-panel">
+        <h2 class="shopping-feed-panel__title"><?= $escaper->escapeHtml(__('Log output')) ?></h2>
+        <pre class="shopping-feed-log"><?= $escaper->escapeHtml($log) ?></pre>
+    </section>
 <?php endif; ?>

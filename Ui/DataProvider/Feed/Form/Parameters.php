@@ -15,10 +15,30 @@ class Parameters
      *
      * @param Config $types
      * @param Options $options
+     * @param ConditionalValue $conditionalValue
      * @param array $renderers
      */
-    public function __construct(private Config $types, private Options $options, private array $renderers = [])
+    public function __construct(
+        private Config $types,
+        private Options $options,
+        private ConditionalValue $conditionalValue,
+        private array $renderers = []
+    ) {
+    }
+
+    /**
+     * Condition attributes, operators and options plus output attributes for Conditional Value editors.
+     *
+     * Sent once per form; every parameter row imports it instead of carrying its own copy.
+     *
+     * @return array<string, array<int|string, mixed>> Keys: conditions, attributes
+     */
+    public function conditional(): array
     {
+        return [
+            'conditions' => $this->conditionalValue->get(),
+            'attributes' => $this->options->get('Attributes'),
+        ];
     }
 
     /**

@@ -33,7 +33,7 @@ class StatusTest extends TestCase
             ['id' => 1, 'status' => StatusSource::STATUS_PROCESSING],
         ]]]);
         self::assertSame(
-            '<span class="grid-severity-critical"><span>' . $label . '</span></span>',
+            '<span class="grid-severity-major shopping-feed-status-processing"><span>' . $label . '</span></span>',
             $result['data']['items'][0]['status']
         );
     }

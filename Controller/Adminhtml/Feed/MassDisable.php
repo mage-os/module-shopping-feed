@@ -37,6 +37,13 @@ class MassDisable extends \Magento\Backend\App\Action implements \Magento\Framew
     protected $filter;
 
     /**
+     * Writes the status column only
+     *
+     * @var \MageOS\ShoppingFeed\Model\ResourceModel\Feed
+     */
+    protected $feedResource;
+
+    /**
      * @var FeedCollectionFactory
      */
     protected $collectionFactory;
@@ -47,17 +54,20 @@ class MassDisable extends \Magento\Backend\App\Action implements \Magento\Framew
     protected $queueCollectionFactory;
 
     /**
-     * @param Context                $context
-     * @param Filter                 $filter
-     * @param FeedCollectionFactory  $collectionFactory
-     * @param QueueCollectionFactory $queueCollectionFactory
+     * @param Context                                       $context
+     * @param Filter                                        $filter
+     * @param FeedCollectionFactory                         $collectionFactory
+     * @param QueueCollectionFactory                        $queueCollectionFactory
+     * @param \MageOS\ShoppingFeed\Model\ResourceModel\Feed $feedResource
      */
     public function __construct(
         Context $context,
         Filter $filter,
         FeedCollectionFactory $collectionFactory,
-        QueueCollectionFactory $queueCollectionFactory
+        QueueCollectionFactory $queueCollectionFactory,
+        \MageOS\ShoppingFeed\Model\ResourceModel\Feed $feedResource
     ) {
+        $this->feedResource = $feedResource;
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->queueCollectionFactory = $queueCollectionFactory;
@@ -76,8 +86,15 @@ class MassDisable extends \Magento\Backend\App\Action implements \Magento\Framew
         $collection = $this->filter->getCollection($this->collectionFactory->create());
         /** @var \MageOS\ShoppingFeed\Model\Feed $feed */
         foreach ($collection->getItems() as $feed) {
-            $feed->setStatus(Status::STATUS_DISABLED);
-            $feed->save();
+            // Writes only the status column: stored rules are not revalidated and generator progress is kept.
+            $previous = $feed->getData('status');
+            $this->feedResource->updateStatus((int)$feed->getId(), Status::STATUS_DISABLED);
+            $feed->setData('status', Status::STATUS_DISABLED);
+            $this->_eventManager->dispatch('mageos_shopping_feed_feed_status_change', [
+                'feed' => $feed,
+                'status' => Status::STATUS_DISABLED,
+                'previous_status' => $previous,
+            ]);
             $feedIds[] = $feed->getId();
         }
 
@@ -89,7 +106,9 @@ class MassDisable extends \Magento\Backend\App\Action implements \Magento\Framew
             $item->delete();
         }
 
-        $this->messageManager->addSuccess(__('A total of %1 record(s) have been disabled.', $collection->getSize()));
+        $this->messageManager->addSuccessMessage(
+            __('A total of %1 record(s) have been disabled.', $collection->getSize())
+        );
         return $this->resultFactory->create(ResultFactory::TYPE_REDIRECT)->setPath('mageos_shopping_feed/feed/index');
     }
 }

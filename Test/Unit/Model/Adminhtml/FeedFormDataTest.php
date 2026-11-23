@@ -60,6 +60,19 @@ class FeedFormDataTest extends TestCase
         self::assertSame($input, (new FeedFormData())->decode(json_encode($input)));
     }
 
+    public function testXmlSettingsSurviveProviderAndSaveTransport(): void
+    {
+        $data = ['config' => [
+            'output_params_format' => 'xml',
+            'output_params_xml_header' => '<?xml version="1.0"?><rss xmlns:g="urn:google"><channel>',
+            'output_params_xml_item' => 'item', 'output_params_xml_footer' => '</channel></rss>',
+            'output_params_xml_optional_columns' => 'description,brand',
+            'output_params_xml_cdata_columns' => '*',
+        ]];
+        $form = new FeedFormData();
+        self::assertSame($data, $form->decode($form->encodeForProvider($data)));
+    }
+
     public function testProviderEnvelopeSurvivesMagentoTemplateSanitizationWithoutChangingNestedArrays(): void
     {
         $data = ['config' => ['columns_product_columns' => [
@@ -124,6 +137,20 @@ class FeedFormDataTest extends TestCase
             ['find' => 'first', 'position' => 1, 'record_id' => 1]
         ]]]));
         self::assertSame([['find' => 'first'], ['find' => 'second']], $data['config']['filters_find_and_replace']);
+    }
+
+    public function testModifierOrderEditsControlTheChainWithoutPersistingUiBookkeeping(): void
+    {
+        $data = (new FeedFormData())->decode(json_encode(['config' => ['filters_column_modifiers' => [
+            ['column' => 'title', 'operation' => 'uppercase', 'position' => 20, 'record_id' => 0],
+            ['column' => 'title', 'operation' => 'append', 'value' => 'abc', 'position' => 10, 'record_id' => 1]
+        ]]]));
+        $rows = $data['config']['filters_column_modifiers'];
+        self::assertSame(['append', 'uppercase'], array_column($rows, 'operation'));
+        self::assertArrayNotHasKey('position', $rows[0]);
+        self::assertArrayNotHasKey('record_id', $rows[0]);
+        $modifiers = new \MageOS\ShoppingFeed\Model\Product\ModifierChain();
+        self::assertSame('XABC', $modifiers->apply('x', $modifiers->compile($rows)['title'], 'USD'));
     }
 
     public function testMalformedJsonIsARecoverableValidationError(): void

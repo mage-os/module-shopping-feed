@@ -68,6 +68,7 @@ class Configurable extends Composite implements AdapterInterface
      * @param \Magento\Framework\Serialize\SerializerInterface $jsonSerializer
      * @param \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Concatenate $concatenateMapper
      * @param LinkedProductCollectionFactory $linkedProductCollectionFactory
+     * @param \MageOS\ShoppingFeed\Model\ProductSelection\Selection $productSelection
      * @param array $data
      */
     public function __construct(
@@ -100,6 +101,7 @@ class Configurable extends Composite implements AdapterInterface
         \Magento\Framework\Serialize\SerializerInterface $jsonSerializer,
         \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Concatenate $concatenateMapper,
         \Magento\Catalog\Model\ResourceModel\Product\Link\Product\CollectionFactory $linkedProductCollectionFactory,
+        \MageOS\ShoppingFeed\Model\ProductSelection\Selection $productSelection,
         array $data = []
     ) {
 
@@ -133,6 +135,7 @@ class Configurable extends Composite implements AdapterInterface
             $jsonSerializer,
             $concatenateMapper,
             $linkedProductCollectionFactory,
+            $productSelection,
             $data
         );
     }

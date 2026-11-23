@@ -104,18 +104,31 @@ class AdditionalImageLinkTest extends ModelFramework
     {
         $this->productMock->method('getData')->willReturn('base.jpg');
         $this->productMock->method('getMediaGalleryImages')->willReturn([
-            ['file' => 'one.jpg', 'disabled' => false],
+            ['file' => 'one,w_100.jpg', 'disabled' => false],
             ['file' => 'two.png', 'disabled' => false],
         ]);
         $this->adapterMock->method('getProduct')->willReturn($this->productMock);
         $this->adapterMock->method('getData')->willReturn('https://example.com');
         $this->adapterMock->method('getFeed')->willReturn($this->feedMock);
+        $format = 'delimited';
         $this->feedMock->method('getConfig')->willReturnCallback(
-            static fn($key, $default = '') => $key === 'output_params_delimiter' ? ',' : $default
+            static function ($key, $default = '') use (&$format) {
+                return match ($key) {
+                    'output_params_format' => $format,
+                    'output_params_delimiter' => ',',
+                    default => $default,
+                };
+            }
         );
         $this->model->addAdapter($this->adapterMock);
-        self::assertSame('https://example.com/one.jpg|https://example.com/two.png', $this->model->map());
+        self::assertSame('https://example.com/one,w_100.jpg|https://example.com/two.png', $this->model->map());
+        $format = 'xml';
+        $mapped = $this->model->map();
+        self::assertInstanceOf(\MageOS\ShoppingFeed\Model\Output\MappedValue::class, $mapped);
+        self::assertSame('https://example.com/one,w_100.jpg,https://example.com/two.png', (string)$mapped);
+        self::assertSame(['https://example.com/one,w_100.jpg', 'https://example.com/two.png'], $mapped->values);
+        $format = 'delimited';
         $this->model->setConfiguration('separator', ',');
-        self::assertSame('https://example.com/one.jpg,https://example.com/two.png', $this->model->map());
+        self::assertSame('https://example.com/one,w_100.jpg,https://example.com/two.png', $this->model->map());
     }
 }

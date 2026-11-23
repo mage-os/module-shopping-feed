@@ -1,10 +1,23 @@
-<?php /** @var $block MageOS\ShoppingFeed\Block\Adminhtml\Feed\Viewlog */?>
-<?php if ($block->getError()): ?>
-    <span><?= $escaper->escapeHtml($block->getError()) ?></span>
-<?php else: ?>
-    <ul>
-        <?php foreach ($block->getFileLines() as $line):?>
-            <li><?= $escaper->escapeHtml($line) ?></li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
+<?php
+/**
+ * @var \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Viewlog $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$lines = $block->getError() ? [] : array_values(array_filter(
+    (array)$block->getFileLines(),
+    static fn ($line): bool => trim((string)$line) !== ''
+));
+?>
+<section class="shopping-feed-panel">
+    <?php if ($block->getError()): ?>
+        <p class="shopping-feed-log-empty"><?= $escaper->escapeHtml($block->getError()) ?></p>
+    <?php elseif (!$lines): ?>
+        <p class="shopping-feed-log-empty"><?= $escaper->escapeHtml(__('No log entries yet.')) ?></p>
+    <?php else: ?>
+        <ol class="shopping-feed-log">
+            <?php foreach ($lines as $line): ?>
+                <li><?= $escaper->escapeHtml($line) ?></li>
+            <?php endforeach; ?>
+        </ol>
+    <?php endif; ?>
+</section>

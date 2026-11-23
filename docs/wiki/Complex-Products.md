@@ -2,7 +2,7 @@
 
 Configurable, grouped, and bundle products can produce parent rows, associated rows, or both. Decide the row model first, then configure inheritance, URLs, stock, price, and duplicate handling around it.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: 1.3.0 release candidate. Last reviewed: 2026-11-12.
 
 ## Associated-product modes
 
@@ -25,7 +25,7 @@ Available controls include:
 * Whether a child inherits the parent's out-of-stock state
 * Whether not-visible children receive unique deep links
 * The separator used when attribute values are merged
-* Per-column inheritance between parent and associated product
+* Per-column inheritance between parent and associated product; see [Inherit values from the parent](#inherit-values-from-the-parent)
 
 Google Shopping defaults include item grouping and standard variant columns. Confirm that each child has a stable ID, the intended `item_group_id`, a working deep link, and the correct `color`, `size`, `material`, `pattern`, `gender`, and `age_group` values where applicable.
 
@@ -41,9 +41,51 @@ Available controls include:
 * Whether out-of-stock associated products are allowed
 * Whether not-visible associated products receive unique URLs
 * **Minimal price** or **Sum of associated products prices**
-* Per-column inheritance between parent and associated product
+* Per-column inheritance between parent and associated product; see [Inherit values from the parent](#inherit-values-from-the-parent)
 
 The summed price mode uses default associated quantities when they are available. If the grouped product has no usable default quantities, the mapper can fall back to minimal price.
+
+## Inherit values from the parent
+
+Associated-product rows of configurable and grouped products take every value from the child by default. When a child leaves an attribute empty that the parent fills, such as description, brand, a marketing text, or an image, **Value inheritance by column** fills that column of the child row from the parent.
+
+### Add an inheritance rule
+
+1. Open the feed in **Catalog > Mage-OS Shopping Feed > Feeds Management**. Confirm **Columns Map** contains the column, then **Save** the feed. The rule editor lists only columns in the saved map.
+2. Open **Configurable Products**, or **Grouped Products** for grouped children, and find **Value inheritance by column**.
+3. Add a row, select the **Column**, and choose **Map value from**:
+
+| Map value from | Result for each child row |
+| --- | --- |
+| associated if exists, otherwise from parent | The child's value; when it is empty, the parent's value. Use this to fill gaps on children. |
+| parent if exists, otherwise from associated | The parent's value; when it is empty, the child's value. |
+| parent only | Always the parent's value, for example a shared description. |
+| associated only | Always the child's value. Columns without a rule behave this way. |
+
+4. Leave **Only for attributes** empty unless the column uses the Concatenate Attributes directive; see below.
+5. Save, then run **Test Feed** with the parent SKU and compare the child rows. See [Testing one product](Testing-One-Product).
+
+### What a rule covers
+
+* A rule applies to any column, whether it maps an attribute or a directive. A rule on an image column falls back to the parent image; a rule on a URL column to the parent URL.
+* Rules change associated-product rows only. A parent row, when the associated-products mode includes one, always uses the parent's own values.
+* The child's **Replace empty values** rules run first. The parent is consulted only when the child value is still empty after them.
+* Empty means empty to PHP: an empty string and the value `0` both count. Do not add a fallback rule to a quantity or other numeric column where zero is a real value.
+* Price, sale price, availability, and quantity columns already use configurable- and grouped-specific directives that aggregate the children. A rule on those columns replaces that logic with the parent's own value, so add one only deliberately.
+
+### Concatenate Attributes columns
+
+For a column mapped to **Concatenate Attributes**, a rule without **Only for attributes** applies to the whole rendered pattern. To inherit only some placeholders, enter their attribute codes, comma separated, in **Only for attributes**. Each listed `{{code}}` placeholder is resolved with the rule and the rest of the pattern is rendered from the child.
+
+### Bundle products
+
+Bundle option rows have no inheritance rules in 1.2.5; the **Bundle Products** section does not offer them. Values a bundle recipient needs must be present on the option products themselves.
+
+### Verify inheritance
+
+* **Test Feed** with the parent SKU. Each child row must show the child's value where the child has one and the parent's value where it does not.
+* Include a child whose value is literally `0` if the column is numeric.
+* Generate the complete file and compare row counts with a run without the rule. Inheritance changes values, not the number of rows.
 
 ## Bundle products
 
@@ -76,3 +118,9 @@ For each product type, record:
 | Inherited columns |  |  |
 
 Run the matrix for in-stock and out-of-stock combinations. For MSI Local Inventory, repeat it across at least two sources linked to the selected website stock.
+
+## Conditions and selection (1.3.0)
+
+[Conditional Value](Conditional-Values#conditions-and-parent-products) reads the current mapping product and its active parent. Existing inheritance settings still determine which product supplies a column. It does not search other parents for a standalone row.
+
+[Product Selection](Product-Selection#parent-and-child-behavior) evaluates parent and child output candidates separately. A rejected parent does not automatically exclude a matching child. For standalone candidates, parent-scoped selection can inspect direct parents in the feed website; all parent conditions must match within one complete evaluation against the same parent. Other eligibility filters still apply.

@@ -122,4 +122,16 @@
   <type name="MageOS\ShoppingFeed\Ui\Component\Listing\Column\File">
     <plugin name="mageos_shopping_feed_google_promotions_list_promotions_file" type="MageOS\ShoppingFeed\Ui\Component\Listing\Column\File\Plugin" sortOrder="100" disabled="false"/>
   </type>
+  <!-- Generation and save validation share these collaborators, so preferences and plugins apply to both. -->
+  <type name="MageOS\ShoppingFeed\Model\Product\Filter">
+    <arguments>
+      <argument name="modifierChain" xsi:type="object">MageOS\ShoppingFeed\Model\Product\ModifierChain</argument>
+      <argument name="markup" xsi:type="object">MageOS\ShoppingFeed\Model\Product\Markup</argument>
+    </arguments>
+  </type>
+  <type name="MageOS\ShoppingFeed\Model\Product\ModifierChain">
+    <arguments>
+      <argument name="markup" xsi:type="object">MageOS\ShoppingFeed\Model\Product\Markup</argument>
+    </arguments>
+  </type>
 </config>

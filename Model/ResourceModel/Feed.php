@@ -75,6 +75,42 @@ class Feed extends AbstractDb
     }
 
     /**
+     * Write only the status column of one feed.
+     *
+     * Admin status changes must not rewrite generator progress, messages or other fields that a
+     * running generation may have updated since the feed was loaded.
+     *
+     * @param int $feedId
+     * @param int $status one of Feed\Source\Status::STATUS_*
+     * @return int number of rows changed
+     * @throws \Magento\Framework\Exception\LocalizedException when the status is unknown
+     */
+    public function updateStatus(int $feedId, int $status): int
+    {
+        $known = [
+            \MageOS\ShoppingFeed\Model\Feed\Source\Status::STATUS_DISABLED,
+            \MageOS\ShoppingFeed\Model\Feed\Source\Status::STATUS_SCHEDULED,
+            \MageOS\ShoppingFeed\Model\Feed\Source\Status::STATUS_PENDING,
+            \MageOS\ShoppingFeed\Model\Feed\Source\Status::STATUS_PROCESSING,
+            \MageOS\ShoppingFeed\Model\Feed\Source\Status::STATUS_COMPLETED,
+            \MageOS\ShoppingFeed\Model\Feed\Source\Status::STATUS_ERROR,
+        ];
+        if (!in_array($status, $known, true)) {
+            throw new \Magento\Framework\Exception\LocalizedException(__('Unknown feed status "%1".', $status));
+        }
+
+        $connection = $this->getConnection();
+        if (!$connection) {
+            throw new \Magento\Framework\Exception\LocalizedException(__('No database connection.'));
+        }
+        return $connection->update(
+            $this->getMainTable(),
+            ['status' => $status],
+            [$this->getIdFieldName() . ' = ?' => $feedId]
+        );
+    }
+
+    /**
      * Perform actions before object save
      *
      * @param  AbstractModel $object

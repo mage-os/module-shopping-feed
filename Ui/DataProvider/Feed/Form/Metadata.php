@@ -53,7 +53,9 @@ class Metadata
         }
         $keys = array_merge([], ...$sectionKeys);
         $keys = array_unique(
-            array_merge($keys, FeedFormData::ROW_CONFIG, ['categories_provider_taxonomy_by_category'])
+            array_merge($keys, FeedFormData::ROW_CONFIG, [
+                'categories_provider_taxonomy_by_category', 'filters_product_conditions'
+            ])
         );
         if ($feed->getType() === 'google_shopping') {
             $keys[] = 'promotions_provider_widget';
@@ -134,12 +136,54 @@ class Metadata
             'other'
         );
 
+        foreach (['delimiter', 'enclose_cell', 'enclose_escape', 'default_value', 'encoding'] as $key) {
+            if (isset($meta['general']['children']['output_params_' . $key])) {
+                $this->dependency(
+                    $meta['general']['children']['output_params_' . $key],
+                    'general.output_params_format',
+                    'delimited'
+                );
+            }
+        }
+        $other = &$meta['general']['children']['output_params_delimiter_other']['arguments']['data']['config'];
+        $other['imports']['parentVisible'] = '${ $.ns }.${ $.ns }.general.output_params_delimiter:visible';
+        $other['imports']['__disableTmpl']['parentVisible'] = false;
+
         $columns = $this->select(__('Column'), 'Columns');
+        foreach (['header', 'item', 'footer', 'optional_columns', 'cdata_columns'] as $key) {
+            if (!isset($meta['general']['children']['output_params_xml_' . $key])) {
+                continue;
+            }
+            $this->dependency(
+                $meta['general']['children']['output_params_xml_' . $key],
+                'general.output_params_format',
+                'xml'
+            );
+        }
         $parameter = [
             'label' => __('Parameters'), 'component' => 'MageOS_ShoppingFeed/js/form/parameter',
             'elementTmpl' => 'MageOS_ShoppingFeed/form/parameter', 'definitions' => $this->parameters->get($feed),
-            'imports' => ['attribute' => '${ $.parentName }.attribute:value', '__disableTmpl' => ['attribute' => false]]
+            // Condition attributes and options are read by reference from the product selection field.
+            'imports' => [
+                'attribute' => '${ $.parentName }.attribute:value',
+                '__disableTmpl' => ['attribute' => false]
+            ]
         ];
+        $conditional = $this->parameters->conditional();
+        $meta['filters']['children']['filters_product_conditions'] = $this->field(
+            'config.filters_product_conditions',
+            [
+                'label' => __('Product selection conditions'),
+                'component' => 'MageOS_ShoppingFeed/js/form/product-selection',
+                'elementTmpl' => 'MageOS_ShoppingFeed/form/product-selection',
+                'definition' => ($parameter['definitions']['directive_conditional_value'] ?? [])
+                    + ['selection' => true],
+                // The one copy of the condition definition; the editors here and in parameter rows share it.
+                'conditional' => $conditional,
+                'sortOrder' => 35,
+                'notice' => __('Only matching output products are included. Leave conditions empty to disable.')
+            ]
+        );
         $mapping = ['order' => ['label' => __('Order')],
             'column' => ['label' => __('Column'), 'required' => true],
             'attribute' => $this->select(__('Attribute or Directive'), 'DirectivesAndAttributes')
@@ -162,6 +206,37 @@ class Metadata
             'find' => ['label' => __('Find'), 'required' => true], 'replace' => ['label' => __('Replace')],
             'column' => $columns
         ]);
+        $meta['columns']['children']['filters_column_modifiers'] = $this->rows(
+            __('Column modifiers (top to bottom)'),
+            'config',
+            [
+                'column' => ['label' => __('Column'), 'required' => true,
+                    'notice' => __('Exact output column name from Columns below.')],
+                'operation' => ['label' => __('Modifier'), 'formElement' => 'select', 'required' => true,
+                    'options' => [
+                        ['value' => 'prepend', 'label' => __('Prepend')],
+                        ['value' => 'append', 'label' => __('Append')],
+                        ['value' => 'lowercase', 'label' => __('Lowercase')],
+                        ['value' => 'uppercase', 'label' => __('Uppercase')],
+                        ['value' => 'titlecase', 'label' => __('Title case')],
+                        ['value' => 'round', 'label' => __('Round')],
+                        ['value' => 'integer', 'label' => __('Integer (truncate)')],
+                        ['value' => 'decimal', 'label' => __('Decimal places')],
+                        ['value' => 'date', 'label' => __('Date format')],
+                        ['value' => 'price', 'label' => __('Price format')],
+                        ['value' => 'strip_tags', 'label' => __('Strip tags')],
+                        ['value' => 'escape', 'label' => __('Escape HTML')],
+                        ['value' => 'secure_url', 'label' => __('Secure URL')]
+                    ]],
+                'value' => ['label' => __('Value'), 'notice' => __(
+                    'Text for prepend/append; 0 to 12 for round/decimals; PHP date format (Y-m-d); '
+                    . 'currency code for price (blank uses the existing or feed currency). Otherwise leave blank.'
+                )],
+                'position' => ['label' => __('Order'), 'required' => true,
+                    'validation' => ['validate-digits' => true, 'validate-greater-than-zero' => true],
+                    'notice' => __('Lower numbers run first.')]
+            ]
+        );
         $meta['filters']['children']['filters_output_limit'] = $this->rows(__('Limit column output'), 'config', [
             'column' => $this->select(__('Column'), 'LimitColumns'),
             'limit' => ['label' => __('Max characters'), 'required' => true,
@@ -310,7 +385,8 @@ class Metadata
         }
         // Native selects otherwise replace an unavailable stored option with their first option.
         if (in_array($config['formElement'], ['select', 'multiselect'], true)) {
-            $config['component'] = 'MageOS_ShoppingFeed/js/form/' . $config['formElement'];
+            $config['component'] = ($scope === 'config.output_params_format'
+                ? 'Magento_Ui/js/form/element/' : 'MageOS_ShoppingFeed/js/form/') . $config['formElement'];
         }
         return $this->node($config);
     }
@@ -327,11 +403,17 @@ class Metadata
     private function rows(Phrase $label, string $scope, array $fields, bool $ordered = false): array
     {
         $canSave = $this->authorization->isAllowed('MageOS_ShoppingFeed::save');
+        // The stylesheet sizes columns from the number of visible fields, so header, rows and the Add bar
+        // share one width. Tables with few fields are narrower instead of stretching short inputs.
+        $visible = count(array_filter($fields, static fn (array $config): bool => ($config['visible'] ?? true)));
         $result = $this->node([
             'componentType' => 'dynamicRows', 'label' => $label, 'dataScope' => $scope,
             'addButtonLabel' => __('Add'), 'addButton' => $canSave, 'deleteProperty' => 'delete', 'deleteValue' => true,
             'renderDefaultRecord' => false, 'dndConfig' => ['enabled' => $canSave && !$ordered], 'sortOrder' => 500,
-            'additionalClasses' => ['admin__field-wide' => true, 'shopping-feed-mapping' => $ordered]
+            'additionalClasses' => ['admin__field-wide' => true, 'shopping-feed-rows' => true,
+                'shopping-feed-mapping' => $ordered,
+                'shopping-feed-rows--compact' => !$ordered && $visible <= 3,
+                'shopping-feed-cols-' . $visible => $canSave && !$ordered]
         ]);
         if ($ordered) {
             // Keep existing duplicate order values intact; the explicit Order field controls mapping priority.
@@ -365,7 +447,9 @@ class Metadata
     private function dependency(array &$field, string $source, string $value): void
     {
         $config = &$field['arguments']['data']['config'];
-        $config['component'] = 'MageOS_ShoppingFeed/js/form/dependent-' . ($config['formElement'] ?? 'input');
+        $element = $config['formElement'] ?? 'input';
+        $config['component'] = 'MageOS_ShoppingFeed/js/form/dependent-'
+            . $element;
         $config['imports']['dependency'] = '${ $.ns }.${ $.ns }.' . $source . ':value';
         $config['imports']['__disableTmpl']['dependency'] = false;
         $config['showWhen'] = $value;

@@ -58,7 +58,7 @@ class ResultTest extends TestCase
             Phrase::setRenderer($renderer);
         }
         $this->assertStringContainsString('>Product %1 &lt;tag&gt;</td>', $html);
-        $this->assertStringContainsString('>custom_%1</strong>', $html);
+        $this->assertStringContainsString('>custom_%1</th>', $html);
         $this->assertStringContainsString('translated Column', $html);
     }
 

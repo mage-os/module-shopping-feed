@@ -167,8 +167,8 @@ class Configuration
     /**
      * Accept existing product attributes and Magento's special condition attributes only.
      *
-     * The EAV lookup ignores case, so "SKU" finds sku. The stored spelling is returned because
-     * product data keys are case-sensitive; mixed-case custom codes keep their own spelling.
+     * A code in the wrong case ("SKU") resolves to the stored spelling (sku), because product data keys
+     * are case-sensitive; mixed-case custom codes keep their own spelling.
      *
      * @param mixed $code
      * @return string the attribute code as stored
@@ -182,19 +182,21 @@ class Configuration
         if (in_array($code, ['attribute_set_id', 'category_ids'], true)) {
             return $code;
         }
-        $attribute = $this->eavConfig->getAttribute(Product::ENTITY, $code);
-        if (!$attribute->getId()) {
-            throw new LocalizedException(__('Unknown product attribute: %1.', $code));
-        }
-        // The returned attribute repeats the requested spelling, so take the code from the entity's list.
+        // Resolve the stored spelling before loading anything. Loading an attribute by another spelling makes
+        // Magento's shared EAV config report that spelling for the attribute for the rest of the process.
+        $match = null;
         foreach ($this->eavConfig->getEntityAttributeCodes(Product::ENTITY) as $stored) {
             if ($stored === $code) {
-                return $code;
+                $match = $code;
+                break;
             }
-            if (strcasecmp((string)$stored, $code) === 0) {
+            if ($match === null && strcasecmp((string)$stored, $code) === 0) {
                 $match = (string)$stored;
             }
         }
-        return $match ?? $code;
+        if ($match === null || !$this->eavConfig->getAttribute(Product::ENTITY, $match)->getId()) {
+            throw new LocalizedException(__('Unknown product attribute: %1.', $code));
+        }
+        return $match;
     }
 }

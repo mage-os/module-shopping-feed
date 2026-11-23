@@ -10,6 +10,9 @@ use Magento\Rule\Model\Condition\Product\AbstractProduct;
 /** Use Magento's product-condition semantics on the feed's store-scoped product. */
 class Condition extends AbstractProduct
 {
+    /** Bundle attributes labelled "Dynamic ..." whose stored value is 0 when dynamic and 1 when fixed. */
+    private const BUNDLE_DYNAMIC_ATTRIBUTES = ['price_type', 'sku_type', 'weight_type'];
+
     /**
      * List all scalar product attributes, including those not enabled for promotions.
      *
@@ -77,8 +80,14 @@ class Condition extends AbstractProduct
         }
         $options = parent::getValueSelectOptions();
         if (!$options) {
-            // Boolean attributes without a source model (bundle Dynamic Price/SKU/Weight) have no option list.
-            return $this->getInputType() === 'boolean' ? $yesNo : [];
+            if ($this->getInputType() !== 'boolean') {
+                return [];
+            }
+            // Boolean attributes without a source model have no option list. The bundle "Dynamic" attributes
+            // store 0 for dynamic and 1 for fixed, so Yes is 0 for them.
+            return in_array($this->getAttribute(), self::BUNDLE_DYNAMIC_ATTRIBUTES, true)
+                ? [['value' => '0', 'label' => __('Yes')], ['value' => '1', 'label' => __('No')]]
+                : $yesNo;
         }
         return $options;
     }

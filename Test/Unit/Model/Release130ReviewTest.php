@@ -136,16 +136,23 @@ class Release130ReviewTest extends TestCase
 
     /**
      * A rule saved with "SKU" must read the product's "sku" data, not an empty "SKU" key.
+     *
+     * Magento's EAV config must only ever be asked for the stored spelling: loading "SKU" makes the shared
+     * config report "SKU" as the code of that attribute for every later column and feed in the process.
      */
-    public function testAttributeCodeIsStoredInItsCanonicalSpelling(): void
+    public function testAttributeCodeIsResolvedToItsStoredSpellingBeforeLoading(): void
     {
-        // Like Magento, the attribute found case-insensitively reports the spelling it was asked for.
         $attribute = $this->getMockBuilder(\Magento\Catalog\Model\ResourceModel\Eav\Attribute::class)
-            ->disableOriginalConstructor()->onlyMethods(['getId', 'getAttributeCode'])->getMock();
+            ->disableOriginalConstructor()->onlyMethods(['getId'])->getMock();
         $attribute->method('getId')->willReturn(74);
-        $attribute->method('getAttributeCode')->willReturn('SKU');
+        $requested = [];
         $eavConfig = $this->createMock(\Magento\Eav\Model\Config::class);
-        $eavConfig->method('getAttribute')->willReturn($attribute);
+        $eavConfig->method('getAttribute')->willReturnCallback(
+            static function ($entity, $code) use (&$requested, $attribute) {
+                $requested[] = $code;
+                return $attribute;
+            }
+        );
         $eavConfig->method('getEntityAttributeCodes')->willReturn(['name', 'sku', 'colorCode']);
         $configuration = new \MageOS\ShoppingFeed\Model\ConditionalValue\Configuration(
             $eavConfig,
@@ -158,6 +165,17 @@ class Release130ReviewTest extends TestCase
         self::assertSame('sku', $output['attribute']);
         $mixedCase = $validate->invoke($configuration, ['type' => 'attribute', 'attribute' => 'colorCode']);
         self::assertSame('colorCode', $mixedCase['attribute'], 'a mixed-case custom code keeps its spelling');
+        $wrongCase = $validate->invoke($configuration, ['type' => 'attribute', 'attribute' => 'COLORCODE']);
+        self::assertSame('colorCode', $wrongCase['attribute']);
+        self::assertSame(['sku', 'colorCode', 'colorCode'], $requested, 'only stored spellings are loaded');
+
+        try {
+            $validate->invoke($configuration, ['type' => 'attribute', 'attribute' => 'Missing']);
+            self::fail('An unknown attribute was accepted.');
+        } catch (LocalizedException $exception) {
+            self::assertStringContainsString('Unknown product attribute: Missing', $exception->getMessage());
+        }
+        self::assertCount(3, $requested, 'an unknown code is rejected without loading it');
     }
 
     /**
@@ -210,22 +228,70 @@ class Release130ReviewTest extends TestCase
     }
 
     /**
-     * Bundle "Dynamic Price/SKU/Weight" are boolean attributes without a source model.
+     * Bundle "Dynamic Price/SKU/Weight" are boolean attributes without a source model. They store 0 for
+     * dynamic and 1 for fixed, so "Yes" must select 0.
+     *
+     * @param string $code
+     * @param list<string> $expected option values for Yes then No
+     * @dataProvider booleanAttributesWithoutSource
      */
-    public function testBooleanAttributeWithoutSourceOffersYesNo(): void
+    #[DataProvider('booleanAttributesWithoutSource')]
+    public function testBooleanAttributeWithoutSourceOffersYesNo(string $code, array $expected): void
+    {
+        $condition = $this->booleanCondition($code);
+
+        $options = $condition->getValueSelectOptions();
+
+        self::assertSame($expected, array_column($options, 'value'));
+        self::assertSame(['Yes', 'No'], array_map('strval', array_column($options, 'label')));
+    }
+
+    /** @return array<string, array{string, list<string>}> */
+    public static function booleanAttributesWithoutSource(): array
+    {
+        return [
+            'dynamic price' => ['price_type', ['0', '1']],
+            'dynamic sku' => ['sku_type', ['0', '1']],
+            'dynamic weight' => ['weight_type', ['0', '1']],
+            'ordinary boolean' => ['is_featured', ['1', '0']],
+        ];
+    }
+
+    /**
+     * "Dynamic Price is Yes" matches a dynamic bundle (stored 0), not a fixed-price one (stored 1).
+     */
+    public function testDynamicPriceYesMatchesADynamicBundle(): void
+    {
+        $condition = $this->booleanCondition('price_type');
+        $condition->loadOperatorOptions();
+        $condition->setOperator('==');
+        $condition->setValue(array_column($condition->getValueSelectOptions(), 'value')[0]);
+        $product = $this->getMockBuilder(\Magento\Catalog\Model\Product::class)
+            ->disableOriginalConstructor()->onlyMethods([])->getMock();
+
+        $product->setData('price_type', \Magento\Bundle\Model\Product\Price::PRICE_TYPE_DYNAMIC);
+        self::assertTrue((clone $condition)->validate($product));
+        $product->setData('price_type', \Magento\Bundle\Model\Product\Price::PRICE_TYPE_FIXED);
+        self::assertFalse((clone $condition)->validate($product));
+    }
+
+    /**
+     * Condition on a boolean attribute that has no source model.
+     *
+     * @param string $code
+     * @return Condition
+     */
+    private function booleanCondition(string $code): Condition
     {
         $attribute = $this->getMockBuilder(\Magento\Catalog\Model\ResourceModel\Eav\Attribute::class)
             ->disableOriginalConstructor()->onlyMethods(['usesSource'])->getMock();
         $attribute->method('usesSource')->willReturn(false);
-        $attribute->setData(['attribute_code' => 'price_type', 'frontend_input' => 'boolean']);
+        $attribute->setData(['attribute_code' => $code, 'frontend_input' => 'boolean']);
         $condition = $this->getMockBuilder(Condition::class)->disableOriginalConstructor()
             ->onlyMethods(['getAttributeObject'])->getMock();
         $condition->method('getAttributeObject')->willReturn($attribute);
-        $condition->setAttribute('price_type');
-
-        $options = $condition->getValueSelectOptions();
-
-        self::assertSame(['1', '0'], array_column($options, 'value'));
+        $condition->setAttribute($code);
+        return $condition;
     }
 
     /**

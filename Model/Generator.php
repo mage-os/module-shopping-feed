@@ -317,14 +317,20 @@ class Generator extends DataObject
         // shared services are rebuilt from the current configuration, even when the feed object is reused.
         $this->feed->setData('generation_run_id', bin2hex(random_bytes(8)));
 
-        // Bind the shared logger before validation or events can fail. Each run owns its handler.
+        // Bind the shared logger before validation or events can fail. Each run owns its feed log file:
+        // a preview keeps only its memory handler, any other run drops the previous feed's file handler
+        // and keeps the rest, such as the console handler the CLI command adds.
         $this->unsetData('feed_log_file');
-        $previewHandlers = $this->isTestMode() ? array_filter(
+        $testMode = $this->isTestMode();
+        $keptHandlers = array_filter(
             $this->logger->getHandlers(),
-            static fn ($handler) => $handler instanceof Logger\Handler\MemoryStream
-        ) : [];
+            static fn ($handler) => $testMode
+                ? $handler instanceof Logger\Handler\MemoryStream
+                : !$handler instanceof \Magento\Framework\Logger\Handler\Base
+        );
         $this->logger->resetHandler();
-        foreach ($previewHandlers as $handler) {
+        // pushHandler() prepends, so push in reverse to keep the original order.
+        foreach (array_reverse($keptHandlers) as $handler) {
             $this->logger->pushHandler($handler);
         }
         $logger = $this->getLogger();
@@ -1181,7 +1187,7 @@ class Generator extends DataObject
     {
         if (!$this->hasData('feed_log_file') && !$this->isTestMode()) {
             $feedLogFile = '/' . $this->outputPath->getLogFile($this->feed, false);
-            $this->logger->setHandler($feedLogFile, $this->scopeConfig->getValue(self::XML_LOG_LEVEL));
+            $this->logger->addHandler($feedLogFile, $this->scopeConfig->getValue(self::XML_LOG_LEVEL));
             $this->setData('feed_log_file', $feedLogFile);
         }
         return $this->logger;

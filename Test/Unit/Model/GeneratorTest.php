@@ -114,6 +114,47 @@ class GeneratorTest extends ModelFramework
         }
     }
 
+    /**
+     * The CLI command adds a console handler before the run; a failure reason must still reach it.
+     */
+    public function testGenerationKeepsConsoleHandlerAndReplacesPreviousFeedLogFile(): void
+    {
+        $feed = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Feed::class)
+            ->disableOriginalConstructor()->onlyMethods(['saveStatus'])->getMock();
+        $feed->setData('id', 123);
+        $previousFile = $this->createMock(\Magento\Framework\Logger\Handler\Base::class);
+        $currentFile = $this->createMock(\Magento\Framework\Logger\Handler\Base::class);
+        $handlerFactory = $this->createMock(\MageOS\ShoppingFeed\Model\Logger\HandlerFactory::class);
+        $handlerFactory->expects(self::once())->method('create')->willReturn($currentFile);
+        $logger = new \MageOS\ShoppingFeed\Model\Logger($handlerFactory);
+        $console = new \Monolog\Handler\TestHandler();
+        $logger->pushHandler($previousFile)->pushHandler($console);
+        $selection = $this->createMock(\MageOS\ShoppingFeed\Model\ProductSelection\Selection::class);
+        $selection->method('beginRun')->willThrowException(
+            new \Magento\Framework\Exception\LocalizedException(__('Invalid selection rule'))
+        );
+        $generator = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Generator::class)
+            ->disableOriginalConstructor()->onlyMethods([])->getMock();
+        foreach ([
+            'feed' => $feed,
+            'logger' => $logger,
+            'productSelection' => $selection,
+            'outputPath' => $this->createMock(\MageOS\ShoppingFeed\Model\Feed\OutputPath::class),
+            'scopeConfig' => $this->createMock(\Magento\Framework\App\Config\ScopeConfigInterface::class),
+        ] as $name => $value) {
+            (new \ReflectionProperty(\MageOS\ShoppingFeed\Model\Generator::class, $name))
+                ->setValue($generator, $value);
+        }
+        try {
+            $generator->run();
+            self::fail('Expected the invalid selection to fail.');
+        } catch (\Magento\Framework\Exception\LocalizedException $exception) {
+            self::assertSame('Invalid selection rule', $exception->getMessage());
+        }
+        self::assertSame([$console, $currentFile], $logger->getHandlers());
+        self::assertTrue($console->hasErrorThatContains('Invalid selection rule'));
+    }
+
     public function testPreviewKeepsMemoryDiagnosticsAndDropsPreviousFeedHandlers(): void
     {
         $feed = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Feed::class)
